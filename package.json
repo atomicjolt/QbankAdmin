@@ -1,7 +1,7 @@
 {
-  "name": "react_client_starter_app",
-  "version": "0.0.2",
-  "description": "Client only React Starter App.",
+  "name": "QBankAdmin",
+  "version": "0.0.1",
+  "description": "Admin tool for MIT's QBank",
   "engines": {
     "node": "5.10.1"
   },
@@ -13,14 +13,16 @@
     "hot": "cd ./client && npm run hot",
     "live": "cd ./client && node server.js",
     "test": "cd ./client && npm run test",
-    "coveralls": "cd ./client && npm run coveralls"
+    "coveralls": "cd ./client && npm run coveralls",
+    "install": "cd authentication && npm install && cd ../authorization && npm install",
+    "lint": "eslint . || true"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/atomicjolt/react_client_starter_app"
+    "url": "https://github.com/atomicjolt/QBankAdmin"
   },
   "keywords": [
-    "react"
+    "QBank Admin"
   ],
   "author": "atomicjolt",
   "license": "MIT",
@@ -28,5 +30,18 @@
   "dependencies": {
     "del": "^2.2.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "async": "^2.0.0-rc.3",
+    "aws-sdk": "^2.2.48",
+    "chai": "^3.5.0",
+    "dirty-chai": "^1.2.2",
+    "eslint": "^2.8.0",
+    "eslint-config-airbnb": "^7.0.0",
+    "eslint-plugin-jsx-a11y": "^0.6.2",
+    "eslint-plugin-react": "^4.3.0",
+    "mocha": "^2.4.5",
+    "nock": "^7.7.2",
+    "serverless-authentication": "^0.4.4"
+  },
+  "private": false
 }
