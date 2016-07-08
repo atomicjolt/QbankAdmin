@@ -1,14 +1,17 @@
 import { combineReducers }  from 'redux';
-import settings             from './settings';
-import application          from './application';
-import messages             from './messages';
-import jwt                  from './jwt';
+
+import application  from './application';
+import auth         from './auth';
+import jwt          from './jwt';
+import messages     from './messages';
+import settings     from './settings';
 
 const rootReducer = combineReducers({
   settings,
   jwt,
   application,
-  messages
+  messages,
+  auth
 });
 
 export default rootReducer;
