@@ -17,6 +17,18 @@ Make sure to install git and npm before you start then:
 
 then visit http://localhost:8080
 
+# Google OAuth setup
+-----------------------
+1. Create a new project in the Google console (we call ours qbank-admin):
+https://console.developers.google.com
+
+2. On the project overview page be sure to enable the "Google+ API"
+
+3. Get the OAuth id and secret for the project from the 'credentials' section of the console. Put the values
+into _meta/variables/s-variables-dev.json (replace dev with whatever stage you are deploying).
+"providerGoogleId"
+"providerGoogleSecret"
+
 
 # Using the QBank Admin
 -----------------------
