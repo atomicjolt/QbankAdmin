@@ -29,7 +29,7 @@ class Auth extends React.Component {
     this.props.setAuthorization(params.authorization_token, params.refresh_token);
   }
 
-  render(){
+  render() {
     console.log(this.state, this.props);
 
     return (
