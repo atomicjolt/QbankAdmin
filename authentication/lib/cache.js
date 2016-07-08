@@ -92,7 +92,7 @@ function revokeState(state, callback) {
  * @param user
  * @param callback
  */
-function saveRefreshToken(user, callback) {
+function saveRefreshToken(user, email, callback) {
   const token = hash();
   const params = {
     TableName: table,
@@ -100,7 +100,8 @@ function saveRefreshToken(user, callback) {
       Token: token,
       Type: 'REFRESH',
       Expired: false,
-      UserId: user
+      UserId: user,
+      email: email
     }
   };
 

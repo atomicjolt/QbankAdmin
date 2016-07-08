@@ -78,7 +78,7 @@ function callbackHandler(event, callback) {
           async.parallel({
             refreshToken: (_callback) => {
               // Save refresh token
-              cache.saveRefreshToken(id, _callback);
+              cache.saveRefreshToken(id, profile.email, _callback);
             },
             profile: (_callback) => {
               // Here you can save the profile to DynamoDB if it doesn't already exist
