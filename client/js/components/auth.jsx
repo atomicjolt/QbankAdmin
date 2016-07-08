@@ -3,6 +3,7 @@
 import React        from "react";
 import { connect }  from "react-redux";
 
+import history               from "../history";
 import assets                from "../libs/assets";
 import { setAuthorization }  from "../actions/auth";
 
@@ -29,17 +30,15 @@ class Auth extends React.Component {
     this.props.setAuthorization(params.authorization_token, params.refresh_token);
   }
 
-  render() {
-    console.log(this.state, this.props);
+  componentDidMount() {
+    // Now that the user is authenticated, navigate back to the app's root.
+    location.hash = "";
+  }
 
+  render() {
     return (
       <div>
-        <p>Welcome!</p>
-        <p>Your tokens:</p>
-        <dl>
-          <dt>auth</dt><dd>{this.props.auth_token}</dd>
-          <dt>refresh</dt><dd>{this.props.refresh_token}</dd>
-        </dl>
+        <p>Signing you in&hellip;</p>
       </div>
     );
   }
