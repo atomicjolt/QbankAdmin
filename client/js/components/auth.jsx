@@ -13,7 +13,6 @@ class Auth extends React.Component {
 
   componentWillMount() {
     let params = hashParams();
-    console.log("params=", params);
     this.props.setAuthorization(params.authorization_token,
                                 params.refresh_token);
   }
@@ -26,7 +25,6 @@ class Auth extends React.Component {
     let newHash = joinParams(params);
     // We purposefully do not include a hash path here, so we get back to the app's root:
     let newUrl = location.pathname + "#" + newHash;
-    console.log("newUrl", newUrl);
     history.pushState(null, null, newUrl);
   }
 
