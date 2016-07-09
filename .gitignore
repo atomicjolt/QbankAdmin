@@ -3,6 +3,8 @@
 secrets.js
 config/secrets.js
 s3_website.yml
+/lighttpd.conf
+/server.pem
 
 # Build
 /build
