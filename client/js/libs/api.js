@@ -8,6 +8,20 @@ import NetworkConstants from "../constants/network";
 var _pendingRequests = {};
 var _cache = {};
 
+/**
+ * Provides a simple, consistent API to make HTTP requests.
+ *
+ * The following apply to each of `get`, `post`, `put`, `del`, and
+ * `execRequest`:
+ *
+ *   url: the path or subpath to make the request to.  If it includes "http:" or
+ *        "https:", it is assumed to be the complete path.
+ *
+ *   apiUrl: the root path of the api.  If `url` includes the information, this
+ *           may be left undefined.
+ *
+ *   returns a promise with a `then` method
+ */
 export default class Api{
 
   static get(url, apiUrl, jwt, csrf, params, headers){
@@ -61,8 +75,8 @@ export default class Api{
   }
 
   /**
-   * Returns a complete, absolute URL by conditionally appending `path` to
-   * `apiUrl`.  If `path` already contains "http", it is returned as-is.
+   * Returns a complete, absolute URL by conditionally appending `part` to
+   * `apiUrl`.  If `part` already contains "http", it is returned as-is.
    */
   static _makeUrl(part, apiUrl){
     if(part.indexOf("http") >= 0){
@@ -149,7 +163,7 @@ export default class Api{
 
   }
 
-}
+};
 
 
 // function *doCacheRequest(url, key, requestMethod, requestType){
