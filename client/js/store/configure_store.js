@@ -1,10 +1,12 @@
-import { createStore, applyMiddleware, compose } from 'redux';
-import { persistState }                          from 'redux-devtools';
-import rootReducer                               from '../reducers';
-import DevTools                                  from '../dev/dev_tools.jsx';
-import API                                       from '../middleware/api';
+import { createStore, applyMiddleware, compose }  from 'redux';
+import { persistState }                           from 'redux-devtools';
 
-let middleware = [ API ];
+import rootReducer  from '../reducers';
+import DevTools     from '../dev/dev_tools.jsx';
+import API          from '../middleware/api';
+import qbank        from '../middleware/qbank';
+
+let middleware = [ API, qbank ];
 
 let enhancers = [
   applyMiddleware(...middleware)

@@ -3,11 +3,20 @@
 import React        from 'react';
 import { connect }  from 'react-redux';
 
-import assets  from '../libs/assets';
+import { startApp }  from '../actions/app';
+import assets        from '../libs/assets';
 
 
-@connect((state) => (state), null, null, {withRef: true})
+@connect((state) => (state), {startApp}, null, {withRef: true})
 class Home extends React.Component {
+
+  componentWillMount() {
+    let p = this.props;
+    console.log("this.props", this.props);
+    if(p.auth.authenticated && !p.application.started) {
+      p.startApp(p.auth.auth_token);
+    }
+  }
 
   render() {
 
@@ -28,8 +37,16 @@ class Home extends React.Component {
 
     return (
       <div>
-        <div class="main">
-          <h1>QBank Admin</h1>
+        <div>(CLIx logo)</div>
+        <div>
+          <h1>Filter Tree</h1>
+        </div>
+        <div>
+          <div>(back)</div>
+          <hr/>
+          <div>(player preview)</div>
+          <hr/>
+          <div>(embed code)</div>
         </div>
       </div>
     );
