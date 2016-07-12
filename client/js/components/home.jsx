@@ -7,6 +7,8 @@ import { startApp }  from '../actions/app';
 import assets        from '../libs/assets';
 import _             from 'lodash';
 
+const select = (state) => (state);
+
 class Home extends React.Component {
 
   constructor(){
