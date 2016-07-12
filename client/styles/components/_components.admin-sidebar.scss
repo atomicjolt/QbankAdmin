@@ -1,0 +1,81 @@
+.c-sidebar__header{
+  height: 5rem;
+  background: $accent;
+}
+
+.c-sidebar__filters{
+  padding: 1.5rem 2rem;
+  height: 100%;
+}
+
+.c-filters__title{
+  margin: 0 0 2rem;
+  @include regular;
+  font-size: 1.8rem;
+  color: $primary;
+  border-bottom: 0.2rem solid $light-gray;
+  padding-bottom: 1.5rem;
+}
+
+.c-filter-scroll{
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+.c-checkbox--nested{
+
+  div{
+    display: inline-block;
+    cursor: pointer;
+    position: relative;
+    padding-left: 2.5rem;
+    font-size: 1.4rem;
+    @include semi-bold;
+    color: $text-color;
+  }
+
+  div:after{
+    z-index: 1;
+    content: '';
+    position: absolute;
+    left: 0.2rem;
+    top: 0.2rem;
+    height: 1.1rem;
+    width: 1.1rem;
+    border-radius: 0.3rem;
+    border: 0.2rem solid $secondary;
+  }
+
+  input[type="checkbox"]:checked + div:before{
+    z-index: 2;
+    content: '';
+    width: 0.3rem;
+    height: 0.8rem;
+    border: solid $white;
+    border-width: 0 0.2rem 0.2rem 0;
+    position: absolute;
+    transform: rotate(45deg);
+    top: 0.3rem;
+    left: 0.7rem;
+  }
+
+  input[type="checkbox"]:checked + div:after{
+    border-color: $secondary;
+    background: $secondary;
+  }
+
+  input{
+    display: none;
+    margin: 0;
+    height: 0.01rem;
+    width: 0.01rem;
+  }
+}
+
+.c-filter__item{
+  margin-top: 0.8rem;
+}
+
+.c-filter__dropdown{
+  padding-left: 2rem;
+}
