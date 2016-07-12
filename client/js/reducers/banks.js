@@ -31,7 +31,7 @@ const initialState = Immutable.fromJS({
             {
               "title": "Activity 44",
               "text": "CLIx content for activity 44",
-              "id": "assessment.Bank%3A577d49564a4045154ead4dd4%40ODL.MIT.EDU",
+              "id": "assessment.Bank%3A577d49564a4045154ead4dd3%40ODL.MIT.EDU",
               "children": [],
               "assessments": [{}]
             }],
@@ -44,7 +44,7 @@ const initialState = Immutable.fromJS({
       {
         "title": "Math",
         "text": "CLIx content for math",
-        "id": "assessment.Bank%3A577d49564a4045154ead4dcc%40ODL.MIT.EDU",
+        "id": "assessment.Bank%3A577d49564a4045154ead4dcb%40ODL.MIT.EDU",
         "children": [{}],
         "assessments": [{}]
       }],
