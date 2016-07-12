@@ -1,0 +1,110 @@
+.c-admin-content__main{
+  height: 100%;
+  position: relative;
+  z-index: 1;
+  margin-top: -5rem;
+  padding-top: 5rem;
+}
+
+.c-admin-content__main--scroll{
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+.c-admin-list-item{
+  border-bottom: 0.1rem solid $lightest-gray;
+
+  &:hover{
+    background: $lightest-gray;
+  }
+
+  a{
+    display: block;
+    padding: 2rem 2rem;
+    color: $text-color;
+    font-size: 1.6rem;
+    @include semi-bold;
+
+    &:hover{
+      color: $primary;
+    }
+  }
+}
+
+.c-preview-sidebar{
+  float: left;
+  height: 100%;
+  width: 25rem;
+  padding: 0 2rem;
+  background: $white;
+
+  h2{
+    @include regular;
+    font-size: 2rem;
+    color: $text-color;
+  }
+
+  p{
+    @include semi-bold;
+    font-size: 1.2rem;
+    color: $subtext-color;
+    margin-top: 0.5rem;
+
+    span{
+      color: $text-color;
+    }
+  }
+}
+
+.c-preview-questions{
+  overflow: hidden;
+  height: 100%;
+  padding-bottom: 12.5rem;
+
+  .o-assessment-container{
+    margin: 2rem auto;
+
+    .c-answers{
+      padding-bottom: 2rem;
+      pointer-events: none;
+    }
+  }
+}
+
+.c-preview-scroll{
+  padding: 0 2rem;
+  max-height: 100%;
+  overflow-y: auto;
+  position: relative;
+  z-index: 1;
+}
+
+.c-preview-embed{
+  height: 12.5rem;
+  border-top: 0.2rem solid $accent;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  background: $white;
+  padding: 1.5rem 2rem;
+  z-index: 2;
+
+  label{
+    display: block;
+    @include semi-bold;
+    font-size: 1.2rem;
+    color: $subtext-color;
+    padding-bottom: 0.5rem;
+  }
+  textarea{
+    width: 100%;
+    border: 0.1rem solid $gray;
+    border-radius: $radius;
+    outline: none;
+    resize: none;
+    padding: 0.3rem 0.5rem;
+    @include regular;
+    font-size: 1.2rem;
+    color: $text-color;
+  }
+}
