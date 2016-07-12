@@ -1,14 +1,15 @@
 'use strict';
-var crypto = require('crypto-js');
-var moment = require('moment');
-var Buffer = require('buffer').Buffer;
 
-class Util {
-    static hmac(key, string) {
-        var hmacOutput = crypto.HmacSHA256(string, key).toString(crypto.enc.HEX);
-        var b = new Buffer(hmacOutput, 'hex');
-        return b.toString('base64');
-    }
+import {Buffer}  from 'buffer';
+import crypto    from 'crypto-js';
+import moment    from 'moment';
+
+export class Util {
+  static hmac(key, string) {
+    var hmacOutput = crypto.HmacSHA256(string, key).toString(crypto.enc.HEX);
+    var b = new Buffer(hmacOutput, 'hex');
+    return b.toString('base64');
+  }
 
   static getHexEncodedHash(string) {
     return crypto.SHA256(string).toString(crypto.enc.HEX);
@@ -31,6 +32,4 @@ class Util {
     if (!moment(datetimeString).isValid()) throw "Unacceptable datetime string"; // is warning message shows , please comment out moment.js line 850
     return moment(datetimeString).toISOString().replace(/[:\-]|\.\d{3}/g, '');
   }
-}
-
-module.exports = Util;
+};

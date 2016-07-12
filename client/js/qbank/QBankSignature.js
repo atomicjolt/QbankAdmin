@@ -1,4 +1,5 @@
 'use strict';
+
 // as a test:
 // input:
 //    'POST /api/v2/assessment/banks/ HTTP/1.1\naccept: application/json\ndate: Mon, 14 Mar 2016 14:41:27 GMT\nhost: testserver:80\nx-api-proxy: taaccct_instructor'
@@ -8,8 +9,11 @@
 //    '93mOtcrwPkgg8vfSEFxzDe5uy5rNlCbvgMjQovo1Clo='
 // with public key: sIcaXKd67Y80MufpCB73
 // and private key: LKswkklexT14vbudS4jOGzHvcEG48O1dAvhcVSJQ
-var _ = require('lodash');
-const Util = require('./Util');
+
+import _  from 'lodash';
+
+import Util  from './Util';
+
 const ALGORITHM = 'hmac-sha256';
 const UNSIGNABLE_HEADERS = ['authorization', 'content-length', 'user-agent', 'expiresHeader'];
 const REQUIRED_OPTIONS_KEYS = [
@@ -28,7 +32,7 @@ const REQUIRED_HEADERS = [
 ];
 
 
-class QBankSignature {
+export class QBankSignature {
 
   setParams(options) {
     this.sanityCheckOptionsHeaders(options);
@@ -51,10 +55,10 @@ class QBankSignature {
   getStringToSign() {
     let parts = [];
     parts.push(this.method.toUpperCase() + ' ' + this.pathName + ' HTTP/1.1');
-        parts.push('accept: ' + this.headers.accept);
+    parts.push('accept: ' + this.headers.accept);
     parts.push('date: ' + this.datetime);
-        parts.push('host: ' + this.headers.host);
-        parts.push('x-api-proxy: ' + this.headers['x-api-proxy']);
+    parts.push('host: ' + this.headers.host);
+    parts.push('x-api-proxy: ' + this.headers['x-api-proxy']);
 
     return parts.join('\n');
   }
@@ -92,7 +96,7 @@ class QBankSignature {
     });
 
     if (missingKeys.length > 0) {
-      throw `Missing the following keys in options: ${missingKeys.join(' ')}`
+      throw `Missing the following keys in options: ${missingKeys.join(' ')}`;
     }
   }
 
@@ -101,7 +105,7 @@ class QBankSignature {
     this.sanityCheckRequiredKeysFor(options.credentials, ['SecretKey', 'AccessKeyId']);
     this.sanityCheckRequiredKeysFor(options.headers, REQUIRED_HEADERS);
     if (options.headers.date === undefined) {
-            this.datetime = new Date().toLocaleString();
+      this.datetime = new Date().toLocaleString();
     } else {
       this.datetime = options.headers.date;
     }
@@ -125,11 +129,9 @@ class QBankSignature {
     });
 
     return arr2.map((query)=>{
-      let name = query.split('=')[0],
-        value = query.split('=')[1] || '';
+      let name = query.split('=')[0];
+      let value = query.split('=')[1] || '';
       return Util.uriEscape(name) + '=' + Util.uriEscape(value);
     }).join('&');
   }
-}
-
-module.exports = QBankSignature;
+};
