@@ -5,7 +5,7 @@ import { connect }  from 'react-redux';
 
 import { startApp }  from '../actions/app';
 import assets        from '../libs/assets';
-
+import _             from 'lodash';
 
 @connect((state) => (state), {startApp}, null, {withRef: true})
 class Home extends React.Component {
@@ -24,65 +24,29 @@ class Home extends React.Component {
     }
   }
 
-  activity(children){
-    return _.map(children, (child)=>{
-      return (<ul className="c-filter__dropdown">
-                <li className="c-filter__item">
-                  <label className="c-checkbox--nested"><input type="checkbox"/><div>{child.title}</div></label>
-                </li>
-              </ul>);
-    });
+  renderItem(child){
+    let itemClass = "c-filter__item";
+    if(!_.isUndefined(child.children)){
+      itemClass = itemClass + " c-filter__item--dropdown";
+    }
+    return(<li className={itemClass}>
+              <label className="c-checkbox--nested"><input type="checkbox"/><div>{child.title}</div></label>
+              {this.renderChildren(child.children)}
+            </li>);
   }
 
-  lesson(children){
+  renderChildren(children){
+    if(_.isUndefined(children)){ return; }
     return _.map(children, (child)=>{
       return (<ul className="c-filter__dropdown">
-                <li className="c-filter__item  c-filter__item--dropdown">
-                  <label className="c-checkbox--nested"><input type="checkbox"/><div>{child.title}</div></label>
-                  {this.activity(child.children)}
-                </li>
+                {this.renderItem(child)}
               </ul>);
-    });
-  }
-
-  unit(children){
-    return _.map(children, (child)=>{
-      return (<ul className="c-filter__dropdown">
-                <li className="c-filter__item  c-filter__item--dropdown">
-                  <label className="c-checkbox--nested"><input type="checkbox"/><div>{child.title}</div></label>
-                  {this.lesson(child.children)}
-                </li>
-              </ul>);
-    });
-  }
-
-  mainTopic(children){
-    return _.map(children, (child)=>{
-      return (<ul className="c-filter__dropdown">
-              <li className="c-filter__item  c-filter__item--dropdown">
-                <ul className="c-filter__dropdown">
-                  <li className="c-filter__item  c-filter__item--dropdown">
-                    <label className="c-checkbox--nested"><input type="checkbox"/><div>{child.title}</div></label>
-                    {this.unit(child.children)}
-                  </li>
-                </ul>
-              </li>
-            </ul>);;
     });
   }
 
   gradeLevel(hierarchy){
-    return _.map(hierarchy.Bank, (grade)=>{
-      return (
-          <li className="c-filter__item  c-filter__item--dropdown">
-            <label className="c-checkbox--nested">
-              <input type="checkbox"/>
-                <div>
-                  {grade.title}
-                </div>
-            </label>
-            {this.mainTopic(grade.children)}
-          </li>);
+    return _.map(hierarchy.Bank, (child)=>{
+      return this.renderItem(child);
     });
   }
 
