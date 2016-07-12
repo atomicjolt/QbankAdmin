@@ -50,19 +50,6 @@ class Home extends React.Component {
     });
   }
 
-  // toggleFilter(grade){
-  //   var gradeChecked = this.state.gradeChecked; // is a hash of what is checked.
-
-  //   var standard = _.filter(this.props.topicStandards, (ts)=>{ return ts.name == `${priority.name}`; })[0];
-
-  //   if(metaData[standard.id]){
-  //     _.unset(metaData, standard.id);
-  //   } else {
-  //     metaData[standard.id] = standard.name;
-  //   }
-  //   this.setState({ metaData: metaData });
-  // }
-
   render() {
 
     const img = assets("./images/atomicjolt.jpg");
