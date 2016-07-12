@@ -10,27 +10,99 @@ import assets        from '../libs/assets';
 @connect((state) => (state), {startApp}, null, {withRef: true})
 class Home extends React.Component {
 
+  constructor(){
+    super();
+    this.state = {
+      gradeChecked: {},
+    };
+  }
+
   componentWillMount() {
     let p = this.props;
     if(p.auth.authenticated && !p.application.started) {
       p.startApp(p.auth.auth_token);
     }
   }
-  mainTopic(){
-    var banks = this.props.banks.toJS();
-    var t = banks.data.results;
-    return _.map(t, (name)=>{
-      return <li className="c-filter__item  c-filter__item--dropdown">
-                <label className="c-checkbox--nested"><input type="checkbox"/><div>{name.displayName.text}</div></label>
-              </li>;
-    });
 
+  activity(children){
+    return _.map(children, (child)=>{
+      return (<ul className="c-filter__dropdown">
+                <li className="c-filter__item">
+                  <label className="c-checkbox--nested"><input type="checkbox"/><div>{child.title}</div></label>
+                </li>
+              </ul>);
+    });
   }
+
+  lesson(children){
+    return _.map(children, (child)=>{
+      return (<ul className="c-filter__dropdown">
+                <li className="c-filter__item  c-filter__item--dropdown">
+                  <label className="c-checkbox--nested"><input type="checkbox"/><div>{child.title}</div></label>
+                  {this.activity(child.children)}
+                </li>
+              </ul>);
+    });
+  }
+
+  unit(children){
+    return _.map(children, (child)=>{
+      return (<ul className="c-filter__dropdown">
+                <li className="c-filter__item  c-filter__item--dropdown">
+                  <label className="c-checkbox--nested"><input type="checkbox"/><div>{child.title}</div></label>
+                  {this.lesson(child.children)}
+                </li>
+              </ul>);
+    });
+  }
+
+  mainTopic(children){
+    return _.map(children, (child)=>{
+      return (<ul className="c-filter__dropdown">
+              <li className="c-filter__item  c-filter__item--dropdown">
+                <ul className="c-filter__dropdown">
+                  <li className="c-filter__item  c-filter__item--dropdown">
+                    <label className="c-checkbox--nested"><input type="checkbox"/><div>{child.title}</div></label>
+                    {this.unit(child.children)}
+                  </li>
+                </ul>
+              </li>
+            </ul>);;
+    });
+  }
+
+  gradeLevel(hierarchy){
+    return _.map(hierarchy.Bank, (grade)=>{
+      return (
+          <li className="c-filter__item  c-filter__item--dropdown">
+            <label className="c-checkbox--nested">
+              <input type="checkbox"/>
+                <div>
+                  {grade.title}
+                </div>
+            </label>
+            {this.mainTopic(grade.children)}
+          </li>);
+    });
+  }
+
+  // toggleFilter(grade){
+  //   var gradeChecked = this.state.gradeChecked; // is a hash of what is checked.
+
+  //   var standard = _.filter(this.props.topicStandards, (ts)=>{ return ts.name == `${priority.name}`; })[0];
+
+  //   if(metaData[standard.id]){
+  //     _.unset(metaData, standard.id);
+  //   } else {
+  //     metaData[standard.id] = standard.name;
+  //   }
+  //   this.setState({ metaData: metaData });
+  // }
 
   render() {
 
     const img = assets("./images/atomicjolt.jpg");
-    var banks = this.props.banks.toJS();
+    var hierarchy = this.props.banks.toJS();
 
     if(!this.props.auth.authenticated) {
       return (
@@ -54,55 +126,7 @@ class Home extends React.Component {
       <div className="c-sidebar__filters">
         <p className="c-filters__title">Filter Tree</p>
         <ul className="c-filter-scroll">
-          <li className="c-filter__item  c-filter__item--dropdown">
-            <label className="c-checkbox--nested"><input type="checkbox"/><div>8th Grade</div></label>
-            <ul className="c-filter__dropdown">
-              {this.mainTopic()}
-              <li className="c-filter__item  c-filter__item--dropdown">
-                <ul className="c-filter__dropdown">
-                  <li className="c-filter__item  c-filter__item--dropdown">
-                    <label className="c-checkbox--nested"><input type="checkbox"/><div>Algebra</div></label>
-                  </li>
-                  <li className="c-filter__item  c-filter__item--dropdown">
-                    <label className="c-checkbox--nested"><input type="checkbox"/><div>Geometry</div></label>
-                    <ul className="c-filter__dropdown">
-                      <li className="c-filter__item  c-filter__item--dropdown">
-                        <label className="c-checkbox--nested"><input type="checkbox"/><div>Unit 1</div></label>
-                        <ul className="c-filter__dropdown">
-                          <li className="c-filter__item  c-filter__item--dropdown">
-                            <label className="c-checkbox--nested"><input type="checkbox"/><div>Lesson 1</div></label>
-                            <ul className="c-filter__dropdown">
-                              <li className="c-filter__item">
-                                <label className="c-checkbox--nested"><input type="checkbox"/><div>Activity 1</div></label>
-                              </li>
-                              <li className="c-filter__item">
-                                <label className="c-checkbox--nested"><input type="checkbox"/><div>Activity 1</div></label>
-                              </li>
-                              <li className="c-filter__item">
-                                <label className="c-checkbox--nested"><input type="checkbox"/><div>Activity 1</div></label>
-                              </li>
-                            </ul>
-                          </li>
-                        </ul>
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-          <li className="c-filter__item  c-filter__item--dropdown">
-            <label className="c-checkbox--nested"><input type="checkbox"/><div>9th Grade</div></label>
-          </li>
-          <li className="c-filter__item  c-filter__item--dropdown">
-            <label className="c-checkbox--nested"><input type="checkbox"/><div>10th Grade</div></label>
-          </li>
-          <li className="c-filter__item  c-filter__item--dropdown">
-            <label className="c-checkbox--nested"><input type="checkbox"/><div>11th Grade</div></label>
-          </li>
-          <li className="c-filter__item  c-filter__item--dropdown">
-            <label className="c-checkbox--nested"><input type="checkbox"/><div>12th Grade</div></label>
-          </li>
+          {this.gradeLevel(hierarchy)}
         </ul>
       </div>
     </div>

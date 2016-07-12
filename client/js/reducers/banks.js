@@ -5,71 +5,50 @@ import _                                   from "lodash";
 import { Constants as BanksConstants }   from "../actions/banks";
 
 const initialState = Immutable.fromJS({
-  "_links": {
-    "self": "https://qbank-dev.mit.edu/touchstone/api/v2/assessment/hierarchies/",
-    "assessment.Bank%3A54f9e39833bb7293e9da5b44%40oki-dev.MIT.EDU": "https://qbank-dev.mit.edu/touchstone/api/v2/assessment/hierarchies/assessment.Bank:54f9e39833bb7293e9da5b44@oki-dev.MIT.EDU/"
-  },
-  "data": {
-    "count": 1,
-    "next": null,
-    "previous": null,
-    "results": [
+  "Bank": [{
+    "title": "Grade 9",
+    "text": "CLIx content for grade 9",
+    "id": "assessment.Bank%3A577d49564a4045154ead4dca%40ODL.MIT.EDU",
+    "children" : [{
+      "title": "English",
+      "text": "CLIx content for english",
+      "id": "assessment.Bank%3A577d49564a4045154ead4dcc%40ODL.MIT.EDU",
+      "children": [{
+        "title": "Standard English",
+        "text": "CLIx content for standard english",
+        "id": "assessment.Bank%3A577d49564a4045154ead4dce%40ODL.MIT.EDU",
+        "children": [{
+          "title": "Unit 1",
+          "text": "CLIx content for Unit 1",
+          "id": "assessment.Bank%3A577d49564a4045154ead4dd0%40ODL.MIT.EDU",
+          "children": [{
+            "title": "Activity 4",
+            "text": "CLIx content for activity 4",
+            "id": "assessment.Bank%3A577d49564a4045154ead4dd4%40ODL.MIT.EDU",
+            "children": [],
+            "assessments": [{}]
+          },
+            {
+              "title": "Activity 44",
+              "text": "CLIx content for activity 44",
+              "id": "assessment.Bank%3A577d49564a4045154ead4dd4%40ODL.MIT.EDU",
+              "children": [],
+              "assessments": [{}]
+            }],
+          "assessments": [{}]
+        }],
+        "assessments": [{}]
+      }],
+      "assessments": [{}]
+    },
       {
-        "displayName": {
-          "text": "English, 2014_Fall",
-          "languageTypeId": "639-2%3AENG%40ISO",
-          "formatTypeId": "TextFormats%3APLAIN%40okapia.net",
-          "scriptTypeId": "15924%3ALATN%40ISO"
-        },
-        "description": {
-          "text": "Assessment bank for Differential Equations, 2014_Fall",
-          "languageTypeId": "639-2%3AENG%40ISO",
-          "formatTypeId": "TextFormats%3APLAIN%40okapia.net",
-          "scriptTypeId": "15924%3ALATN%40ISO"
-        },
-        "recordTypeIds": [],
-        "genusTypeId": "GenusType%3ADEFAULT%40dlkit.mit.edu",
-        "type": "Bank",
-        "id": "assessment.Bank%3A54f9e39833bb7293e9da5b44%40oki-dev.MIT.EDU"
-      },
-      {
-        "displayName": {
-          "text": "Science, 2014_Fall",
-          "languageTypeId": "639-2%3AENG%40ISO",
-          "formatTypeId": "TextFormats%3APLAIN%40okapia.net",
-          "scriptTypeId": "15924%3ALATN%40ISO"
-        },
-        "description": {
-          "text": "Assessment bank for Differential Equations, 2014_Fall",
-          "languageTypeId": "639-2%3AENG%40ISO",
-          "formatTypeId": "TextFormats%3APLAIN%40okapia.net",
-          "scriptTypeId": "15924%3ALATN%40ISO"
-        },
-        "recordTypeIds": [],
-        "genusTypeId": "GenusType%3ADEFAULT%40dlkit.mit.edu",
-        "type": "Bank",
-        "id": "assessment.Bank%3A54f9e39833bb7293e9da5b44%40oki-dev.MIT.EDU"
-      },
-      {
-        "displayName": {
-          "text": "Math, 2014_Fall",
-          "languageTypeId": "639-2%3AENG%40ISO",
-          "formatTypeId": "TextFormats%3APLAIN%40okapia.net",
-          "scriptTypeId": "15924%3ALATN%40ISO"
-        },
-        "description": {
-          "text": "Assessment bank for Differential Equations, 2014_Fall",
-          "languageTypeId": "639-2%3AENG%40ISO",
-          "formatTypeId": "TextFormats%3APLAIN%40okapia.net",
-          "scriptTypeId": "15924%3ALATN%40ISO"
-        },
-        "recordTypeIds": [],
-        "genusTypeId": "GenusType%3ADEFAULT%40dlkit.mit.edu",
-        "type": "Bank",
-        "id": "assessment.Bank%3A54f9e39833bb7293e9da5b44%40oki-dev.MIT.EDU"
-      }
-    ]
-  }
+        "title": "Math",
+        "text": "CLIx content for math",
+        "id": "assessment.Bank%3A577d49564a4045154ead4dcc%40ODL.MIT.EDU",
+        "children": [{}],
+        "assessments": [{}]
+      }],
+  }]
 });
 
 export default (state = initialState, action) => {
