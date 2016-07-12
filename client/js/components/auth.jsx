@@ -13,7 +13,6 @@ class Auth extends React.Component {
 
   componentWillMount() {
     let params = hashParams();
-    console.log(params);
     this.props.setAuthorization(params.authorization_token,
                                 params.refresh_token);
   }

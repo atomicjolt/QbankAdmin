@@ -12,7 +12,6 @@ export const Constants = wrapper(types, []);
 
 
 export function getBankHierarchy(){
-  debugger;
   return {
     type:      Constants.GET_BANK_HIERARCHY
   };
