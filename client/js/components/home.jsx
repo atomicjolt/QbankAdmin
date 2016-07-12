@@ -13,7 +13,7 @@ class Home extends React.Component {
   constructor(){
     super();
     this.state = {
-      gradeChecked: {},
+      itemChecked: {},
     };
   }
 
@@ -24,14 +24,24 @@ class Home extends React.Component {
     }
   }
 
+  checkItem(child, e){
+    let itemChecked = this.state.itemChecked;
+    itemChecked[child.id] = e.target.checked;
+    this.setState({itemChecked});
+  }
+
   renderItem(child){
     let itemClass = "c-filter__item";
     if(!_.isUndefined(child.children)){
       itemClass = itemClass + " c-filter__item--dropdown";
     }
+    let renderedChildren;
+    if(this.state.itemChecked[child.id]){
+      renderedChildren = this.renderChildren(child.children);
+    }
     return(<li className={itemClass}>
-              <label className="c-checkbox--nested"><input type="checkbox"/><div>{child.title}</div></label>
-              {this.renderChildren(child.children)}
+              <label className="c-checkbox--nested"><input type="checkbox" onChange={ (e) => this.checkItem(child, e) }/><div>{child.title}</div></label>
+              {renderedChildren}
             </li>);
   }
 
