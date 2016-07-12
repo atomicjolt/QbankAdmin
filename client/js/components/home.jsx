@@ -7,7 +7,6 @@ import { startApp }  from '../actions/app';
 import assets        from '../libs/assets';
 import _             from 'lodash';
 
-@connect((state) => (state), {startApp}, null, {withRef: true})
 class Home extends React.Component {
 
   constructor(){
@@ -151,5 +150,5 @@ class Home extends React.Component {
     </div>);
   }
 }
-export { Home as default };
 
+export default connect(select, { startApp })(Home);
