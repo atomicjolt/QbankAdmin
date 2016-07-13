@@ -15,6 +15,7 @@ class Home extends React.Component {
     super();
     this.state = {
       itemChecked: {},
+      assessments: {}
     };
   }
 
@@ -40,7 +41,7 @@ class Home extends React.Component {
     if(this.state.itemChecked[child.id]){
       renderedChildren = this.renderChildren(child.children);
     }
-    return(<li className={itemClass}>
+    return(<li key={child.id} className={itemClass}>
               <label className="c-checkbox--nested"><input type="checkbox" onChange={ (e) => this.checkItem(child, e) }/><div>{child.title}</div></label>
               {renderedChildren}
             </li>);
@@ -49,22 +50,67 @@ class Home extends React.Component {
   renderChildren(children){
     if(_.isUndefined(children)){ return; }
     return _.map(children, (child)=>{
-      return (<ul className="c-filter__dropdown">
+      return (<ul key={child.id} className="c-filter__dropdown">
                 {this.renderItem(child)}
               </ul>);
     });
   }
 
   gradeLevel(hierarchy){
-    return _.map(hierarchy.Bank, (child)=>{
+    return _.map(hierarchy, (child)=>{
       return this.renderItem(child);
+    });
+  }
+  // localhost:8091/api/v1/assessment/banks/
+  // assessment.Bank%3A577d49564a4045154ead4dd4%40ODL.MIT.EDU/assessments/
+  // assessment.Assessment%3A577d49584a4045154ead4f17%40ODL.MIT.EDU/assessmentsoffered
+
+  allAssessments(hierarchy, assessment){
+
+    _.forEach(hierarchy, (bank)=>{
+      if(bank.assessments.length >= 1){
+        assessment.push(bank.assessments);
+      }
+      if(bank.children && bank.children.length >= 1){
+        this.allAssessments(bank.children, assessment);
+      }
+    });
+
+    return _.flatten(assessment);
+  }
+
+
+  filteredAssessments(assessments){
+    var items = this.state.itemChecked;
+    var assessKeys = [];
+    var bank = this.props.banks.toJS();
+
+    _.forEach(items, (value, key)=>{
+      if(value == true){
+        assessKeys.push(key);
+      }
+    });
+    //  return _.map(assessKeys, (keyItem)=>{
+    //   return (
+    //     <li key={keyItem} className="c-admin-list-item">
+    //       <a href="">{keyItem}</a>
+    //     </li>);
+    // });
+    return _.map(assessments, (keyItem)=>{
+      var value = _.values(keyItem);
+      return (
+        <li key={value} className="c-admin-list-item">
+          <a href="">{value}</a>
+        </li>);
     });
   }
 
   render() {
-
-    const img = assets("./images/atomicjolt.jpg");
     var hierarchy = this.props.banks.toJS();
+    var assessment = [];
+
+    var assessments = this.allAssessments(hierarchy, assessment);
+    const img = assets("./images/atomicjolt.jpg");
 
     if(!this.props.auth.authenticated) {
       return (
@@ -137,15 +183,7 @@ class Home extends React.Component {
       </div>
       <div className="c-admin-content__main  c-admin-content__main--scroll">
         <ul>
-          <li className="c-admin-list-item">
-            <a href="">Assessment 1</a>
-          </li>
-          <li className="c-admin-list-item">
-            <a href="">Assessment 2</a>
-          </li>
-          <li className="c-admin-list-item">
-            <a href="">Assessment 3</a>
-          </li>
+          {this.filteredAssessments(assessments)}
         </ul>
       </div>
     </div>
