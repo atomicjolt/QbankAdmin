@@ -10,9 +10,9 @@
 // with public key: sIcaXKd67Y80MufpCB73
 // and private key: LKswkklexT14vbudS4jOGzHvcEG48O1dAvhcVSJQ
 
-import _  from 'lodash';
+var _ = require("lodash");
 
-import Util  from './Util';
+var Util = require("./Util");
 
 const ALGORITHM = 'hmac-sha256';
 const UNSIGNABLE_HEADERS = ['authorization', 'content-length', 'user-agent', 'expiresHeader'];
@@ -32,7 +32,7 @@ const REQUIRED_HEADERS = [
 ];
 
 
-export default class QBankSignature {
+class QBankSignature {
 
   setParams(options) {
     this.sanityCheckOptionsHeaders(options);
@@ -135,3 +135,5 @@ export default class QBankSignature {
     }).join('&');
   }
 };
+
+module.exports = QBankSignature;

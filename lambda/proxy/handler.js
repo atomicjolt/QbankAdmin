@@ -1,12 +1,12 @@
 "use strict";
 
-var Util = require("./Util");
+var QBankSignature = require("./QBankSignature");
 
 module.exports.handler = function (event, context, callback) {
   if(context.done === undefined) {
     console.log(arguments);
     return;
   }
-  console.log(Util);
+  console.log(QBankSignature);
   context.succeed();
 };
