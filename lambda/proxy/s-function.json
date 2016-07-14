@@ -1,0 +1,64 @@
+{
+  "name": "function1",
+  "customName": false,  // Custom name for your deployed Lambda function
+  "customRole": false,  // Custom IAM Role for your deployed Lambda function
+  "handler": "function1/handler.handler", // path of the handler relative to the function root
+  "runtime": "nodejs",
+  "description": "some description for your lambda",
+  "timeout": 6,
+  "memorySize": 1024,
+  "custom": {
+    "excludePatterns": [] // an array of whatever you don't want to deploy with the function
+  },
+  "environment": { // env vars needed by your function. Makes use of Serverless variables
+    "SOME_ENV_VAR": "${envVarValue}"
+  },
+  "events": [ // event sources for this lambda
+    {
+      "name" : "myEventSource", // unique name for this event source
+      "type": "schedule", // type of event source
+      "config": {
+        "schedule": "rate(5 minutes)",
+        "enabled": true
+      }
+    }
+  ], 
+  "endpoints": [ // an array of endpoints that will invoke this lambda function
+    {
+      "path": "function1",
+      "method": "GET",
+      "authorizationType": "none",
+      "apiKeyRequired": false,
+      "requestParameters": {},
+      "requestTemplates": {
+        "application/json": ""
+      },
+      "responses": {
+        "400": {
+          "selectionPattern": "^\\[BadRequest\\].*", // selectionPattern is mapped to the Lambda Error Regex
+          "statusCode": "400" // HTTP Status that is returned as part of the regex matching
+        },
+        "403": {
+          "selectionPattern": "^\\[Forbidden\\].*",
+          "statusCode": "403"
+        },
+        "404": {
+          "selectionPattern": "^\\[NotFound\\].*",
+          "statusCode": "404"
+        },
+        "default": {
+          "statusCode": "200",
+          "responseParameters": {},
+          "responseModels": {},
+          "responseTemplates": {
+            "application/json": ""
+          }
+        }
+      }
+    }
+  ],
+  "vpc": {
+    "securityGroupIds": [],
+    "subnetIds": []
+  }
+}
