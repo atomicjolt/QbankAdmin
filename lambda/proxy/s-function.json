@@ -1,31 +1,15 @@
 {
-  "name": "function1",
-  "customName": false,  // Custom name for your deployed Lambda function
-  "customRole": false,  // Custom IAM Role for your deployed Lambda function
-  "handler": "function1/handler.handler", // path of the handler relative to the function root
-  "runtime": "nodejs",
+  "name": "proxy",
+  "customName": false,
+  "customRole": false,
+  "handler": "handler.handler",
+  "runtime": "nodejs4.3",
   "description": "some description for your lambda",
   "timeout": 6,
   "memorySize": 1024,
-  "custom": {
-    "excludePatterns": [] // an array of whatever you don't want to deploy with the function
-  },
-  "environment": { // env vars needed by your function. Makes use of Serverless variables
-    "SOME_ENV_VAR": "${envVarValue}"
-  },
-  "events": [ // event sources for this lambda
+  "endpoints": [
     {
-      "name" : "myEventSource", // unique name for this event source
-      "type": "schedule", // type of event source
-      "config": {
-        "schedule": "rate(5 minutes)",
-        "enabled": true
-      }
-    }
-  ], 
-  "endpoints": [ // an array of endpoints that will invoke this lambda function
-    {
-      "path": "function1",
+      "path": "proxy",
       "method": "GET",
       "authorizationType": "none",
       "apiKeyRequired": false,
@@ -35,8 +19,8 @@
       },
       "responses": {
         "400": {
-          "selectionPattern": "^\\[BadRequest\\].*", // selectionPattern is mapped to the Lambda Error Regex
-          "statusCode": "400" // HTTP Status that is returned as part of the regex matching
+          "selectionPattern": "^\\[BadRequest\\].*",
+          "statusCode": "400"
         },
         "403": {
           "selectionPattern": "^\\[Forbidden\\].*",
