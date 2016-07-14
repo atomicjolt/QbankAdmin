@@ -59,7 +59,18 @@ Inside the client directory run:
   `npm-check-updates`
 
 
-#Setup Deploy:
+#Production
+-----------------------
+If you want to see what your application will look like in production run
+
+  `npm run live`
+
+This will serve files from the build/prod directory.
+
+#Deploy:
+-----------------------
+
+##Setup Client Deploy:
 -----------------------
 
   1. Install the s3_website gem:
@@ -112,16 +123,7 @@ Inside the client directory run:
     `s3_website cfg apply`
 
 
-#Production
------------------------
-If you want to see what your application will look like in production run
-
-  `npm run live`
-
-This will serve files from the build/prod directory.
-
-
-#Deploy:
+##Deploy Client:
 -----------------------
 
   Build a development release without deploying:
@@ -137,6 +139,21 @@ This will serve files from the build/prod directory.
   Build a release and deploy:
 
   `npm run release`
+
+
+##Setup Serverless Function Deployment:
+-----------------------
+
+  1. Install the serverless package:
+
+    `npm install serverless`
+
+  2. Deploy functions
+
+    `sls dash deploy`
+
+##Deploy Serverless Functions:
+-----------------------
 
 
 License and attribution
