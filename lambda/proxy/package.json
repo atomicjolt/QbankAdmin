@@ -1,0 +1,8 @@
+{
+  "name": "react_client_starter_app",
+  "dependencies": {
+    "crypto-js": "^3.1.6",
+    "moment": "^2.14.1",
+    "superagent": "2.0.0"
+  }
+}
