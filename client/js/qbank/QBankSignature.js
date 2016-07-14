@@ -32,7 +32,7 @@ const REQUIRED_HEADERS = [
 ];
 
 
-export class QBankSignature {
+export default class QBankSignature {
 
   setParams(options) {
     this.sanityCheckOptionsHeaders(options);

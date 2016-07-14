@@ -1,8 +1,16 @@
-import Api  from "../libs/api";
+import keyData   from "../qbank/keys";
+import {create}  from "../qbank/QBankFetcher";
+
+const signer = create({
+  SecretKey: keyData.privateKey,
+  AccessKeyId: keyData.publicKey,
+  Email: "me@example.edu",
+  Host: "qbank-clix-dev.mit.edu"
+});
 
 export default (store) => (next) => {
   function startApp(action) {
-    Api.get("assessment/hierarchies/roots/", "https://qbank-dev.mit.edu/api/v2/", null, null, null, null).then(
+    signer({method: "get", path: "/api/v1/assessment/hierarchies/roots/"}).then(
       function () {
         console.log("success", arguments);
       },

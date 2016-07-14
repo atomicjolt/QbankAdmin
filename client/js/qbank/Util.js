@@ -4,7 +4,7 @@ import {Buffer}  from 'buffer';
 import crypto    from 'crypto-js';
 import moment    from 'moment';
 
-export class Util {
+export default class Util {
   static hmac(key, string) {
     var hmacOutput = crypto.HmacSHA256(string, key).toString(crypto.enc.HEX);
     var b = new Buffer(hmacOutput, 'hex');

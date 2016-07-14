@@ -1,8 +1,7 @@
 "use strict";
 
-import requestPromise from 'request-promise';
-
-import QBankSignature from './QBankSignature';
+import Api             from "../libs/api";
+import QBankSignature  from "./QBankSignature";
 
 
 // This is adapted from https://github.mit.edu/sei/fbw-app/tree/master/StudentApp/utilities/signingUtil
@@ -44,7 +43,8 @@ export function create(credentials) {
       credentials
     };
     qbank.setParams(qbankOptions);
-    authorizationString = qbank.getAuthorizationString();
+    var authorizationString = qbank.getAuthorizationString();
+    console.log("authorizationString=", authorizationString);
 
     // alternately: 
     var requestOptions = {
@@ -60,8 +60,19 @@ export function create(credentials) {
       url,
       method: params.method || 'GET'
     };
-    console.log(requestOptions);
-    return requestPromise(requestOptions);
+
+    delete requestOptions.headers["x-api-key"];
+
+    return Api.execRequest(
+      params.method.toLowerCase() || "get",
+      url,
+      null, // apiUrl
+      null, // jwt
+      null, // csrf
+      null, // params
+      null, // body
+      requestOptions.headers
+    );
 
   };
 }
