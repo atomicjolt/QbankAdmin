@@ -13,11 +13,13 @@ export default (store) => (next) => {
     signer({method: "get", path: "/api/v1/assessment/hierarchies/roots/"}).then(
       function () {
         console.log("success", arguments);
+        // store.dispatch({ type: "GET_BANK_HIERARCHY" });
       },
       function (err) {
         console.log("error", err.url, err.message);
       }
     );
+
     next(action);
   }
   return startApp;

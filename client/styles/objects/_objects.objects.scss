@@ -1,0 +1,26 @@
+.o-assessment-container{
+  @include main-container;
+  width: 100%;
+  margin: 1rem auto;
+}
+
+.o-admin-container{
+  position: relative;
+  padding-left: 35rem;
+}
+
+.o-sidebar{
+  width: 35rem;
+  height: 100%;
+  min-height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: $white;
+  box-shadow: 0 0 0.5rem rgba(0,0,0,0.3);
+}
+
+.o-admin-content{
+  position: relative;
+  padding: 0 2rem;
+}
