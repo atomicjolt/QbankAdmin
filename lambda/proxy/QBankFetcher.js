@@ -1,7 +1,7 @@
 "use strict";
 
-import Api             from "../libs/api";
-import QBankSignature  from "./QBankSignature";
+var request = require("superagent");
+var QBankSignature = require("./QBankSignature");
 
 
 // This is adapted from https://github.mit.edu/sei/fbw-app/tree/master/StudentApp/utilities/signingUtil
@@ -11,7 +11,7 @@ import QBankSignature  from "./QBankSignature";
 // underyling `fetch` promise.
 //
 // Requires {AccessKeyId, SecretKey, Host, Email}
-export function create(credentials) {
+function create(credentials) {
   var qbank = new QBankSignature();
 
   // TODO(kr) Ideally this would be exactly the same API as `fetch`
@@ -61,18 +61,14 @@ export function create(credentials) {
       method: params.method || 'GET'
     };
 
-    delete requestOptions.headers["x-api-key"];
+    var req = request(params.method.toLowerCase() || "get", url);
 
-    return Api.execRequest(
-      params.method.toLowerCase() || "get",
-      url,
-      null, // apiUrl
-      null, // jwt
-      null, // csrf
-      null, // params
-      null, // body
-      requestOptions.headers
-    );
+    for(var k in requestOptions.headers) {
+      req.set(k, requestOptions.headers[k]);
+    }
 
+    return req;
   };
 }
+
+module.exports.create = create;
