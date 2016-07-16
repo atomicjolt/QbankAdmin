@@ -1,16 +1,8 @@
-import keyData   from "../qbank/keys";
-import {create}  from "../qbank/QBankFetcher";
-
-const signer = create({
-  SecretKey: keyData.privateKey,
-  AccessKeyId: keyData.publicKey,
-  Email: "me@example.edu",
-  Host: "qbank-clix-dev.mit.edu"
-});
+import request from "superagent";
 
 export default (store) => (next) => {
   function startApp(action) {
-    signer({method: "get", path: "/api/v1/assessment/hierarchies/roots/"}).then(
+    request.get("https://4h8n6sg95j.execute-api.us-east-1.amazonaws.com/dev/proxy").then(
       function () {
         console.log("success", arguments);
         // store.dispatch({ type: "GET_BANK_HIERARCHY" });

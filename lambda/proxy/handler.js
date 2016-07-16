@@ -14,10 +14,9 @@ module.exports.handler = function (event, context, callback) {
   request.
     get("https://qbank-clix-dev.mit.edu/api/v1/assessment/hierarchies/roots").
     set("Accept", "application/json").
-    set("Content-type", "application/json").
-    then(function good() {
+    then(function good(response) {
       console.log("good", arguments);
-      context.succeed();
+      context.succeed(JSON.parse(response.text));
     }, function bad() {
       console.log("bad", arguments);
       context.fail();
