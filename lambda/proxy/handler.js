@@ -69,10 +69,9 @@ module.exports.handler = function (event, context, callback) {
    * the hiearchy, requesting details each bank.
    */
   function recursivelyGetBankDetails(bank) {
+    getBankDetails(bank);
     for(var i in bank.childNodes) {
-      var child = bank.childNodes[i];
-      getBankDetails(child);
-      recursivelyGetBankDetails(child);
+      recursivelyGetBankDetails(bank.childNodes[i]);
     }
   }
 
