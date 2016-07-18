@@ -22,7 +22,7 @@ module.exports.handler = function (event, context, callback) {
       get("https://qbank-clix-dev.mit.edu/api/v1/assessment/hierarchies/" + thing).
       set("Accept", "application/json").
       then((response) => {
-        console.log("Received", thing, success);
+        console.log("Received", thing);
         success(response);
         // We need to decrement-and-check *after* we call the success function,
         // as that function may add more work to do.
@@ -39,7 +39,7 @@ module.exports.handler = function (event, context, callback) {
   }
 
   function getBankDetails(bank) {
-    console.log("getBankDetails", bank);
+    console.log("getBankDetails", bank.id);
     get("nodes/" + bank.id, (response) => {
       var details = JSON.parse(response.text);
 
@@ -54,20 +54,28 @@ module.exports.handler = function (event, context, callback) {
     });
   }
 
+  function recursivelyGetBankDetails(bank) {
+    for(var i in bank.childNodes) {
+      var child = bank.childNodes[i];
+      getBankDetails(child);
+      recursivelyGetBankDetails(child);
+    }
+  }
+
   function getChildren(bank) {
-    console.log("getChildren", bank);
+    console.log("getChildren", bank.id);
     get("nodes/" + bank.id + "/children?descendants=10", (response) => {
       console.log("inserting children...");
       bank.childNodes = JSON.parse(response.text);
       for(var i in bank.childNodes) {
-        getBankDetails(bank.childNodes[i]);
+        recursivelyGetBankDetails(bank.childNodes[i]);
       }
       console.log("done inserting children");
     });
   }
 
   get("roots", (response) => {
-    console.log("Received roots", response);
+    console.log("Received roots");
     banks = JSON.parse(response.text);
     console.log("Parsed roots");
     for(var i in banks) {
