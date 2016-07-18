@@ -12,7 +12,31 @@ module.exports.handler = function (event, context, callback) {
   }
 
   var banks;
+  var assessments = [];
   var outstanding = 0;
+
+  function attachToBank(bank, map) {
+    console.log("attachToBank", bank.id, map);
+    bank.assessments = map[bank.id] || [];
+    console.log(bank.id, bank.assessments);
+    for(var i in bank.childNodes) {
+      attachToBank(bank.childNodes[i], map);
+    }
+  }
+
+  function attachAssessments() {
+    console.log("attachAssessments");
+    var map = {};
+    for(var i in assessments) {
+      var assessment = assessments[i];
+      map[assessment.bankId] = map[assessment.bankId] || [];
+      map[assessment.bankId].push(assessment);
+    }
+    console.log(map);
+    for(i in banks) {
+      attachToBank(banks[i], map);
+    }
+  }
 
   /**
    * Fetches the resource at the `thing` subpath of QBank's API.  Calls function
@@ -25,7 +49,7 @@ module.exports.handler = function (event, context, callback) {
     console.log("Getting " + thing + ", " + outstanding + " requests");
 
     request.
-      get("https://qbank-clix-dev.mit.edu/api/v1/assessment/hierarchies/" + thing).
+      get("https://qbank-clix-dev.mit.edu/api/v1/assessment/" + thing).
       set("Accept", "application/json").
       then((response) => {
         console.log("Received", thing);
@@ -35,7 +59,8 @@ module.exports.handler = function (event, context, callback) {
         --outstanding;
         console.log(outstanding + " requests left");
         if(outstanding == 0) {
-          console.log("Succeeding", banks);
+          console.log("Succeeding", banks, assessments);
+          attachAssessments();
           context.succeed(banks);
         }
       }, function () {
@@ -50,7 +75,7 @@ module.exports.handler = function (event, context, callback) {
    */
   function getBankDetails(bank) {
     console.log("getBankDetails", bank.id);
-    get("nodes/" + bank.id, (response) => {
+    get("hierarchies/nodes/" + bank.id, (response) => {
       var details = JSON.parse(response.text);
 
       // The detailed object we get back contains a `childNodes` key with an
@@ -82,7 +107,7 @@ module.exports.handler = function (event, context, callback) {
    */
   function getChildren(bank) {
     console.log("getChildren", bank.id);
-    get("nodes/" + bank.id + "/children?descendants=10", (response) => {
+    get("hierarchies/nodes/" + bank.id + "/children?descendants=10", (response) => {
       console.log("inserting children...");
       bank.childNodes = JSON.parse(response.text);
       for(var i in bank.childNodes) {
@@ -92,13 +117,23 @@ module.exports.handler = function (event, context, callback) {
     });
   }
 
+  function getAssessments(bank) {
+    console.log("getAssessments", bank.id);
+    get("banks/" + bank.id + "/assessments", (response) => {
+      var arr = JSON.parse(response.text);
+      console.log(arr);
+      assessments = assessments.concat(arr);
+    });
+  }
+
   // Get the root banks and start filling in the hierarchy and details.
-  get("roots", (response) => {
+  get("hierarchies/roots", (response) => {
     console.log("Received roots");
     banks = JSON.parse(response.text);
     console.log("Parsed roots");
     for(var i in banks) {
       getChildren(banks[i]);
+      getAssessments(banks[i]);
     }
     console.log("Requested children");
   });
