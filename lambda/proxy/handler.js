@@ -14,6 +14,12 @@ module.exports.handler = function (event, context, callback) {
   var banks;
   var outstanding = 0;
 
+  /**
+   * Fetches the resource at the `thing` subpath of QBank's API.  Calls function
+   * `success` when the resource is received.  Keeps track of how many requests
+   * are still waiting to be received; once all requests are finished, calls the
+   * context's `succeed` function with the bank hierarchy as the return value.
+   */
   function get(thing, success) {
     ++outstanding;
     console.log("Getting " + thing + ", " + outstanding + " requests");
@@ -38,6 +44,10 @@ module.exports.handler = function (event, context, callback) {
       });
   }
 
+  /**
+   * Gets the details for a single bank, such as title, description, etc.
+   * Updates the bank in-place.
+   */
   function getBankDetails(bank) {
     console.log("getBankDetails", bank.id);
     get("nodes/" + bank.id, (response) => {
@@ -54,6 +64,10 @@ module.exports.handler = function (event, context, callback) {
     });
   }
 
+  /**
+   * Given a hierarchy of banks with no details (title, etc.), recursively walks
+   * the hiearchy, requesting details each bank.
+   */
   function recursivelyGetBankDetails(bank) {
     for(var i in bank.childNodes) {
       var child = bank.childNodes[i];
@@ -62,6 +76,10 @@ module.exports.handler = function (event, context, callback) {
     }
   }
 
+  /**
+   * Gets the hierarchy of banks appearing under the given root bank.  The
+   * hierarchy includes only IDs, not details such as title.
+   */
   function getChildren(bank) {
     console.log("getChildren", bank.id);
     get("nodes/" + bank.id + "/children?descendants=10", (response) => {
@@ -74,6 +92,7 @@ module.exports.handler = function (event, context, callback) {
     });
   }
 
+  // Get the root banks and start filling in the hierarchy and details.
   get("roots", (response) => {
     console.log("Received roots");
     banks = JSON.parse(response.text);
