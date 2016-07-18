@@ -28,21 +28,29 @@ class Home extends React.Component {
 
   checkItem(child, e){
     let itemChecked = this.state.itemChecked;
-    itemChecked[child.id] = e.target.checked;
+    itemChecked[child.id] = e.target ? e.target.checked: e;
+    if( child.childNodes ? child.childNodes.length >= 1 : child[0].childNodes.length >= 1 ){
+      _.forEach(child.childNodes, (c)=>{
+        if(c.childNodes.length >= 1){
+          this.checkItem(c.childNodes, false);
+        }
+
+      });
+    }
     this.setState({itemChecked});
   }
 
   renderItem(child){
     let itemClass = "c-filter__item";
-    if(!_.isUndefined(child.children)){
+    if(!_.isUndefined(child.childNodes)){
       itemClass = itemClass + " c-filter__item--dropdown";
     }
     let renderedChildren;
     if(this.state.itemChecked[child.id]){
-      renderedChildren = this.renderChildren(child.children);
+      renderedChildren = this.renderChildren(child.childNodes);
     }
     return(<li key={child.id} className={itemClass}>
-              <label className="c-checkbox--nested"><input type="checkbox" onChange={ (e) => this.checkItem(child, e) }/><div>{child.title}</div></label>
+              <label className="c-checkbox--nested"><input type="checkbox" onChange={ (e) => this.checkItem(child, e) }/><div>{child.displayName ? child.displayName.text : "DUMMY"}</div></label>
               {renderedChildren}
             </li>);
   }
@@ -61,55 +69,64 @@ class Home extends React.Component {
       return this.renderItem(child);
     });
   }
-  // localhost:8091/api/v1/assessment/banks/
-  // assessment.Bank%3A577d49564a4045154ead4dd4%40ODL.MIT.EDU/assessments/
-  // assessment.Assessment%3A577d49584a4045154ead4f17%40ODL.MIT.EDU/assessmentsoffered
 
   allAssessments(hierarchy, assessment){
-
     _.forEach(hierarchy, (bank)=>{
+      let id = bank.id;
       if(bank.assessments.length >= 1){
-        assessment.push(bank.assessments);
+        _.forEach(bank.assessments, (singleAssessment)=>{
+          assessment.push({assessment: singleAssessment, bankId: id});
+        });
       }
-      if(bank.children && bank.children.length >= 1){
-        this.allAssessments(bank.children, assessment);
+      if(bank.childNodes && bank.childNodes.length >= 1){
+        this.allAssessments(bank.childNodes, assessment);
       }
     });
 
-    return _.flatten(assessment);
+    return assessment;
   }
 
 
   filteredAssessments(assessments){
     var items = this.state.itemChecked;
     var assessKeys = [];
-    var bank = this.props.banks.toJS();
 
     _.forEach(items, (value, key)=>{
       if(value == true){
         assessKeys.push(key);
       }
     });
-    //  return _.map(assessKeys, (keyItem)=>{
+    // var mapping = {};
+    // _.forEach(assessments, (assessment)=>{
+    //   if(_.isUndefined(mapping[assessment.bankId])){
+    //     mapping[assessment.bankId] = [];
+    //     mapping[assessment.bankId].push(assessment);
+    //   }else{
+    //     mapping[assessment.bankId].push(assessment);
+    //   }
+    // });
+
+    return _.map(assessKeys, (keyItem)=>{
+      return (
+      <li key={keyItem} className="c-admin-list-item">
+        <a href="">{keyItem}</a>
+      </li>);
+    });
+
+    // return _.map(assessments, (keyItem)=>{
+    //   var value = _.values(keyItem);
     //   return (
-    //     <li key={keyItem} className="c-admin-list-item">
-    //       <a href="">{keyItem}</a>
+    //     <li key={value} className="c-admin-list-item">
+    //       <a href="">{value}</a>
     //     </li>);
     // });
-    return _.map(assessments, (keyItem)=>{
-      var value = _.values(keyItem);
-      return (
-        <li key={value} className="c-admin-list-item">
-          <a href="">{value}</a>
-        </li>);
-    });
   }
 
   render() {
-    var hierarchy = this.props.banks.toJS();
+    var hierarchy = this.props.banks;
     var assessment = [];
 
-    var assessments = this.allAssessments(hierarchy, assessment);
+    // var assessments = this.allAssessments(hierarchy, assessment);
     const img = assets("./images/atomicjolt.jpg");
 
     if(!this.props.auth.authenticated) {
@@ -183,7 +200,7 @@ class Home extends React.Component {
       </div>
       <div className="c-admin-content__main  c-admin-content__main--scroll">
         <ul>
-          {this.filteredAssessments(assessments)}
+
         </ul>
       </div>
     </div>
