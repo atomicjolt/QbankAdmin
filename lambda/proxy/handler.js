@@ -16,23 +16,19 @@ module.exports.handler = function (event, context, callback) {
   var outstanding = 0;
 
   function attachToBank(bank, map) {
-    console.log("attachToBank", bank.id, map);
     bank.assessments = map[bank.id] || [];
-    console.log(bank.id, bank.assessments);
     for(var i in bank.childNodes) {
       attachToBank(bank.childNodes[i], map);
     }
   }
 
   function attachAssessments() {
-    console.log("attachAssessments");
     var map = {};
     for(var i in assessments) {
       var assessment = assessments[i];
       map[assessment.bankId] = map[assessment.bankId] || [];
       map[assessment.bankId].push(assessment);
     }
-    console.log(map);
     for(i in banks) {
       attachToBank(banks[i], map);
     }
@@ -74,7 +70,6 @@ module.exports.handler = function (event, context, callback) {
    * Updates the bank in-place.
    */
   function getBankDetails(bank) {
-    console.log("getBankDetails", bank.id);
     get("hierarchies/nodes/" + bank.id, (response) => {
       var details = JSON.parse(response.text);
 
@@ -106,35 +101,27 @@ module.exports.handler = function (event, context, callback) {
    * hierarchy includes only IDs, not details such as title.
    */
   function getChildren(bank) {
-    console.log("getChildren", bank.id);
     get("hierarchies/nodes/" + bank.id + "/children?descendants=10", (response) => {
-      console.log("inserting children...");
       bank.childNodes = JSON.parse(response.text);
       for(var i in bank.childNodes) {
         recursivelyGetBankDetails(bank.childNodes[i]);
       }
-      console.log("done inserting children");
     });
   }
 
   function getAssessments(bank) {
-    console.log("getAssessments", bank.id);
     get("banks/" + bank.id + "/assessments", (response) => {
       var arr = JSON.parse(response.text);
-      console.log(arr);
       assessments = assessments.concat(arr);
     });
   }
 
   // Get the root banks and start filling in the hierarchy and details.
   get("hierarchies/roots", (response) => {
-    console.log("Received roots");
     banks = JSON.parse(response.text);
-    console.log("Parsed roots");
     for(var i in banks) {
       getChildren(banks[i]);
       getAssessments(banks[i]);
     }
-    console.log("Requested children");
   });
 };
