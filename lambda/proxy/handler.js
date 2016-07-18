@@ -44,10 +44,10 @@ module.exports.handler = function (event, context, callback) {
       var details = JSON.parse(response.text);
 
       // The detailed object we get back contains a `childNodes` key with an
-      // empty array value, which conflict with the real `childNodes` values
+      // empty array value, which conflicts with the real `childNodes` value
       // already in the hierarchy.  We preserve the correct value by assigning
-      // it to the newly-received object, *then* assign the new object's to the
-      // original.
+      // it to the newly-received object, *then* assign the new object's entries
+      // to the original.
 
       details.childNodes = bank.childNodes;
       Object.assign(bank, details);
