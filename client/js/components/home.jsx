@@ -31,10 +31,10 @@ class Home extends React.Component {
     itemChecked[child.id] = e.target ? e.target.checked: e;
     if( child.childNodes ? child.childNodes.length >= 1 : child[0].childNodes.length >= 1 ){
       _.forEach(child.childNodes, (c)=>{
+        itemChecked[c.id] = false;
         if(c.childNodes.length >= 1){
           this.checkItem(c.childNodes, false);
         }
-
       });
     }
     this.setState({itemChecked});
@@ -123,6 +123,9 @@ class Home extends React.Component {
   }
 
   render() {
+
+    var item = this.state.itemChecked;
+    debugger;
     var hierarchy = this.props.banks;
     var assessment = [];
 
