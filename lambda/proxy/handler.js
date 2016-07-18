@@ -38,11 +38,30 @@ module.exports.handler = function (event, context, callback) {
       });
   }
 
+  function getBankDetails(bank) {
+    console.log("getBankDetails", bank);
+    get("nodes/" + bank.id, (response) => {
+      var details = JSON.parse(response.text);
+
+      // The detailed object we get back contains a `childNodes` key with an
+      // empty array value, which conflict with the real `childNodes` values
+      // already in the hierarchy.  We preserve the correct value by assigning
+      // it to the newly-received object, *then* assign the new object's to the
+      // original.
+
+      details.childNodes = bank.childNodes;
+      Object.assign(bank, details);
+    });
+  }
+
   function getChildren(bank) {
     console.log("getChildren", bank);
     get("nodes/" + bank.id + "/children?descendants=10", (response) => {
       console.log("inserting children...");
-      bank.children = JSON.parse(response.text);
+      bank.childNodes = JSON.parse(response.text);
+      for(var i in bank.childNodes) {
+        getBankDetails(bank.childNodes[i]);
+      }
       console.log("done inserting children");
     });
   }
