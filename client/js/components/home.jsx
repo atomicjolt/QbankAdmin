@@ -76,6 +76,7 @@ class Home extends React.Component {
       return this.renderAssessments(bank);
     }));
   }
+
   noChildChecked(bank, itemChecked){
     for (var i in bank.childNodes){
       if(itemChecked[bank.childNodes[i].id]){
@@ -85,24 +86,42 @@ class Home extends React.Component {
     return true;
   }
 
+  renderSubAssessments(bank) {
+    let assessmentItems = [];
+    for(let i in bank.childNodes) {
+      let bc = bank.childNodes[i];
+      for(let j in bc.assessments) {
+        let a = bc.assessments[j];
+        assessmentItems.push(
+          <li key={a.id} className="c-admin-list-item">
+            <a href="">{a.displayName.text}</a>
+          </li>
+        );
+      }
+      Array.prototype.push.apply(assessmentItems, this.renderSubAssessments(bc));
+    }
+    return assessmentItems;
+  }
+
   renderAssessments(bank){
     let itemChecked = this.state.itemChecked;
     let assessmentItems = [];
-    console.log()
-    if(itemChecked[bank.id] && this.noChildChecked(bank, itemChecked)){
-      assessmentItems = _.map(bank.childNodes, (bc)=>(this.renderAssessments(bc)));
-      console.log(assessmentItems);
+    if(itemChecked[bank.id]) {
       assessmentItems.push(
-        _.map(bank.assessments, (a)=>{
-          return (
-            <li key={a.id} className="c-admin-list-item">
-              <a href="">{a.displayName.text}</a>
-            </li>
-          );
-        })
+        _.map(bank.assessments, (a) => (
+          <li key={a.id} className="c-admin-list-item">
+            <a href="">{a.displayName.text}</a>
+          </li>
+        ))
       );
+      if(this.noChildChecked(bank, itemChecked)) {
+        Array.prototype.push.apply(assessmentItems, this.renderSubAssessments(bank));
+      } else {
+        let subAssessments = _.flatten(_.map(bank.childNodes, (bc) => (this.renderAssessments(bc))));
+        Array.prototype.push.apply(assessmentItems, subAssessments);
+      }
     }
-    return _.flatten(assessmentItems);
+    return assessmentItems;
   }
 
   render() {
