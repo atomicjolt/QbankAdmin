@@ -86,27 +86,11 @@ class Home extends React.Component {
     return true;
   }
 
-  renderSubAssessments(bank) {
-    let assessmentItems = [];
-    for(let i in bank.childNodes) {
-      let bc = bank.childNodes[i];
-      for(let j in bc.assessments) {
-        let a = bc.assessments[j];
-        assessmentItems.push(
-          <li key={a.id} className="c-admin-list-item">
-            <a href="">{a.displayName.text}</a>
-          </li>
-        );
-      }
-      Array.prototype.push.apply(assessmentItems, this.renderSubAssessments(bc));
-    }
-    return assessmentItems;
-  }
-
-  renderAssessments(bank){
+  renderAssessments(bank, force){
+    console.log("renderAssessments", bank, force);
     let itemChecked = this.state.itemChecked;
     let assessmentItems = [];
-    if(itemChecked[bank.id]) {
+    if(force || itemChecked[bank.id]) {
       assessmentItems.push(
         _.map(bank.assessments, (a) => (
           <li key={a.id} className="c-admin-list-item">
@@ -114,11 +98,10 @@ class Home extends React.Component {
           </li>
         ))
       );
-      if(this.noChildChecked(bank, itemChecked)) {
-        Array.prototype.push.apply(assessmentItems, this.renderSubAssessments(bank));
-      } else {
-        let subAssessments = _.flatten(_.map(bank.childNodes, (bc) => (this.renderAssessments(bc))));
-        Array.prototype.push.apply(assessmentItems, subAssessments);
+      let forceChildren = this.noChildChecked(bank, itemChecked);
+      for(let i in bank.childNodes) {
+        let bc = bank.childNodes[i];
+        Array.prototype.push.apply(assessmentItems, this.renderAssessments(bc, forceChildren));
       }
     }
     return assessmentItems;
