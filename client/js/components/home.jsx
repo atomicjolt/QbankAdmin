@@ -43,25 +43,31 @@ class Home extends React.Component {
 
   renderItem(bank){
     let itemClass = "c-filter__item";
-    if(!_.isUndefined(bank.childNodes)){
+    if(bank.childNodes.length == 0){
       itemClass = itemClass + " c-filter__item--dropdown";
     }
     let renderedChildren;
     if(this.state.itemChecked[bank.id]){
       renderedChildren = this.renderChildren(bank.childNodes);
     }
-    return(<li key={bank.id} className={itemClass}>
-              <label className="c-checkbox--nested"><input type="checkbox" onChange={ (e) => this.checkItem(bank, e.target.checked) }/><div>{bank.displayName ? bank.displayName.text : "DUMMY"}</div></label>
-              {renderedChildren}
-            </li>);
+    return (
+      <li key={bank.id} className={itemClass}>
+        <label className="c-checkbox--nested">
+          <input type="checkbox" onChange={ (e) => this.checkItem(bank, e.target.checked) }/>
+          <div>{bank.displayName ? bank.displayName.text : "DUMMY"}</div>
+        </label>
+        {renderedChildren}
+      </li>
+    );
   }
 
   renderChildren(children){
     if(_.isUndefined(children)){ return; }
     return _.map(children, (child)=>{
-      return (<ul key={child.id} className="c-filter__dropdown">
-                {this.renderItem(child)}
-              </ul>);
+      return (
+        <ul key={child.id} className="c-filter__dropdown">
+          {this.renderItem(child)}
+        </ul>);
     });
   }
 
@@ -110,7 +116,6 @@ class Home extends React.Component {
 
     var item = this.state.itemChecked;
     var hierarchy = this.props.banks;
-
     const img = assets("./images/atomicjolt.jpg");
 
     if(!this.props.auth.authenticated) {
