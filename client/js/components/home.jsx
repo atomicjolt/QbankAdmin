@@ -87,7 +87,6 @@ class Home extends React.Component {
   }
 
   renderAssessments(bank, force){
-    console.log("renderAssessments", bank, force);
     let itemChecked = this.state.itemChecked;
     let assessmentItems = [];
     if(force || itemChecked[bank.id]) {
