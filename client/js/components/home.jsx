@@ -26,33 +26,49 @@ class Home extends React.Component {
     }
   }
 
-  checkItem(child, e){
-    let itemChecked = this.state.itemChecked;
-    itemChecked[child.id] = e.target.checked;
+  checkItem(bank, value){
+    let map = {[bank.id]: value};
+    if(!value){
+      this.resetHierarchy(bank, map);
+    }
+    let itemChecked = Object.assign({}, this.state.itemChecked, map);
     this.setState({itemChecked});
   }
 
-  renderItem(child){
+  resetHierarchy(bank, map){
+    map[bank.id] = false;
+    _.forEach(bank.childNodes, (bc)=>{
+      this.resetHierarchy(bc, map);
+    });
+  }
+
+  renderItem(bank){
     let itemClass = "c-filter__item";
-    if(!_.isUndefined(child.children)){
+    if(bank.childNodes.length == 0){
       itemClass = itemClass + " c-filter__item--dropdown";
     }
     let renderedChildren;
-    if(this.state.itemChecked[child.id]){
-      renderedChildren = this.renderChildren(child.children);
+    if(this.state.itemChecked[bank.id]){
+      renderedChildren = this.renderChildren(bank.childNodes);
     }
-    return(<li key={child.id} className={itemClass}>
-              <label className="c-checkbox--nested"><input type="checkbox" onChange={ (e) => this.checkItem(child, e) }/><div>{child.title}</div></label>
-              {renderedChildren}
-            </li>);
+    return (
+      <li key={bank.id} className={itemClass}>
+        <label className="c-checkbox--nested">
+          <input type="checkbox" onChange={ (e) => this.checkItem(bank, e.target.checked) }/>
+          <div>{bank.displayName ? bank.displayName.text : "DUMMY"}</div>
+        </label>
+        {renderedChildren}
+      </li>
+    );
   }
 
   renderChildren(children){
     if(_.isUndefined(children)){ return; }
     return _.map(children, (child)=>{
-      return (<ul key={child.id} className="c-filter__dropdown">
-                {this.renderItem(child)}
-              </ul>);
+      return (
+        <ul key={child.id} className="c-filter__dropdown">
+          {this.renderItem(child)}
+        </ul>);
     });
   }
 
@@ -61,55 +77,11 @@ class Home extends React.Component {
       return this.renderItem(child);
     });
   }
-  // localhost:8091/api/v1/assessment/banks/
-  // assessment.Bank%3A577d49564a4045154ead4dd4%40ODL.MIT.EDU/assessments/
-  // assessment.Assessment%3A577d49584a4045154ead4f17%40ODL.MIT.EDU/assessmentsoffered
-
-  allAssessments(hierarchy, assessment){
-
-    _.forEach(hierarchy, (bank)=>{
-      if(bank.assessments.length >= 1){
-        assessment.push(bank.assessments);
-      }
-      if(bank.children && bank.children.length >= 1){
-        this.allAssessments(bank.children, assessment);
-      }
-    });
-
-    return _.flatten(assessment);
-  }
-
-
-  filteredAssessments(assessments){
-    var items = this.state.itemChecked;
-    var assessKeys = [];
-    var bank = this.props.banks.toJS();
-
-    _.forEach(items, (value, key)=>{
-      if(value == true){
-        assessKeys.push(key);
-      }
-    });
-    //  return _.map(assessKeys, (keyItem)=>{
-    //   return (
-    //     <li key={keyItem} className="c-admin-list-item">
-    //       <a href="">{keyItem}</a>
-    //     </li>);
-    // });
-    return _.map(assessments, (keyItem)=>{
-      var value = _.values(keyItem);
-      return (
-        <li key={value} className="c-admin-list-item">
-          <a href="">{value}</a>
-        </li>);
-    });
-  }
 
   render() {
-    var hierarchy = this.props.banks.toJS();
-    var assessment = [];
 
-    var assessments = this.allAssessments(hierarchy, assessment);
+    var item = this.state.itemChecked;
+    var hierarchy = this.props.banks;
     const img = assets("./images/atomicjolt.jpg");
 
     if(!this.props.auth.authenticated) {
@@ -183,7 +155,7 @@ class Home extends React.Component {
       </div>
       <div className="c-admin-content__main  c-admin-content__main--scroll">
         <ul>
-          {this.filteredAssessments(assessments)}
+
         </ul>
       </div>
     </div>
