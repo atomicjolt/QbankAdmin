@@ -55,7 +55,7 @@ class Home extends React.Component {
       <li key={bank.id} className={itemClass}>
         <label className="c-checkbox--nested">
           <input type="checkbox" onChange={ (e) => this.checkItem(bank, e.target.checked) }/>
-          <div>{bank.displayName ? bank.displayName.text : "DUMMY"}</div>
+          <div>{bank.displayName}</div>
         </label>
         {renderedChildren}
       </li>
