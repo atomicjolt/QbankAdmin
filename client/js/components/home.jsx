@@ -1,11 +1,12 @@
 "use strict";
 
+import _            from 'lodash';
 import React        from 'react';
 import { connect }  from 'react-redux';
 
 import { startApp }  from '../actions/app';
 import assets        from '../libs/assets';
-import _             from 'lodash';
+
 
 const select = (state) => (state);
 
@@ -55,7 +56,7 @@ class Home extends React.Component {
       <li key={bank.id} className={itemClass}>
         <label className="c-checkbox--nested">
           <input type="checkbox" onChange={ (e) => this.checkItem(bank, e.target.checked) }/>
-          <div>{bank.displayName ? bank.displayName.text : "DUMMY"}</div>
+          <div>{bank.displayName.text}</div>
         </label>
         {renderedChildren}
       </li>
@@ -76,6 +77,41 @@ class Home extends React.Component {
     return _.map(hierarchy, (child)=>{
       return this.renderItem(child);
     });
+  }
+
+  filteredAssessments(hierarchy){
+    return _.flatten(_.map(hierarchy, (bank)=>{
+      return this.renderAssessments(bank);
+    }));
+  }
+
+  noChildChecked(bank, itemChecked){
+    for (var i in bank.childNodes){
+      if(itemChecked[bank.childNodes[i].id]){
+        return false;
+      }
+    }
+    return true;
+  }
+
+  renderAssessments(bank, force){
+    let itemChecked = this.state.itemChecked;
+    let assessmentItems = [];
+    if(force || itemChecked[bank.id]) {
+      assessmentItems.push(
+        _.map(bank.assessments, (a) => (
+          <li key={a.id} className="c-admin-list-item">
+            <a href="">{a.displayName.text}</a>
+          </li>
+        ))
+      );
+      let forceChildren = this.noChildChecked(bank, itemChecked);
+      for(let i in bank.childNodes) {
+        let bc = bank.childNodes[i];
+        Array.prototype.push.apply(assessmentItems, this.renderAssessments(bc, forceChildren));
+      }
+    }
+    return assessmentItems;
   }
 
   render() {
@@ -155,7 +191,7 @@ class Home extends React.Component {
       </div>
       <div className="c-admin-content__main  c-admin-content__main--scroll">
         <ul>
-
+          {this.filteredAssessments(hierarchy)}
         </ul>
       </div>
     </div>
