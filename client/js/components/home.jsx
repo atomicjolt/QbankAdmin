@@ -26,31 +26,33 @@ class Home extends React.Component {
     }
   }
 
-  checkItem(child, e){
-    let itemChecked = this.state.itemChecked;
-    itemChecked[child.id] = e.target ? e.target.checked: e;
-    if( child.childNodes ? child.childNodes.length >= 1 : child[0].childNodes.length >= 1 ){
-      _.forEach(child.childNodes, (c)=>{
-        itemChecked[c.id] = false;
-        if(c.childNodes.length >= 1){
-          this.checkItem(c.childNodes, false);
-        }
-      });
+  checkItem(bank, value){
+    let map = {[bank.id]: value};
+    if(!value){
+      this.resetHierarchy(bank, map);
     }
+    let itemChecked = Object.assign({}, this.state.itemChecked, map);
     this.setState({itemChecked});
   }
 
-  renderItem(child){
+  resetHierarchy(bank, map){
+    map[bank.id] = false;
+    _.forEach(bank.childNodes, (bc)=>{
+      this.resetHierarchy(bc, map);
+    });
+  }
+
+  renderItem(bank){
     let itemClass = "c-filter__item";
-    if(!_.isUndefined(child.childNodes)){
+    if(!_.isUndefined(bank.childNodes)){
       itemClass = itemClass + " c-filter__item--dropdown";
     }
     let renderedChildren;
-    if(this.state.itemChecked[child.id]){
-      renderedChildren = this.renderChildren(child.childNodes);
+    if(this.state.itemChecked[bank.id]){
+      renderedChildren = this.renderChildren(bank.childNodes);
     }
-    return(<li key={child.id} className={itemClass}>
-              <label className="c-checkbox--nested"><input type="checkbox" onChange={ (e) => this.checkItem(child, e) }/><div>{child.displayName ? child.displayName.text : "DUMMY"}</div></label>
+    return(<li key={bank.id} className={itemClass}>
+              <label className="c-checkbox--nested"><input type="checkbox" onChange={ (e) => this.checkItem(bank, e.target.checked) }/><div>{bank.displayName ? bank.displayName.text : "DUMMY"}</div></label>
               {renderedChildren}
             </li>);
   }
