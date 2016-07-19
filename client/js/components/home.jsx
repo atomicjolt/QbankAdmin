@@ -2,7 +2,6 @@
 
 import React        from 'react';
 import { connect }  from 'react-redux';
-
 import { startApp }  from '../actions/app';
 import assets        from '../libs/assets';
 import _             from 'lodash';
@@ -72,66 +71,45 @@ class Home extends React.Component {
     });
   }
 
-  allAssessments(hierarchy, assessment){
-    _.forEach(hierarchy, (bank)=>{
-      let id = bank.id;
-      if(bank.assessments.length >= 1){
-        _.forEach(bank.assessments, (singleAssessment)=>{
-          assessment.push({assessment: singleAssessment, bankId: id});
-        });
+  filteredAssessments(hierarchy){
+    return _.flatten(_.map(hierarchy, (bank)=>{
+      return this.renderAssessments(bank);
+    }));
+  }
+  noChildChecked(bank, itemChecked){
+    for (var i in bank.childNodes){
+      if(itemChecked[bank.childNodes[i].id]){
+        return false;
       }
-      if(bank.childNodes && bank.childNodes.length >= 1){
-        this.allAssessments(bank.childNodes, assessment);
-      }
-    });
-
-    return assessment;
+    }
+    return true;
   }
 
-
-  filteredAssessments(assessments){
-    var items = this.state.itemChecked;
-    var assessKeys = [];
-
-    _.forEach(items, (value, key)=>{
-      if(value == true){
-        assessKeys.push(key);
-      }
-    });
-    // var mapping = {};
-    // _.forEach(assessments, (assessment)=>{
-    //   if(_.isUndefined(mapping[assessment.bankId])){
-    //     mapping[assessment.bankId] = [];
-    //     mapping[assessment.bankId].push(assessment);
-    //   }else{
-    //     mapping[assessment.bankId].push(assessment);
-    //   }
-    // });
-
-    return _.map(assessKeys, (keyItem)=>{
-      return (
-      <li key={keyItem} className="c-admin-list-item">
-        <a href="">{keyItem}</a>
-      </li>);
-    });
-
-    // return _.map(assessments, (keyItem)=>{
-    //   var value = _.values(keyItem);
-    //   return (
-    //     <li key={value} className="c-admin-list-item">
-    //       <a href="">{value}</a>
-    //     </li>);
-    // });
+  renderAssessments(bank){
+    let itemChecked = this.state.itemChecked;
+    let assessmentItems = [];
+    console.log()
+    if(itemChecked[bank.id] && this.noChildChecked(bank, itemChecked)){
+      assessmentItems = _.map(bank.childNodes, (bc)=>(this.renderAssessments(bc)));
+      console.log(assessmentItems);
+      assessmentItems.push(
+        _.map(bank.assessments, (a)=>{
+          return (
+            <li key={a.id} className="c-admin-list-item">
+              <a href="">{a.displayName.text}</a>
+            </li>
+          );
+        })
+      );
+    }
+    return _.flatten(assessmentItems);
   }
 
   render() {
 
     var item = this.state.itemChecked;
-    debugger;
     var hierarchy = this.props.banks;
-    var assessment = [];
 
-    // var assessments = this.allAssessments(hierarchy, assessment);
     const img = assets("./images/atomicjolt.jpg");
 
     if(!this.props.auth.authenticated) {
@@ -205,7 +183,7 @@ class Home extends React.Component {
       </div>
       <div className="c-admin-content__main  c-admin-content__main--scroll">
         <ul>
-
+          {this.filteredAssessments(hierarchy)}
         </ul>
       </div>
     </div>
