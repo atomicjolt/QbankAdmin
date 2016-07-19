@@ -102,9 +102,7 @@ module.exports.handler = function (event, context, callback) {
   function getChildren(bank) {
     get("hierarchies/nodes/" + bank.id + "/children?descendants=10", (response) => {
       bank.childNodes = JSON.parse(response.text);
-      for(var i in bank.childNodes) {
-        recursivelyGetBankDetails(bank.childNodes[i]);
-      }
+      recursivelyGetBankDetails(bank);
     });
   }
 
