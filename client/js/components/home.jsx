@@ -44,25 +44,31 @@ class Home extends React.Component {
 
   renderItem(bank){
     let itemClass = "c-filter__item";
-    if(!_.isUndefined(bank.childNodes)){
+    if(bank.childNodes.length == 0){
       itemClass = itemClass + " c-filter__item--dropdown";
     }
     let renderedChildren;
     if(this.state.itemChecked[bank.id]){
       renderedChildren = this.renderChildren(bank.childNodes);
     }
-    return(<li key={bank.id} className={itemClass}>
-              <label className="c-checkbox--nested"><input type="checkbox" onChange={ (e) => this.checkItem(bank, e.target.checked) }/><div>{bank.displayName ? bank.displayName.text : "DUMMY"}</div></label>
-              {renderedChildren}
-            </li>);
+    return (
+      <li key={bank.id} className={itemClass}>
+        <label className="c-checkbox--nested">
+          <input type="checkbox" onChange={ (e) => this.checkItem(bank, e.target.checked) }/>
+          <div>{bank.displayName ? bank.displayName.text : "DUMMY"}</div>
+        </label>
+        {renderedChildren}
+      </li>
+    );
   }
 
   renderChildren(children){
     if(_.isUndefined(children)){ return; }
     return _.map(children, (child)=>{
-      return (<ul key={child.id} className="c-filter__dropdown">
-                {this.renderItem(child)}
-              </ul>);
+      return (
+        <ul key={child.id} className="c-filter__dropdown">
+          {this.renderItem(child)}
+        </ul>);
     });
   }
 
@@ -72,66 +78,10 @@ class Home extends React.Component {
     });
   }
 
-  allAssessments(hierarchy, assessment){
-    _.forEach(hierarchy, (bank)=>{
-      let id = bank.id;
-      if(bank.assessments.length >= 1){
-        _.forEach(bank.assessments, (singleAssessment)=>{
-          assessment.push({assessment: singleAssessment, bankId: id});
-        });
-      }
-      if(bank.childNodes && bank.childNodes.length >= 1){
-        this.allAssessments(bank.childNodes, assessment);
-      }
-    });
-
-    return assessment;
-  }
-
-
-  filteredAssessments(assessments){
-    var items = this.state.itemChecked;
-    var assessKeys = [];
-
-    _.forEach(items, (value, key)=>{
-      if(value == true){
-        assessKeys.push(key);
-      }
-    });
-    // var mapping = {};
-    // _.forEach(assessments, (assessment)=>{
-    //   if(_.isUndefined(mapping[assessment.bankId])){
-    //     mapping[assessment.bankId] = [];
-    //     mapping[assessment.bankId].push(assessment);
-    //   }else{
-    //     mapping[assessment.bankId].push(assessment);
-    //   }
-    // });
-
-    return _.map(assessKeys, (keyItem)=>{
-      return (
-      <li key={keyItem} className="c-admin-list-item">
-        <a href="">{keyItem}</a>
-      </li>);
-    });
-
-    // return _.map(assessments, (keyItem)=>{
-    //   var value = _.values(keyItem);
-    //   return (
-    //     <li key={value} className="c-admin-list-item">
-    //       <a href="">{value}</a>
-    //     </li>);
-    // });
-  }
-
   render() {
 
     var item = this.state.itemChecked;
-    debugger;
     var hierarchy = this.props.banks;
-    var assessment = [];
-
-    // var assessments = this.allAssessments(hierarchy, assessment);
     const img = assets("./images/atomicjolt.jpg");
 
     if(!this.props.auth.authenticated) {
