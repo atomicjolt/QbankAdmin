@@ -5,6 +5,7 @@ import React        from 'react';
 import { connect }  from 'react-redux';
 
 import { startApp }  from '../actions/app';
+import { assessmentOffered }  from '../actions/assessment_offered';
 import assets        from '../libs/assets';
 
 
@@ -101,7 +102,7 @@ class Home extends React.Component {
       assessmentItems.push(
         _.map(bank.assessments, (a) => (
           <li key={a.id} className="c-admin-list-item">
-            <a href="">{a.displayName.text}</a>
+            <a href="#" onClick={()=>{this.props.assessmentOffered(bank.id, a.id);}}>{a.displayName.text}</a>
           </li>
         ))
       );
@@ -112,6 +113,15 @@ class Home extends React.Component {
       }
     }
     return assessmentItems;
+  }
+
+  iframe(){
+    let assessOffered = this.props.assessment_offered;
+    if(!_.isEmpty(assessOffered)){
+      let url = encodeURI(`http://localhost:8080/?unlock_next=ON_CORRECT&api_url=http://localhost:8091/api/v1&bank=${assessOffered.bankId}&assessment_offered_id=${assessOffered.id}#/assessment`);
+      return `<iframe src="${url}"/>`;
+    }
+    return "";
   }
 
   render() {
@@ -193,10 +203,16 @@ class Home extends React.Component {
         <ul>
           {this.filteredAssessments(hierarchy)}
         </ul>
+        <div className="c-preview-embed">
+          <label for="embed">Embed Code</label>
+          <textarea id="embed" value ={this.iframe()} readOnly="true"></textarea>
+        </div>
       </div>
     </div>
     </div>);
   }
 }
 
-export default connect(select, { startApp })(Home);
+export default connect(select, { startApp, assessmentOffered })(Home);
+
+
