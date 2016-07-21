@@ -53,9 +53,11 @@ const assessmentOffered = {
 };
 
 export default (state = assessmentOffered, action) => {
+  console.log("In assessment_offered.js reducer");
   switch(action.type){
 
-    case AssessmentConstants.ASSESSMENT_OFFERED:
+    case AssessmentConstants.ASSESSMENT_OFFERED + AssessmentConstants.DONE:
+      console.log("In ASSESSMENT_OFFERED case.");
       return action.payload;
 
     default:
