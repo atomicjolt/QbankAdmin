@@ -1,0 +1,6 @@
+{
+  "name": "react_client_starter_app",
+  "dependencies": {
+    "superagent": "2.0.0"
+  }
+}
