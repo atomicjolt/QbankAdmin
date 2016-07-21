@@ -114,8 +114,7 @@ class Home extends React.Component {
     return assessmentItems;
   }
 
-  iframe(){
-    let assessOffered = this.props.assessment_offered;
+  iframe(assessOffered){
     if(!_.isEmpty(assessOffered)){
       let url = encodeURI(`http://localhost:8080/?unlock_next=ON_CORRECT&api_url=http://localhost:8091/api/v1&bank=${assessOffered.bankId}&assessment_offered_id=${assessOffered.id}#/assessment`);
       return `<iframe src="${url}"/>`;
@@ -143,8 +142,8 @@ class Home extends React.Component {
 
   render() {
 
-    var items = this.state.itemChecked;
     var hierarchy = this.props.banks;
+    var assessOffered = this.props.assessment_offered;
     const img = assets("./images/atomicjolt.jpg");
 
     if(!this.props.auth.authenticated) {
@@ -183,7 +182,7 @@ class Home extends React.Component {
         </ul>
         <div className="c-preview-embed">
           <label for="embed">Embed Code</label>
-          <textarea id="embed" value={this.iframe()} readOnly="true"></textarea>
+          <textarea id="embed" value={this.iframe(assessOffered)} readOnly="true"></textarea>
         </div>
       </div>
     </div>
