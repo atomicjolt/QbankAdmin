@@ -12,4 +12,3 @@ export function assessmentOffered(bankId, assessmentId) {
     assessmentId
   };
 }
-
