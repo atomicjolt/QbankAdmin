@@ -1,5 +1,5 @@
 {
-  "name": "react_client_starter_app",
+  "name": "qbank-admin-offer",
   "dependencies": {
     "superagent": "2.0.0"
   }
