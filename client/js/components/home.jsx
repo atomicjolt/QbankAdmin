@@ -5,7 +5,8 @@ import React        from 'react';
 import { connect }  from 'react-redux';
 
 import { startApp }  from '../actions/app';
-import { assessmentOffered }  from '../actions/assessment_offered';
+import { assessmentOffered,
+         assessmentOfferedCleared }  from '../actions/assessment_offered';
 import assets        from '../libs/assets';
 
 
@@ -29,6 +30,7 @@ class Home extends React.Component {
   }
 
   checkItem(bank, value){
+    this.props.assessmentOfferedCleared();
     let map = {[bank.id]: value};
     if(!value){
       this.resetHierarchy(bank, map);
@@ -213,6 +215,6 @@ class Home extends React.Component {
   }
 }
 
-export default connect(select, { startApp, assessmentOffered })(Home);
+export default connect(select, { startApp, assessmentOffered, assessmentOfferedCleared })(Home);
 
 

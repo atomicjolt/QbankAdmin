@@ -6,9 +6,7 @@ import { Constants as AssessmentConstants }   from "../actions/assessment_offere
 
 export default (store) => (next) => {
   function startApp(action) {
-    console.log("middleware startApp function");
     if(action.type == "APP_START") {
-      console.log("middleware APP_START type");
       request.get("https://4h8n6sg95j.execute-api.us-east-1.amazonaws.com/dev/proxy").then(
         function (response) {
           store.dispatch({
@@ -23,7 +21,9 @@ export default (store) => (next) => {
     }
 
     if(action.type == "ASSESSMENT_OFFERED") {
-      console.log("middleware ASSESSMENT_OFFERED type");
+      store.dispatch({
+        type:     AssessmentConstants.ASSESSMENT_OFFERED_CLEARED
+      });
       var url = "https://4h8n6sg95j.execute-api.us-east-1.amazonaws.com/dev/offer";
       var body = {
         bank_id: action.bankId,
@@ -32,7 +32,6 @@ export default (store) => (next) => {
       console.log("In middleware making assessmentOfferedId request...");
       request.post(url).send(body).then(
         function (response) {
-          console("received good response");
           store.dispatch({
             type:     AssessmentConstants.ASSESSMENT_OFFERED + DONE,
             payload: response.body
@@ -43,7 +42,6 @@ export default (store) => (next) => {
         }
       );
     }
-
     next(action);
   }
 
