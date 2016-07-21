@@ -5,7 +5,6 @@ import React        from 'react';
 import { connect }  from 'react-redux';
 
 import { startApp }  from '../actions/app';
-// import { assessmentOffered }  from '../actions/assessment_offered';
 import assets        from '../libs/assets';
 
 
@@ -124,68 +123,23 @@ class Home extends React.Component {
     return "";
   }
 
-  // breadcrumbs(items){
-  //   var checked = _.compact(_.map(items, (val, key)=>{
-  //     if(val == true){
-  //       return key;
-  //     }
-  //   }));
-  //   return _.map(checked, (item)=>{
-  //     var a = {};
-  //     a["id"] = item;
-  //     return (
-  //     <div className="c-breadcrumb" key = {item}>
-  //       <span>{item.slice(40,48)}</span>
-  //       <a href="#" onClick={()=>{this.checkItem(a, false);}}>
-  //         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-  //             <path d="M29.17 16l-5.17 5.17-5.17-5.17-2.83 2.83 5.17 5.17-5.17 5.17 2.83 2.83 5.17-5.17 5.17 5.17 2.83-2.83-5.17-5.17 5.17-5.17-2.83-2.83zm-5.17-12c-11.05 0-20 8.95-20 20s8.95 20 20 20 20-8.95 20-20-8.95-20-20-20zm0 36c-8.82 0-16-7.18-16-16s7.18-16 16-16 16 7.18 16 16-7.18 16-16 16z"/>
-  //         </svg>
-  //       </a>
-  //     </div>);
-  //   });
-  // }
-
-
-
-
-
-
   breadcrumbs(hierarchy){
+    var checked = _.compact(_.map(this.state.itemChecked, (val, key)=>{if(val === true){return key;}}));
     return _.map(hierarchy, (bank)=>{
-      let items = this.state.itemChecked;
-      var checked = _.compact(_.map(items, (val, key)=>{
-        if(val == true){
-          return key;
-        }
-      }));
-
       if(_.includes(checked, bank.id)){
-        _.forEach(bank.childNodes, (bc)=>{
-          this.breadcrumbs(bc);
-        });
-        return (
-        <div className="c-breadcrumb" key = {bank.id}>
-          <span>{bank.displayName.text}</span>
-          <a href="#" onClick={()=>{this.checkItem(bank, false);}}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-                <path d="M29.17 16l-5.17 5.17-5.17-5.17-2.83 2.83 5.17 5.17-5.17 5.17 2.83 2.83 5.17-5.17 5.17 5.17 2.83-2.83-5.17-5.17 5.17-5.17-2.83-2.83zm-5.17-12c-11.05 0-20 8.95-20 20s8.95 20 20 20 20-8.95 20-20-8.95-20-20-20zm0 36c-8.82 0-16-7.18-16-16s7.18-16 16-16 16 7.18 16 16-7.18 16-16 16z"/>
-            </svg>
-          </a>
-        </div>
-      );
+        return [(
+          <div className="c-breadcrumb" key = {bank.id}>
+            <span>{bank.displayName.text}</span>
+            <a href="#" onClick={()=>{this.checkItem(bank, false);}}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+                  <path d="M29.17 16l-5.17 5.17-5.17-5.17-2.83 2.83 5.17 5.17-5.17 5.17 2.83 2.83 5.17-5.17 5.17 5.17 2.83-2.83-5.17-5.17 5.17-5.17-2.83-2.83zm-5.17-12c-11.05 0-20 8.95-20 20s8.95 20 20 20 20-8.95 20-20-8.95-20-20-20zm0 36c-8.82 0-16-7.18-16-16s7.18-16 16-16 16 7.18 16 16-7.18 16-16 16z"/>
+              </svg>
+            </a>
+          </div>
+        ), this.breadcrumbs(bank.childNodes)];
       }
-      else{
-        return;
-      }
-
-
     });
   }
-
-
-
-
-
 
   render() {
 
