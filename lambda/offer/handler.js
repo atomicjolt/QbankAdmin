@@ -11,8 +11,8 @@ module.exports.handler = function (event, context, callback) {
     return;
   }
 
-  var bank_id = event.bank_id;// .replace(/%/g, "%37");
-  var assessment_id = event.assessment_id;// .replace(/%/g, "%37");
+  var bank_id = event.bank_id;
+  var assessment_id = event.assessment_id;
 
   request.post("https://qbank-clix-dev.mit.edu/api/v1/assessment/banks/" + bank_id + "/assessments/" + assessment_id + "/assessmentsoffered").
     set("Accept", "application/json").
