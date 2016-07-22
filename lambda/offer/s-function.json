@@ -13,13 +13,8 @@
       "method": "POST",
       "authorizationType": "none",
       "apiKeyRequired": false,
-      "requestParameters": {
-        "integration.request.querystring.bank_id": "method.request.querystring.bank_id",
-        "integration.request.querystring.assessment_id": "method.request.querystring.assessment_id"
-      },
-      "requestTemplates": {
-        "application/json": "{\"method\":\"GET\",\"bank_id\":\"$input.params('bank_id')\",\"assessment_id\":\"$input.params('assessment_id')\"}"
-      },
+      "requestParameters": {},
+      "requestTemplates": {},
       "responses": {
         "400": {
           "selectionPattern": "^\\[BadRequest\\].*",
