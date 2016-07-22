@@ -4,10 +4,9 @@ import _            from 'lodash';
 import React        from 'react';
 import { connect }  from 'react-redux';
 
-import { startApp }  from '../actions/app';
-import { assessmentOffered,
-         assessmentOfferedCleared }  from '../actions/assessment_offered';
-import assets        from '../libs/assets';
+import { startApp }                       from '../actions/app';
+import { offerAssessment, clearSnippet }  from '../actions/assessment_offered';
+import assets                             from '../libs/assets';
 
 
 const select = (state) => (state);
@@ -30,7 +29,7 @@ class Home extends React.Component {
   }
 
   checkItem(bank, value){
-    this.props.assessmentOfferedCleared();
+    this.props.clearSnippet();
     let map = {[bank.id]: value};
     if(!value){
       this.resetHierarchy(bank, map);
@@ -104,7 +103,7 @@ class Home extends React.Component {
       assessmentItems.push(
         _.map(bank.assessments, (a) => (
           <li key={a.id} className="c-admin-list-item">
-            <a href="#" onClick={()=>{this.props.assessmentOffered(bank.id, a.id);}}>{a.displayName.text}</a>
+            <a href="#" onClick={()=>{this.props.offerAssessment(bank.id, a.id);}}>{a.displayName.text}</a>
           </li>
         ))
       );
@@ -120,7 +119,9 @@ class Home extends React.Component {
   iframe(){
     let assessOffered = this.props.assessment_offered;
     if(!_.isEmpty(assessOffered)){
-      let url = encodeURI(`http://localhost:8080/?unlock_next=ON_CORRECT&api_url=http://localhost:8091/api/v1&bank=${assessOffered.bankId}&assessment_offered_id=${assessOffered.id}#/assessment`);
+      let qBankHost = "https://qbank-clix-dev.mit.edu";
+      let playerHost = "http://localhost:8080";
+      let url = encodeURI(`${playerHost}/?unlock_next=ON_CORRECT&api_url=${qBankHost}/api/v1&bank=${assessOffered.bankId}&assessment_offered_id=${assessOffered.id}#/assessment`);
       return `<iframe src="${url}"/>`;
     }
     return "";
@@ -215,6 +216,4 @@ class Home extends React.Component {
   }
 }
 
-export default connect(select, { startApp, assessmentOffered, assessmentOfferedCleared })(Home);
-
-
+export default connect(select, { startApp, offerAssessment, clearSnippet })(Home);

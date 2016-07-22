@@ -2,18 +2,18 @@
 
 import wrapper    from "../constants/wrapper";
 
-export const Constants = wrapper(["ASSESSMENT_OFFERED", "ASSESSMENT_OFFERED_CLEARED"], []);
+export const Constants = wrapper(["ASSESSMENT_OFFER", "ASSESSMENT_CLEAR_SNIPPET"], []);
 
-export function assessmentOffered(bankId, assessmentId) {
+export function offerAssessment(bankId, assessmentId) {
   return {
-    type:      Constants.ASSESSMENT_OFFERED,
+    type:      Constants.ASSESSMENT_OFFER,
     bankId,
     assessmentId
   };
 }
 
-export function assessmentOfferedCleared() {
+export function clearSnippet() {
   return {
-    type:      Constants.ASSESSMENT_OFFERED_CLEARED,
+    type:      Constants.ASSESSMENT_CLEAR_SNIPPET,
   };
 }
