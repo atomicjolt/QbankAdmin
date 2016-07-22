@@ -45,6 +45,11 @@ class Home extends React.Component {
     });
   }
 
+  isCheckedBreadcrumbs(bankId){
+    var checked = _.compact(_.map(this.state.itemChecked, (val, key)=>{if(val === true){return key;}}));
+    return _.includes(checked, bankId);
+  }
+
   renderItem(bank){
     let itemClass = "c-filter__item";
     if(bank.childNodes.length == 0){
@@ -57,7 +62,7 @@ class Home extends React.Component {
     return (
       <li key={bank.id} className={itemClass}>
         <label className="c-checkbox--nested">
-          <input type="checkbox" onChange={ (e) => this.checkItem(bank, e.target.checked) }/>
+          <input type="checkbox" checked={this.isCheckedBreadcrumbs(bank.id)} onChange={ (e) => this.checkItem(bank, e.target.checked) }/>
           <div>{bank.displayName.text}</div>
         </label>
         {renderedChildren}
@@ -127,9 +132,26 @@ class Home extends React.Component {
     return "";
   }
 
+  breadcrumbs(hierarchy){
+    var checked = _.compact(_.map(this.state.itemChecked, (val, key)=>{if(val === true){return key;}}));
+    return _.map(hierarchy, (bank)=>{
+      if(_.includes(checked, bank.id)){
+        return [(
+          <div className="c-breadcrumb" key={bank.id}>
+            <span>{bank.displayName.text}</span>
+            <a href="#" onClick={()=>{this.checkItem(bank, false);}}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+                  <path d="M29.17 16l-5.17 5.17-5.17-5.17-2.83 2.83 5.17 5.17-5.17 5.17 2.83 2.83 5.17-5.17 5.17 5.17 2.83-2.83-5.17-5.17 5.17-5.17-2.83-2.83zm-5.17-12c-11.05 0-20 8.95-20 20s8.95 20 20 20 20-8.95 20-20-8.95-20-20-20zm0 36c-8.82 0-16-7.18-16-16s7.18-16 16-16 16 7.18 16 16-7.18 16-16 16z"/>
+              </svg>
+            </a>
+          </div>
+        ), this.breadcrumbs(bank.childNodes)];
+      }
+    });
+  }
+
   render() {
 
-    var item = this.state.itemChecked;
     var hierarchy = this.props.banks;
     const img = assets("./images/atomicjolt.jpg");
 
@@ -161,46 +183,7 @@ class Home extends React.Component {
     </div>
     <div className="o-admin-content">
       <div className="c-admin-content__header">
-        <div className="c-breadcrumb">
-          <span>8th Grade</span>
-          <a href="">
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-                <path d="M29.17 16l-5.17 5.17-5.17-5.17-2.83 2.83 5.17 5.17-5.17 5.17 2.83 2.83 5.17-5.17 5.17 5.17 2.83-2.83-5.17-5.17 5.17-5.17-2.83-2.83zm-5.17-12c-11.05 0-20 8.95-20 20s8.95 20 20 20 20-8.95 20-20-8.95-20-20-20zm0 36c-8.82 0-16-7.18-16-16s7.18-16 16-16 16 7.18 16 16-7.18 16-16 16z"/>
-            </svg>
-          </a>
-        </div>
-        <div className="c-breadcrumb">
-          <span>Math</span>
-          <a href="">
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-                <path d="M29.17 16l-5.17 5.17-5.17-5.17-2.83 2.83 5.17 5.17-5.17 5.17 2.83 2.83 5.17-5.17 5.17 5.17 2.83-2.83-5.17-5.17 5.17-5.17-2.83-2.83zm-5.17-12c-11.05 0-20 8.95-20 20s8.95 20 20 20 20-8.95 20-20-8.95-20-20-20zm0 36c-8.82 0-16-7.18-16-16s7.18-16 16-16 16 7.18 16 16-7.18 16-16 16z"/>
-            </svg>
-          </a>
-        </div>
-        <div className="c-breadcrumb">
-          <span>Geometry</span>
-          <a href="">
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-                <path d="M29.17 16l-5.17 5.17-5.17-5.17-2.83 2.83 5.17 5.17-5.17 5.17 2.83 2.83 5.17-5.17 5.17 5.17 2.83-2.83-5.17-5.17 5.17-5.17-2.83-2.83zm-5.17-12c-11.05 0-20 8.95-20 20s8.95 20 20 20 20-8.95 20-20-8.95-20-20-20zm0 36c-8.82 0-16-7.18-16-16s7.18-16 16-16 16 7.18 16 16-7.18 16-16 16z"/>
-            </svg>
-          </a>
-        </div>
-        <div className="c-breadcrumb">
-          <span>Unit 1</span>
-          <a href="">
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-                <path d="M29.17 16l-5.17 5.17-5.17-5.17-2.83 2.83 5.17 5.17-5.17 5.17 2.83 2.83 5.17-5.17 5.17 5.17 2.83-2.83-5.17-5.17 5.17-5.17-2.83-2.83zm-5.17-12c-11.05 0-20 8.95-20 20s8.95 20 20 20 20-8.95 20-20-8.95-20-20-20zm0 36c-8.82 0-16-7.18-16-16s7.18-16 16-16 16 7.18 16 16-7.18 16-16 16z"/>
-            </svg>
-          </a>
-        </div>
-        <div className="c-breadcrumb">
-          <span>Lesson 1</span>
-          <a href="">
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-                <path d="M29.17 16l-5.17 5.17-5.17-5.17-2.83 2.83 5.17 5.17-5.17 5.17 2.83 2.83 5.17-5.17 5.17 5.17 2.83-2.83-5.17-5.17 5.17-5.17-2.83-2.83zm-5.17-12c-11.05 0-20 8.95-20 20s8.95 20 20 20 20-8.95 20-20-8.95-20-20-20zm0 36c-8.82 0-16-7.18-16-16s7.18-16 16-16 16 7.18 16 16-7.18 16-16 16z"/>
-            </svg>
-          </a>
-        </div>
+        {this.breadcrumbs(hierarchy)}
       </div>
       <div className="c-admin-content__main  c-admin-content__main--scroll">
         <ul>
