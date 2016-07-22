@@ -43,6 +43,15 @@ class Home extends React.Component {
     });
   }
 
+  isCheckedBreadcrumbs(bankId){
+    var checked = _.compact(_.map(this.state.itemChecked, (val, key)=>{if(val === true){return key;}}));
+    debugger;
+    if(_.includes(checked, bankId)){
+      return true;
+    }
+    return false;
+  }
+
   renderItem(bank){
     let itemClass = "c-filter__item";
     if(bank.childNodes.length == 0){
@@ -55,7 +64,7 @@ class Home extends React.Component {
     return (
       <li key={bank.id} className={itemClass}>
         <label className="c-checkbox--nested">
-          <input type="checkbox" onChange={ (e) => this.checkItem(bank, e.target.checked) }/>
+          <input type="checkbox" checked = {this.isCheckedBreadcrumbs(bank.id)}onChange={ (e) => this.checkItem(bank, e.target.checked) }/>
           <div>{bank.displayName.text}</div>
         </label>
         {renderedChildren}
