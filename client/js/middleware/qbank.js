@@ -27,14 +27,14 @@ export default (store) => (next) => {
       });
       var url = "https://4h8n6sg95j.execute-api.us-east-1.amazonaws.com/dev/offer";
       var body = {
-        bank_id: action.bankId,
+        bank_id:       action.bankId,
         assessment_id: action.assessmentId
       };
       request.post(url).send(body).then(
         function (response) {
           store.dispatch({
             type:     AssessmentConstants.ASSESSMENT_OFFER + DONE,
-            payload: response.body
+            payload:  response.body
           });
         },
         function (err) {
