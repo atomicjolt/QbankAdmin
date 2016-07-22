@@ -11,6 +11,9 @@ module.exports.handler = function (event, context, callback) {
     return;
   }
 
+  if(event.method === "OPTIONS") return;
+  if(event.method !== "POST") context.fail();
+
   var bank_id = event.bank_id;
   var assessment_id = event.assessment_id;
 
