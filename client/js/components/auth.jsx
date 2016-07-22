@@ -23,7 +23,8 @@ class Auth extends React.Component {
     delete params.authorization_token;
     delete params.refresh_token;
     let newHash = joinParams(params);
-    // We purposefully do not include a hash path here, so we get back to the app's root:
+    // We purposefully do not include a hash path here, so we get back to the
+    // app's root:
     let newUrl = location.pathname + "#" + newHash;
     history.pushState(null, null, newUrl);
   }

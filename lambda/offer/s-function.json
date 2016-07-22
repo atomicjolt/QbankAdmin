@@ -1,0 +1,74 @@
+{
+  "name": "offer",
+  "customName": false,
+  "customRole": false,
+  "handler": "handler.handler",
+  "runtime": "nodejs4.3",
+  "description": "some description for your lambda",
+  "timeout": 6,
+  "memorySize": 1024,
+  "endpoints": [
+    {
+      "path": "offer",
+      "method": "POST",
+      "authorizationType": "none",
+      "apiKeyRequired": false,
+      "requestParameters": {},
+      "requestTemplates": {},
+      "responses": {
+        "400": {
+          "selectionPattern": "^\\[BadRequest\\].*",
+          "statusCode": "400"
+        },
+        "403": {
+          "selectionPattern": "^\\[Forbidden\\].*",
+          "statusCode": "403"
+        },
+        "404": {
+          "selectionPattern": "^\\[NotFound\\].*",
+          "statusCode": "404"
+        },
+        "default": {
+          "statusCode": "200",
+          "responseParameters": {
+            "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,Cache-Control'",
+            "method.response.header.Access-Control-Allow-Methods": "'*'",
+            "method.response.header.Access-Control-Allow-Origin": "'*'"
+          },
+          "responseModels": {},
+          "responseTemplates": {
+            "application/json": ""
+          }
+        }
+      }
+    },
+    {
+      "path": "offer",
+      "method": "OPTIONS",
+      "authorizationType": "none",
+      "apiKeyRequired": false,
+      "requestParameters": {},
+      "requestTemplates": {
+        "application/json": "{\"method\":\"OPTIONS\"}"
+      },
+      "responses": {
+        "default": {
+          "statusCode": "200",
+          "responseParameters": {
+            "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,Cache-Control'",
+            "method.response.header.Access-Control-Allow-Methods": "'*'",
+            "method.response.header.Access-Control-Allow-Origin": "'*'"
+          },
+          "responseModels": {},
+          "responseTemplates": {
+            "application/json": ""
+          }
+        }
+      }
+    }
+  ],
+  "vpc": {
+    "securityGroupIds": [],
+    "subnetIds": []
+  }
+}
