@@ -126,7 +126,7 @@ class Home extends React.Component {
       for(let i in bank.childNodes) {
         let bc = bank.childNodes[i];
         Array.prototype.push.apply(assessmentItems, this.renderAssessments(bc, forceChildren));
-      }i
+      }
     }
     return assessmentItems;
   }
@@ -140,7 +140,7 @@ class Home extends React.Component {
         </svg>
       </div>;
     }
-  }i
+  }
 
   iframe(){
     let assessOffered = this.props.assessment_offered;
