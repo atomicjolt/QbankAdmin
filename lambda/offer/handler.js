@@ -15,10 +15,11 @@ module.exports.handler = function (event, context, callback) {
 
   var bank_id = event.bank_id;
   var assessment_id = event.assessment_id;
+  var qbankHost = event.qbankHost ? event.qbankHost : "https://qbank-clix-dev.mit.edu" ;
 
   // Although the values are unused (and empty strings here), QBank's API
   // requires a JSON payload with "name" and "description" keys.
-  request.post("https://qbank-clix-dev.mit.edu/api/v1/assessment/banks/" + bank_id + "/assessments/" + assessment_id + "/assessmentsoffered").
+  request.post(qbankHost + "/api/v1/assessment/banks/" + bank_id + "/assessments/" + assessment_id + "/assessmentsoffered").
     set("Accept", "application/json").
     send('{"name":"","description":""}').
     then((response) => {

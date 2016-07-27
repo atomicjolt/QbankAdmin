@@ -8,7 +8,8 @@ import { DONE }                               from "../constants/wrapper";
 export default (store) => (next) => {
   function startApp(action) {
     if(action.type == AppConstants.APP_START) {
-      request.get("https://4h8n6sg95j.execute-api.us-east-1.amazonaws.com/dev/proxy").then(
+      var qBankHost = action.qBankHost;
+      request.get("https://4h8n6sg95j.execute-api.us-east-1.amazonaws.com/dev/proxy?qBankHost=" + qBankHost).then(
         function (response) {
           store.dispatch({
             type:     BanksConstants.GET_BANK_HIERARCHY,
@@ -28,7 +29,8 @@ export default (store) => (next) => {
       var url = "https://4h8n6sg95j.execute-api.us-east-1.amazonaws.com/dev/offer";
       var body = {
         bank_id:       action.bankId,
-        assessment_id: action.assessmentId
+        assessment_id: action.assessmentId,
+        qbank_server: action.qbank_server
       };
       request.post(url).send(body).then(
         function (response) {

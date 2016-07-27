@@ -12,6 +12,7 @@ module.exports.handler = function (event, context, callback) {
   }
 
   var banks;
+  var qBankHost = event.qBankHost ? event.qBankHost : "https://qbank-clix-dev.mit.edu" ;
   var assessments = [];
   var outstanding = 0;
 
@@ -45,7 +46,7 @@ module.exports.handler = function (event, context, callback) {
     console.log("Getting " + thing + ", " + outstanding + " requests");
 
     request.
-      get("https://qbank-clix-dev.mit.edu/api/v1/assessment/" + thing).
+      get(qBankHost + "/api/v1/assessment/" + thing).
       set("Accept", "application/json").
       then((response) => {
         console.log("Received", thing);

@@ -24,7 +24,7 @@ class Home extends React.Component {
   componentWillMount() {
     let p = this.props;
     if(p.auth.authenticated && !p.application.started) {
-      p.startApp(p.auth.auth_token);
+      p.startApp(p.auth.auth_token, this.props.settings.qBankHost);
     }
   }
 
@@ -101,6 +101,13 @@ class Home extends React.Component {
     return true;
   }
 
+
+  offerAssessment(bankId, assessmentId){
+    this.setState({fetchingOffered: true});
+    var qBankHost = this.props.settings.qBankHost;
+    this.props.offerAssessment(bankId, assessmentId, qBankHost);
+  }
+
   renderAssessments(bank, force){
     let itemChecked = this.state.itemChecked;
     let assessmentItems = [];
@@ -108,7 +115,7 @@ class Home extends React.Component {
       assessmentItems.push(
         _.map(bank.assessments, (a) => (
           <li key={a.id} className="c-admin-list-item">
-            <a href="#" onClick={()=>{this.props.offerAssessment(bank.id, a.id);}}>{a.displayName.text}</a>
+            <a href="#" onClick={()=>{this.offerAssessment(bank.id, a.id);}}>{a.displayName.text}</a>
           </li>
         ))
       );
@@ -124,8 +131,8 @@ class Home extends React.Component {
   iframe(){
     let assessOffered = this.props.assessment_offered;
     if(!_.isEmpty(assessOffered)){
-      let qBankHost = "https://qbank-clix-dev.mit.edu";
-      let playerHost = "http://localhost:8080";
+      let qBankHost = this.props.settings.qBankHost ? this.props.settings.qBankHost : "https://qbank-clix-dev.mit.edu";
+      let playerHost = "http://localhost:8080"; //This will need to be the instance deployed, not localhost.
       let url = encodeURI(`${playerHost}/?unlock_next=ON_CORRECT&api_url=${qBankHost}/api/v1&bank=${assessOffered.bankId}&assessment_offered_id=${assessOffered.id}#/assessment`);
       return `<iframe src="${url}"/>`;
     }
