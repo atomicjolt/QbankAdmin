@@ -9,6 +9,8 @@ export default (store) => (next) => {
   function startApp(action) {
     if(action.type == AppConstants.APP_START) {
       var qBankHost = action.qBankHost;
+     //console.log("https://4h8n6sg95j.execute-api.us-east-1.amazonaws.com/dev/proxy?qBankHost=" + qBankHost);
+      debugger;
       request.get("https://4h8n6sg95j.execute-api.us-east-1.amazonaws.com/dev/proxy?qBankHost=" + qBankHost).then(
         function (response) {
           store.dispatch({
@@ -27,10 +29,11 @@ export default (store) => (next) => {
         type:     AssessmentConstants.ASSESSMENT_CLEAR_SNIPPET
       });
       var url = "https://4h8n6sg95j.execute-api.us-east-1.amazonaws.com/dev/offer";
+
       var body = {
         bank_id:       action.bankId,
         assessment_id: action.assessmentId,
-        qbank_server: action.qbank_server
+        qBankHost: action.qBankHost
       };
       request.post(url).send(body).then(
         function (response) {
