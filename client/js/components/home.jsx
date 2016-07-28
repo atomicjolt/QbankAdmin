@@ -1,11 +1,13 @@
 "use strict";
 
+import _            from 'lodash';
 import React        from 'react';
 import { connect }  from 'react-redux';
 
-import { startApp }  from '../actions/app';
-import assets        from '../libs/assets';
-import _             from 'lodash';
+import { startApp }                       from '../actions/app';
+import { offerAssessment, clearSnippet }  from '../actions/assessment_offered';
+import assets                             from '../libs/assets';
+
 
 const select = (state) => (state);
 
@@ -15,6 +17,8 @@ class Home extends React.Component {
     super();
     this.state = {
       itemChecked: {},
+      assessments: {},
+      fetchingOffered: false
     };
   }
 
@@ -25,46 +29,162 @@ class Home extends React.Component {
     }
   }
 
-  checkItem(child, e){
-    let itemChecked = this.state.itemChecked;
-    itemChecked[child.id] = e.target.checked;
+  checkItem(bank, value){
+    this.props.clearSnippet();
+    this.setState({fetchingOffered: false});
+    let map = {[bank.id]: value};
+    if(!value){
+      this.resetHierarchy(bank, map);
+    }
+    let itemChecked = Object.assign({}, this.state.itemChecked, map);
     this.setState({itemChecked});
   }
 
-  renderItem(child){
+  resetHierarchy(bank, map){
+    map[bank.id] = false;
+    _.forEach(bank.childNodes, (bc)=>{
+      this.resetHierarchy(bc, map);
+    });
+  }
+
+  isCheckedBreadcrumbs(bankId){
+    var checked = _.compact(_.map(this.state.itemChecked, (val, key)=>{if(val === true){return key;}}));
+    return _.includes(checked, bankId);
+  }
+
+  renderItem(bank){
     let itemClass = "c-filter__item";
-    if(!_.isUndefined(child.children)){
+    if(bank.childNodes.length == 0){
       itemClass = itemClass + " c-filter__item--dropdown";
     }
     let renderedChildren;
-    if(this.state.itemChecked[child.id]){
-      renderedChildren = this.renderChildren(child.children);
+    if(this.state.itemChecked[bank.id]){
+      renderedChildren = this.renderChildren(bank.childNodes);
     }
-    return(<li className={itemClass}>
-              <label className="c-checkbox--nested"><input type="checkbox" onChange={ (e) => this.checkItem(child, e) }/><div>{child.title}</div></label>
-              {renderedChildren}
-            </li>);
+    return (
+      <li key={bank.id} className={itemClass}>
+        <label className="c-checkbox--nested">
+          <input type="checkbox" checked={this.isCheckedBreadcrumbs(bank.id)} onChange={ (e) => this.checkItem(bank, e.target.checked) }/>
+          <div>{bank.displayName.text}</div>
+        </label>
+        {renderedChildren}
+      </li>
+    );
   }
 
   renderChildren(children){
     if(_.isUndefined(children)){ return; }
     return _.map(children, (child)=>{
-      return (<ul className="c-filter__dropdown">
-                {this.renderItem(child)}
-              </ul>);
+      return (
+        <ul key={child.id} className="c-filter__dropdown">
+          {this.renderItem(child)}
+        </ul>);
     });
   }
 
   gradeLevel(hierarchy){
-    return _.map(hierarchy.Bank, (child)=>{
+    if(_.isEmpty(hierarchy)){
+      return <div className="loader">{this.spinner()}</div>;
+    }
+    return _.map(hierarchy, (child)=>{
       return this.renderItem(child);
     });
   }
 
+  filteredAssessments(hierarchy){
+    return _.flatten(_.map(hierarchy, (bank)=>{
+      return this.renderAssessments(bank);
+    }));
+  }
+
+  noChildChecked(bank, itemChecked){
+    for (var i in bank.childNodes){
+      if(itemChecked[bank.childNodes[i].id]){
+        return false;
+      }
+    }
+    return true;
+  }
+
+  offerAssessment(bankId, assessmentId){
+    this.setState({fetchingOffered: true});
+    this.props.offerAssessment(bankId, assessmentId);
+  }
+
+  renderAssessments(bank, force){
+    let itemChecked = this.state.itemChecked;
+    let assessmentItems = [];
+    if(force || itemChecked[bank.id]) {
+      assessmentItems.push(
+        _.map(bank.assessments, (a) => (
+          <li key={a.id} className="c-admin-list-item">
+            <a href="#" onClick={()=>{this.offerAssessment(bank.id, a.id);}}>{a.displayName.text}</a>
+          </li>
+        ))
+      );
+      let forceChildren = this.noChildChecked(bank, itemChecked);
+      for(let i in bank.childNodes) {
+        let bc = bank.childNodes[i];
+        Array.prototype.push.apply(assessmentItems, this.renderAssessments(bc, forceChildren));
+      }
+    }
+    return assessmentItems;
+  }
+
+  iframeSpinner(){
+    if(_.isEmpty(this.props.assessment_offered) && this.state.fetchingOffered == true) {
+      //The default height was 40rem but in this instance I only want the size of 5rem
+      return <div className="c-assessment-loading" style={{"height": "5rem"}}>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 92 92">
+          <path d="M46.1,82.3H41.9l-3.1-.3-3.8-.8-2.1-.7L31.7,80l-1.1-.5A35.7,35.7,0,0,1,21,73.7,37.8,37.8,0,0,1,7.6,49.1l-.2-2V41A32.7,32.7,0,0,1,8,36.8l.4-2.1c.1-.7.4-1.4.6-2a40.3,40.3,0,0,1,8.7-15,41,41,0,0,1,14.5-10l2.1-.8,2.1-.6a34.1,34.1,0,0,1,4.3-1L41.9,5h1.1l2.2-.2h6.3l2.2.3,2.1.4,2,.4,2,.6,2,.6,1.9.7,1.8.8a42.5,42.5,0,0,1,12.2,8.7,41.3,41.3,0,0,1,7.5,10.5l.7,1.3.5,1.3,1,2.4c.5,1.6.9,3.1,1.3,4.4l.7,3.7c.2,1.1.2,2,.3,2.8L90,46a7.5,7.5,0,1,1-15,1.2q0-.3,0-.6V44.5a17.6,17.6,0,0,0,0-1.8l-.2-2.5c-.2-.9-.4-1.9-.6-3.1l-.5-1.7-.3-.9-.4-.9a28.1,28.1,0,0,0-4.5-7.7,30.3,30.3,0,0,0-8.2-7l-1.3-.7-1.3-.7-1.4-.6-1.4-.5-1.5-.5-1.5-.4-1.4-.3-.7-.2h-.9l-1.9-.2H42a25,25,0,0,0-3.4.5l-1.7.3-1.7.5a32.8,32.8,0,0,0-12.2,6.9,33.5,33.5,0,0,0-8.2,11.8c-.2.6-.5,1.1-.7,1.7l-.5,1.7a27.4,27.4,0,0,0-.8,3.4l-.2.8v1l-.2,1.9v3.5a33.9,33.9,0,0,0,3.1,13.2A34.9,34.9,0,0,0,22.5,72a33.8,33.8,0,0,0,8.6,6.3l1,.6,1.1.4,2,.8,3.7,1.1,3,.6,2.3.3Z"/>
+        </svg>
+      </div>;
+    }
+  }
+
+  iframe(){
+    let assessOffered = this.props.assessment_offered;
+    if(!_.isEmpty(assessOffered)){
+      let playerHost = "http://localhost:8080";
+      let qBankHost = "https://qbank-clix-dev.mit.edu";
+      let url = encodeURI(`${playerHost}/?unlock_next=ON_CORRECT&api_url=${qBankHost}/api/v1&bank=${assessOffered.bankId}&assessment_offered_id=${assessOffered.id}#/assessment`);
+      return `<iframe src="${url}"/>`;
+    } else {
+      return "";
+    }
+  }
+
+  breadcrumbs(hierarchy){
+    var checked = _.compact(_.map(this.state.itemChecked, (val, key)=>{if(val === true){return key;}}));
+    return _.map(hierarchy, (bank)=>{
+      if(_.includes(checked, bank.id)){
+        return [(
+          <div className="c-breadcrumb" key={bank.id}>
+            <span>{bank.displayName.text}</span>
+            <a href="#" onClick={()=>{this.checkItem(bank, false);}}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+                  <path d="M29.17 16l-5.17 5.17-5.17-5.17-2.83 2.83 5.17 5.17-5.17 5.17 2.83 2.83 5.17-5.17 5.17 5.17 2.83-2.83-5.17-5.17 5.17-5.17-2.83-2.83zm-5.17-12c-11.05 0-20 8.95-20 20s8.95 20 20 20 20-8.95 20-20-8.95-20-20-20zm0 36c-8.82 0-16-7.18-16-16s7.18-16 16-16 16 7.18 16 16-7.18 16-16 16z"/>
+              </svg>
+            </a>
+          </div>
+        ), this.breadcrumbs(bank.childNodes)];
+      }
+    });
+  }
+
+  spinner(){
+    return (
+      <div className="c-assessment-loading">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 92 92">
+          <path d="M46.1,82.3H41.9l-3.1-.3-3.8-.8-2.1-.7L31.7,80l-1.1-.5A35.7,35.7,0,0,1,21,73.7,37.8,37.8,0,0,1,7.6,49.1l-.2-2V41A32.7,32.7,0,0,1,8,36.8l.4-2.1c.1-.7.4-1.4.6-2a40.3,40.3,0,0,1,8.7-15,41,41,0,0,1,14.5-10l2.1-.8,2.1-.6a34.1,34.1,0,0,1,4.3-1L41.9,5h1.1l2.2-.2h6.3l2.2.3,2.1.4,2,.4,2,.6,2,.6,1.9.7,1.8.8a42.5,42.5,0,0,1,12.2,8.7,41.3,41.3,0,0,1,7.5,10.5l.7,1.3.5,1.3,1,2.4c.5,1.6.9,3.1,1.3,4.4l.7,3.7c.2,1.1.2,2,.3,2.8L90,46a7.5,7.5,0,1,1-15,1.2q0-.3,0-.6V44.5a17.6,17.6,0,0,0,0-1.8l-.2-2.5c-.2-.9-.4-1.9-.6-3.1l-.5-1.7-.3-.9-.4-.9a28.1,28.1,0,0,0-4.5-7.7,30.3,30.3,0,0,0-8.2-7l-1.3-.7-1.3-.7-1.4-.6-1.4-.5-1.5-.5-1.5-.4-1.4-.3-.7-.2h-.9l-1.9-.2H42a25,25,0,0,0-3.4.5l-1.7.3-1.7.5a32.8,32.8,0,0,0-12.2,6.9,33.5,33.5,0,0,0-8.2,11.8c-.2.6-.5,1.1-.7,1.7l-.5,1.7a27.4,27.4,0,0,0-.8,3.4l-.2.8v1l-.2,1.9v3.5a33.9,33.9,0,0,0,3.1,13.2A34.9,34.9,0,0,0,22.5,72a33.8,33.8,0,0,0,8.6,6.3l1,.6,1.1.4,2,.8,3.7,1.1,3,.6,2.3.3Z"/>
+        </svg>
+      </div>);
+  }
+
   render() {
 
+    var hierarchy = this.props.banks;
     const img = assets("./images/atomicjolt.jpg");
-    var hierarchy = this.props.banks.toJS();
 
     if(!this.props.auth.authenticated) {
       return (
@@ -94,63 +214,21 @@ class Home extends React.Component {
     </div>
     <div className="o-admin-content">
       <div className="c-admin-content__header">
-        <div className="c-breadcrumb">
-          <span>8th Grade</span>
-          <a href="">
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-                <path d="M29.17 16l-5.17 5.17-5.17-5.17-2.83 2.83 5.17 5.17-5.17 5.17 2.83 2.83 5.17-5.17 5.17 5.17 2.83-2.83-5.17-5.17 5.17-5.17-2.83-2.83zm-5.17-12c-11.05 0-20 8.95-20 20s8.95 20 20 20 20-8.95 20-20-8.95-20-20-20zm0 36c-8.82 0-16-7.18-16-16s7.18-16 16-16 16 7.18 16 16-7.18 16-16 16z"/>
-            </svg>
-          </a>
-        </div>
-        <div className="c-breadcrumb">
-          <span>Math</span>
-          <a href="">
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-                <path d="M29.17 16l-5.17 5.17-5.17-5.17-2.83 2.83 5.17 5.17-5.17 5.17 2.83 2.83 5.17-5.17 5.17 5.17 2.83-2.83-5.17-5.17 5.17-5.17-2.83-2.83zm-5.17-12c-11.05 0-20 8.95-20 20s8.95 20 20 20 20-8.95 20-20-8.95-20-20-20zm0 36c-8.82 0-16-7.18-16-16s7.18-16 16-16 16 7.18 16 16-7.18 16-16 16z"/>
-            </svg>
-          </a>
-        </div>
-        <div className="c-breadcrumb">
-          <span>Geometry</span>
-          <a href="">
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-                <path d="M29.17 16l-5.17 5.17-5.17-5.17-2.83 2.83 5.17 5.17-5.17 5.17 2.83 2.83 5.17-5.17 5.17 5.17 2.83-2.83-5.17-5.17 5.17-5.17-2.83-2.83zm-5.17-12c-11.05 0-20 8.95-20 20s8.95 20 20 20 20-8.95 20-20-8.95-20-20-20zm0 36c-8.82 0-16-7.18-16-16s7.18-16 16-16 16 7.18 16 16-7.18 16-16 16z"/>
-            </svg>
-          </a>
-        </div>
-        <div className="c-breadcrumb">
-          <span>Unit 1</span>
-          <a href="">
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-                <path d="M29.17 16l-5.17 5.17-5.17-5.17-2.83 2.83 5.17 5.17-5.17 5.17 2.83 2.83 5.17-5.17 5.17 5.17 2.83-2.83-5.17-5.17 5.17-5.17-2.83-2.83zm-5.17-12c-11.05 0-20 8.95-20 20s8.95 20 20 20 20-8.95 20-20-8.95-20-20-20zm0 36c-8.82 0-16-7.18-16-16s7.18-16 16-16 16 7.18 16 16-7.18 16-16 16z"/>
-            </svg>
-          </a>
-        </div>
-        <div className="c-breadcrumb">
-          <span>Lesson 1</span>
-          <a href="">
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-                <path d="M29.17 16l-5.17 5.17-5.17-5.17-2.83 2.83 5.17 5.17-5.17 5.17 2.83 2.83 5.17-5.17 5.17 5.17 2.83-2.83-5.17-5.17 5.17-5.17-2.83-2.83zm-5.17-12c-11.05 0-20 8.95-20 20s8.95 20 20 20 20-8.95 20-20-8.95-20-20-20zm0 36c-8.82 0-16-7.18-16-16s7.18-16 16-16 16 7.18 16 16-7.18 16-16 16z"/>
-            </svg>
-          </a>
-        </div>
+        {this.breadcrumbs(hierarchy)}
       </div>
       <div className="c-admin-content__main  c-admin-content__main--scroll">
         <ul>
-          <li className="c-admin-list-item">
-            <a href="">Assessment 1</a>
-          </li>
-          <li className="c-admin-list-item">
-            <a href="">Assessment 2</a>
-          </li>
-          <li className="c-admin-list-item">
-            <a href="">Assessment 3</a>
-          </li>
+          {this.filteredAssessments(hierarchy)}
         </ul>
+        <div className="c-preview-embed">
+        <div>{this.iframeSpinner()}</div>
+          <label for="embed">Embed Code</label>
+          <textarea id="embed" value={this.iframe()} readOnly="true" ></textarea>
+        </div>
       </div>
     </div>
     </div>);
   }
 }
 
-export default connect(select, { startApp })(Home);
+export default connect(select, { startApp, offerAssessment, clearSnippet })(Home);

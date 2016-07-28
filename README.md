@@ -156,6 +156,13 @@ This will serve files from the build/prod directory.
 -----------------------
 
 
+## Deploying Lambda functions ##
+
+Make sure that `npm install` has run successfully.  Then, execute `sls
+dash deploy`, select all functions and endpoints, then select
+"deploy".
+
+
 License and attribution
 -----------------------
 MIT
