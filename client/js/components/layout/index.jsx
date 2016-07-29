@@ -3,7 +3,8 @@
 import React                    from "react";
 import { connect }              from "react-redux";
 
-@connect((state) => (state), null, null, {withRef: true})
+const select = (state) => (state);
+
 class Index extends React.Component {
 
   constructor(){
@@ -19,4 +20,4 @@ class Index extends React.Component {
 
 }
 
-export default Index;
+export default connect(select, null)(Index);

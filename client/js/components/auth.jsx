@@ -8,8 +8,9 @@ import assets                      from "../libs/assets";
 import { hashParams, joinParams }  from "../utils/query_string";
 
 
-@connect((state) => (state.auth), {setAuthorization}, null, {withRef: true})
-class Auth extends React.Component {
+const select = (state) => (state.auth);
+
+export class Auth extends React.Component {
 
   componentWillMount() {
     let params = hashParams();
@@ -39,4 +40,5 @@ class Auth extends React.Component {
 
 }
 
-export default Auth;
+export default connect(select, { setAuthorization })(Auth);
+
