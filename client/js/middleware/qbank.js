@@ -7,9 +7,10 @@ import { DONE }                               from "../constants/wrapper";
 
 export default (store) => (next) => {
   function startApp(action) {
+
+    const state = store.getState();
     if(action.type == AppConstants.APP_START) {
       const qBankHost = action.qBankHost || "";
-      const state = store.getState();
       request.get(`${state.settings.rootEndpoint}proxy?qBankHost=${qBankHost}`).then(
         function (response) {
           store.dispatch({
@@ -28,7 +29,6 @@ export default (store) => (next) => {
         type:     AssessmentConstants.ASSESSMENT_CLEAR_SNIPPET
       });
 
-      const state = store.getState();
       const url = `${state.settings.rootEndpoint}offer`;
 
       const body = {
