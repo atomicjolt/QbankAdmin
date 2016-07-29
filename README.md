@@ -2,6 +2,10 @@
 -----------------------
 This is a admin tool for the QBank project created by MIT.
 
+#Live Demo
+-----------------------
+http://d3rqboxx1s9wkd.cloudfront.net
+http://www.qbankadmin.com.s3-website-us-east-1.amazonaws.com
 
 #Getting Started:
 -----------------------
