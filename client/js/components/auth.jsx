@@ -3,6 +3,10 @@
 import React        from "react";
 import { connect }  from "react-redux";
 
+import history                  from "../history";
+import { setAuthorization }     from "../actions/auth";
+import { queryParams }          from "../utils/query_string";
+
 const select = (state) => {
   return {
     rootEndpoint: state.settings.rootEndpoint
@@ -10,6 +14,16 @@ const select = (state) => {
 };
 
 export class Auth extends React.Component{
+
+  componentWillMount() {
+    let params = queryParams();
+
+    if(params.authorization_token && params.refresh_token){
+      this.props.setAuthorization(params.authorization_token, params.refresh_token);
+      history.push("/");
+    }
+
+  }
 
   render(){
     const googleSignIn = `${this.props.rootEndpoint}authentication/signin/google`;
@@ -23,10 +37,9 @@ export class Auth extends React.Component{
         </div>
       </div>
     );
-
   }
 
 }
 
-export default connect(select)(Auth);
+export default connect(select, { setAuthorization })(Auth);
 
