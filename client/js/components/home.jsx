@@ -187,20 +187,6 @@ class Home extends React.Component {
 
     const hierarchy = this.props.banks;
     const img = assets("./images/atomicjolt.jpg");
-    const googleSignIn = `${this.props.settings.rootEndpoint}authentication/signin/google`;
-
-    if(!this.props.auth.authenticated) {
-      return (
-        <div>
-          <div class="main">
-            <h2>Providers</h2>
-            <div class="providers">
-              <a href={googleSignIn} id="google">Sign In With Google</a>
-            </div>
-          </div>
-        </div>
-      );
-    }
 
     return (
   <div className="o-admin-container">

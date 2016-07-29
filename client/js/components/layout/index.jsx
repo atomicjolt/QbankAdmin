@@ -3,13 +3,31 @@
 import React                    from "react";
 import { connect }              from "react-redux";
 
+import history                  from "../../history";
+import { setAuthorization }     from "../../actions/auth";
+import { queryParams }          from "../../utils/query_string";
+
+
 const select = (state) => (state);
 
-class Index extends React.Component {
+export class Index extends React.Component {
 
   constructor(){
     super();
     this.state = {};
+  }
+
+  componentWillMount() {
+    let params = queryParams();
+
+    if(params.authorization_token && params.refresh_token){
+      this.props.setAuthorization(params.authorization_token, params.refresh_token);
+    }
+
+    if(!this.props.auth.authenticated){
+      history.push("auth");
+    }
+
   }
 
   render(){
@@ -20,4 +38,4 @@ class Index extends React.Component {
 
 }
 
-export default connect(select, null)(Index);
+export default connect(select, { setAuthorization })(Index);
