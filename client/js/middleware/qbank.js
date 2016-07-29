@@ -7,8 +7,11 @@ import { DONE }                               from "../constants/wrapper";
 
 export default (store) => (next) => {
   function startApp(action) {
+
+    const state = store.getState();
     if(action.type == AppConstants.APP_START) {
-      request.get("https://4h8n6sg95j.execute-api.us-east-1.amazonaws.com/dev/proxy").then(
+      const qBankHost = action.qBankHost || "";
+      request.get(`${state.settings.rootEndpoint}proxy?qBankHost=${qBankHost}`).then(
         function (response) {
           store.dispatch({
             type:     BanksConstants.GET_BANK_HIERARCHY,
@@ -25,10 +28,13 @@ export default (store) => (next) => {
       store.dispatch({
         type:     AssessmentConstants.ASSESSMENT_CLEAR_SNIPPET
       });
-      var url = "https://4h8n6sg95j.execute-api.us-east-1.amazonaws.com/dev/offer";
-      var body = {
+
+      const url = `${state.settings.rootEndpoint}offer`;
+
+      const body = {
         bank_id:       action.bankId,
-        assessment_id: action.assessmentId
+        assessment_id: action.assessmentId,
+        qBankHost: action.qBankHost
       };
       request.post(url).send(body).then(
         function (response) {

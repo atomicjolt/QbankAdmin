@@ -121,6 +121,7 @@ This will serve files from the build/prod directory.
   4. Configure bucket as website:
 
     `s3_website cfg apply`
+  5. Allow cloudfront to be used as CDN.
 
 
 ##Deploy Client:

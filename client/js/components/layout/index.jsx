@@ -3,12 +3,21 @@
 import React                    from "react";
 import { connect }              from "react-redux";
 
-@connect((state) => (state), null, null, {withRef: true})
-class Index extends React.Component {
+import history                  from "../../history";
 
-  constructor(){
-    super();
-    this.state = {};
+
+const select = (state) => {
+  return {
+    authenticated: state.auth.authenticated
+  };
+};
+
+export class Index extends React.Component {
+
+  componentWillMount() {
+    if(!this.props.authenticated){
+      history.push("auth");
+    }
   }
 
   render(){
@@ -19,4 +28,4 @@ class Index extends React.Component {
 
 }
 
-export default Index;
+export default connect(select)(Index);

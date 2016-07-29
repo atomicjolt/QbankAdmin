@@ -3,40 +3,43 @@
 import React        from "react";
 import { connect }  from "react-redux";
 
-import { setAuthorization }        from "../actions/auth";
-import assets                      from "../libs/assets";
-import { hashParams, joinParams }  from "../utils/query_string";
+import history                  from "../history";
+import { setAuthorization }     from "../actions/auth";
+import { queryParams }          from "../utils/query_string";
 
+const select = (state) => {
+  return {
+    rootEndpoint: state.settings.rootEndpoint
+  };
+};
 
-@connect((state) => (state.auth), {setAuthorization}, null, {withRef: true})
-class Auth extends React.Component {
+export class Auth extends React.Component{
 
   componentWillMount() {
-    let params = hashParams();
-    this.props.setAuthorization(params.authorization_token,
-                                params.refresh_token);
+    let params = queryParams();
+
+    if(params.authorization_token && params.refresh_token){
+      this.props.setAuthorization(params.authorization_token, params.refresh_token);
+      history.push("/");
+    }
+
   }
 
-  componentDidMount() {
-    // Now that the user is authenticated, navigate back to the app's root.
-    let params = hashParams();
-    delete params.authorization_token;
-    delete params.refresh_token;
-    let newHash = joinParams(params);
-    // We purposefully do not include a hash path here, so we get back to the
-    // app's root:
-    let newUrl = location.pathname + "#" + newHash;
-    history.pushState(null, null, newUrl);
-  }
-
-  render() {
+  render(){
+    const googleSignIn = `${this.props.rootEndpoint}authentication/signin/google`;
     return (
       <div>
-        <p>Signing you in&hellip;</p>
+        <div class="main">
+          <h2>Providers</h2>
+          <div class="providers">
+            <a href={googleSignIn} id="google">Sign In With Google</a>
+          </div>
+        </div>
       </div>
     );
   }
 
 }
 
-export default Auth;
+export default connect(select, { setAuthorization })(Auth);
+

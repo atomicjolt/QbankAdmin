@@ -3,7 +3,7 @@
 import React        from 'react';
 import ReactDOM     from 'react-dom';
 import TestUtils    from 'react/lib/ReactTestUtils';
-import { Provider } from 'react-redux'
+import { Provider } from 'react-redux';
 import Helper       from '../../../specs_support/helper';
 import Index        from './index';
 

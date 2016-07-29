@@ -25,7 +25,7 @@ class Home extends React.Component {
   componentWillMount() {
     let p = this.props;
     if(p.auth.authenticated && !p.application.started) {
-      p.startApp(p.auth.auth_token);
+      p.startApp(p.auth.auth_token, this.props.settings.qBankHost);
     }
   }
 
@@ -106,9 +106,11 @@ class Home extends React.Component {
     return true;
   }
 
+
   offerAssessment(bankId, assessmentId){
     this.setState({fetchingOffered: true});
-    this.props.offerAssessment(bankId, assessmentId);
+    var qBankHost = this.props.settings.qBankHost;
+    this.props.offerAssessment(bankId, assessmentId, qBankHost);
   }
 
   renderAssessments(bank, force){
@@ -145,8 +147,8 @@ class Home extends React.Component {
   iframe(){
     let assessOffered = this.props.assessment_offered;
     if(!_.isEmpty(assessOffered)){
-      let playerHost = "http://localhost:8080";
-      let qBankHost = "https://qbank-clix-dev.mit.edu";
+      let qBankHost = this.props.settings.qBankHost ? this.props.settings.qBankHost : "https://qbank-clix-dev.mit.edu";
+      let playerHost = this.props.settings.assessmentPlayerUrl; //This will need to be the instance deployed, not localhost.
       let url = encodeURI(`${playerHost}/?unlock_next=ON_CORRECT&api_url=${qBankHost}/api/v1&bank=${assessOffered.bankId}&assessment_offered_id=${assessOffered.id}#/assessment`);
       return `<iframe src="${url}"/>`;
     } else {
@@ -183,21 +185,8 @@ class Home extends React.Component {
 
   render() {
 
-    var hierarchy = this.props.banks;
+    const hierarchy = this.props.banks;
     const img = assets("./images/atomicjolt.jpg");
-
-    if(!this.props.auth.authenticated) {
-      return (
-        <div>
-          <div class="main">
-            <h2>Providers</h2>
-            <div class="providers">
-              <a href="https://4h8n6sg95j.execute-api.us-east-1.amazonaws.com/dev/authentication/signin/google" id="google">Sign In With Google</a>
-            </div>
-          </div>
-        </div>
-      );
-    }
 
     return (
   <div className="o-admin-container">

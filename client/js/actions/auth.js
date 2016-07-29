@@ -8,7 +8,7 @@ const types = [
 
 export const Constants = wrapper(types, []);
 
-export function setAuthorization(auth_token, refresh_token) {
+export function setAuthorization(auth_token, refresh_token){
   return {
     type: Constants.AUTH_SET,
     auth_token,
