@@ -8,8 +8,9 @@ import { DONE }                               from "../constants/wrapper";
 export default (store) => (next) => {
   function startApp(action) {
     if(action.type == AppConstants.APP_START) {
-      var qBankHost = action.qBankHost || "";
-      request.get(`${store.settings.rootEndpoint}proxy?qBankHost=${qBankHost}`).then(
+      const qBankHost = action.qBankHost || "";
+      const state = store.getState();
+      request.get(`${state.settings.rootEndpoint}proxy?qBankHost=${qBankHost}`).then(
         function (response) {
           store.dispatch({
             type:     BanksConstants.GET_BANK_HIERARCHY,
@@ -26,9 +27,11 @@ export default (store) => (next) => {
       store.dispatch({
         type:     AssessmentConstants.ASSESSMENT_CLEAR_SNIPPET
       });
-      var url = `${store.settings.rootEndpoint}offer`;
 
-      var body = {
+      const state = store.getState();
+      const url = `${state.settings.rootEndpoint}offer`;
+
+      const body = {
         bank_id:       action.bankId,
         assessment_id: action.assessmentId,
         qBankHost: action.qBankHost
