@@ -13,9 +13,11 @@
       "method": "GET",
       "authorizationType": "none",
       "apiKeyRequired": false,
-      "requestParameters": {},
+      "requestParameters": {
+        "integration.request.path.provider": "method.request.path.provider"
+      },
       "requestTemplates": {
-        "application/json": ""
+        "application/json": "{\"qBankHost\":\"$input.params('qBankHost')\"}"
       },
       "responses": {
         "400": {
