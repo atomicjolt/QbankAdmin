@@ -14,7 +14,7 @@
     "live": "cd ./client && node server.js",
     "test": "cd ./client && npm run test",
     "coveralls": "cd ./client && npm run coveralls",
-    "install": "cd authentication && npm install && cd ../authorization && npm install",
+    "install": "cd authentication && npm install && cd ../authorization && npm install && cd ../lambda/offer && npm install && cd ../proxy && npm install",
     "lint": "eslint . || true"
   },
   "repository": {

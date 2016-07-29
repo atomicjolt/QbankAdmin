@@ -4,6 +4,27 @@ set -o nounset
 set -o errexit
 set -o pipefail
 
+# Check that the machine is setup
+if [ -f "/usr/local/etc/nginx/nginx.conf" ];
+then
+  echo ""
+else
+  echo "Please run the main setup script to bootstrap the laptop"
+fi
+
+
+# If need be nginx can proxy to another ip eg for docker env, or virtual machine
+
+if [ ! -f .env ]; then
+    echo ".env file not found!"
+    exit 1
+fi
+
+set -a
+source .env
+set +a
+
+
 # Create config file for the app / site.
 
 cat > "/usr/local/etc/nginx/servers/qbank-admin.conf" <<-EOF
@@ -31,7 +52,7 @@ server {
       proxy_set_header   Connection "upgrade";
       proxy_http_version 1.1;
 
-      proxy_pass         http://127.0.0.1:8088/;
+      proxy_pass         http://127.0.0.1:${ASSETS_PORT}/;
 
     }
 }
