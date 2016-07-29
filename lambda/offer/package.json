@@ -1,6 +1,7 @@
 {
   "name": "qbank-admin-offer",
   "dependencies": {
+    "ssl-root-cas": "^1.2.1",
     "superagent": "2.0.0"
   }
 }
