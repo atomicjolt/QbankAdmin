@@ -132,7 +132,7 @@ class Home extends React.Component {
     let assessOffered = this.props.assessment_offered;
     if(!_.isEmpty(assessOffered)){
       let qBankHost = this.props.settings.qBankHost ? this.props.settings.qBankHost : "https://qbank-clix-dev.mit.edu";
-      let playerHost = "http://localhost:8080"; //This will need to be the instance deployed, not localhost.
+      let playerHost = this.props.settings.assessmentPlayerUrl; //This will need to be the instance deployed, not localhost.
       let url = encodeURI(`${playerHost}/?unlock_next=ON_CORRECT&api_url=${qBankHost}/api/v1&bank=${assessOffered.bankId}&assessment_offered_id=${assessOffered.id}#/assessment`);
       return `<iframe src="${url}"/>`;
     }
@@ -159,8 +159,9 @@ class Home extends React.Component {
 
   render() {
 
-    var hierarchy = this.props.banks;
+    const hierarchy = this.props.banks;
     const img = assets("./images/atomicjolt.jpg");
+    const googleSignIn = `${this.props.settings.rootEndpoint}authentication/signin/google`;
 
     if(!this.props.auth.authenticated) {
       return (
@@ -168,7 +169,7 @@ class Home extends React.Component {
           <div class="main">
             <h2>Providers</h2>
             <div class="providers">
-              <a href="https://4h8n6sg95j.execute-api.us-east-1.amazonaws.com/dev/authentication/signin/google" id="google">Sign In With Google</a>
+              <a href={googleSignIn} id="google">Sign In With Google</a>
             </div>
           </div>
         </div>
