@@ -18,7 +18,8 @@ class Home extends React.Component {
     this.state = {
       itemChecked: {},
       assessments: {},
-      fetchingOffered: false
+      fetchingOffered: false,
+      assessmentClicked: {}
     };
   }
 
@@ -108,9 +109,19 @@ class Home extends React.Component {
 
 
   offerAssessment(bankId, assessmentId){
-    this.setState({fetchingOffered: true});
+    this.setState({
+      fetchingOffered: true,
+      assessmentClicked: assessmentId
+    });
     var qBankHost = this.props.settings.qBankHost;
     this.props.offerAssessment(bankId, assessmentId, qBankHost);
+  }
+
+  assessmentStyle(id){
+    if(this.state.assessmentClicked == id){
+      return "c-admin-list-item assessment-clicked";
+    }
+    return "c-admin-list-item";
   }
 
   renderAssessments(bank, force){
@@ -119,7 +130,7 @@ class Home extends React.Component {
     if(force || itemChecked[bank.id]) {
       assessmentItems.push(
         _.map(bank.assessments, (a) => (
-          <li key={a.id} className="c-admin-list-item">
+          <li key={a.id} className={this.assessmentStyle(a.id)}>
             <a href="#" onClick={()=>{this.offerAssessment(bank.id, a.id);}}>{a.displayName.text}</a>
           </li>
         ))
@@ -164,7 +175,7 @@ class Home extends React.Component {
           <div className="c-breadcrumb" key={bank.id}>
             <span>{bank.displayName.text}</span>
             <a href="#" onClick={()=>{this.checkItem(bank, false);}}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
                   <path d="M29.17 16l-5.17 5.17-5.17-5.17-2.83 2.83 5.17 5.17-5.17 5.17 2.83 2.83 5.17-5.17 5.17 5.17 2.83-2.83-5.17-5.17 5.17-5.17-2.83-2.83zm-5.17-12c-11.05 0-20 8.95-20 20s8.95 20 20 20 20-8.95 20-20-8.95-20-20-20zm0 36c-8.82 0-16-7.18-16-16s7.18-16 16-16 16 7.18 16 16-7.18 16-16 16z"/>
               </svg>
             </a>
