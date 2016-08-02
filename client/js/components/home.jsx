@@ -16,6 +16,8 @@ class Home extends React.Component {
   constructor(){
     super();
     this.state = {
+      assessmentClicked: {},
+      isOpen: false,
       itemChecked: {},
       assessments: {},
       fetchingOffered: false
@@ -107,10 +109,12 @@ class Home extends React.Component {
   }
 
 
-  offerAssessment(bankId, assessmentId){
-    this.setState({fetchingOffered: true});
+  offerAssessment(bankId, assessment){
+    this.setState({fetchingOffered: true,
+                   isOpen: true,
+                   assessmentClicked: assessment });
     var qBankHost = this.props.settings.qBankHost;
-    this.props.offerAssessment(bankId, assessmentId, qBankHost);
+    this.props.offerAssessment(bankId, assessment.id, qBankHost);
   }
 
   renderAssessments(bank, force){
@@ -120,7 +124,7 @@ class Home extends React.Component {
       assessmentItems.push(
         _.map(bank.assessments, (a) => (
           <li key={a.id} className="c-admin-list-item">
-            <a href="#" onClick={()=>{this.offerAssessment(bank.id, a.id);}}>{a.displayName.text}</a>
+            <a href="#" onClick={()=>{this.offerAssessment(bank.id, a);}}>{a.displayName.text}</a>
           </li>
         ))
       );
@@ -183,41 +187,82 @@ class Home extends React.Component {
       </div>);
   }
 
+  adminPreview(){
+    var assessmentName = this.state.assessmentClicked.displayName ? this.state.assessmentClicked.displayName.text : "";
+    return (<div className="o-admin-content">
+    <div className="c-admin-content__header">
+      <a href="#" onClick={()=>{this.setState({isOpen: false});}} className="c-btn  c-btn--previous  c-btn--previous--small">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+          <path d="M14.83 16.42l9.17 9.17 9.17-9.17 2.83 2.83-12 12-12-12z"/>
+        </svg>
+        <span>back</span>
+      </a>
+    </div>
+    <div className="c-admin-content__main c-admin-content__main--preview">
+      <div className="c-preview-embed">
+        <div>{this.iframeSpinner()}</div>
+        <label for="embed">Embed Code</label>
+        <textarea id="embed" value={this.iframe()} readOnly="true" ></textarea>
+      </div>
+      <div className="c-preview-sidebar">
+        <h2>{assessmentName}</h2>
+        <p>Date Created: <span>02/09/2016</span></p>
+        <p>Type: <span>{this.state.assessmentClicked.type}</span></p>
+      </div>
+      <div className="c-preview-questions">
+        <div class="c-preview-scroll">
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/KAMeI4uHAFE" frameborder="0" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </div>);
+  }
+
+  slidingClasses(){
+    if(this.state.isOpen){
+      return "o-admin-container  o-admin-container--preview is-open";
+    }
+    return "o-admin-container  o-admin-container--preview";
+  }
+
   render() {
 
     const hierarchy = this.props.banks;
     const img = assets("./images/atomicjolt.jpg");
 
     return (
-  <div className="o-admin-container">
-    <div className="o-sidebar">
-      <div className="c-sidebar__header">
-        <img src="" alt="" />
+  <div style={{"height": "100%"}}>
+    <div className="o-admin-container">
+      <div className="o-sidebar">
+        <div className="c-sidebar__header">
+          <img src="" alt="" />
+        </div>
+        <div className="c-sidebar__filters">
+          <p className="c-filters__title">Filter Tree</p>
+          <ul className="c-filter-scroll">
+            {this.gradeLevel(hierarchy)}
+          </ul>
+        </div>
       </div>
-      <div className="c-sidebar__filters">
-        <p className="c-filters__title">Filter Tree</p>
-        <ul className="c-filter-scroll">
-          {this.gradeLevel(hierarchy)}
-        </ul>
-      </div>
-    </div>
-    <div className="o-admin-content">
-      <div className="c-admin-content__header">
-        {this.breadcrumbs(hierarchy)}
-      </div>
-      <div className="c-admin-content__main  c-admin-content__main--scroll">
-        <ul>
-          {this.filteredAssessments(hierarchy)}
-        </ul>
-        <div className="c-preview-embed">
-        <div>{this.iframeSpinner()}</div>
-          <label for="embed">Embed Code</label>
-          <textarea id="embed" value={this.iframe()} readOnly="true" ></textarea>
+      <div className="o-admin-content">
+        <div className="c-admin-content__header">
+          {this.breadcrumbs(hierarchy)}
+        </div>
+        <div className="c-admin-content__main  c-admin-content__main--scroll">
+          <ul>
+            {this.filteredAssessments(hierarchy)}
+          </ul>
+
         </div>
       </div>
     </div>
-    </div>);
+      <div className={this.slidingClasses()}>
+      <div class="o-sidebar o-sidebar--preview"></div>
+        {this.adminPreview()}
+      </div>
+  </div>);
   }
+
 }
 
 export default connect(select, { startApp, offerAssessment, clearSnippet })(Home);

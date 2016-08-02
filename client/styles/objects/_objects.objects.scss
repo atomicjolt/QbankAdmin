@@ -5,22 +5,37 @@
 }
 
 .o-admin-container{
-  position: relative;
-  padding-left: 35rem;
+  height: 100%;
+}
+
+.o-admin-container--preview{
+  position: absolute;
+  width: 100%;
+  left: 100%;
+  top: 0;
+  @include transition(all 0.5s ease);
+
+  &.is-open{
+    left: 0;
+  }
 }
 
 .o-sidebar{
+  float: left;
   width: 35rem;
   height: 100%;
-  min-height: 100vh;
-  position: absolute;
-  top: 0;
-  left: 0;
+  overflow: hidden;
   background: $white;
   box-shadow: 0 0 0.5rem rgba(0,0,0,0.3);
+  z-index: 10;
+  position: relative;
+}
+
+.o-sidebar--preview{
+  opacity: 0;
 }
 
 .o-admin-content{
-  position: relative;
-  padding: 0 2rem;
+  height: 100%;
+  padding: 0 2rem 0 37rem;
 }

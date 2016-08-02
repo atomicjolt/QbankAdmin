@@ -15,8 +15,15 @@ html, html a {
   @include boxSizing(border-box);
 }
 
+html{
+  height: 100%;
+}
+
 body{
   margin: 0;
+  height: 100%;
+  max-width: 100vw;
+  overflow: hidden;
 }
 
 ul{
@@ -32,4 +39,9 @@ a, a:link, a:visited{
 
 p{
   margin: 0;
+}
+
+.u-hide{
+  opacity: 0 !important;
+  pointer-events: none;
 }

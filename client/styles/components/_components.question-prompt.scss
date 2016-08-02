@@ -1,7 +1,7 @@
 .c-question-prompt{
   padding: 2rem 3rem 2rem;
-  @include semi-bold;
-  font-size: 1.8rem;
+  @include light;
+  font-size: 2rem;
   color: $text-color;
 
   & > *{
@@ -10,7 +10,7 @@
 
   img{
     display: inline-block;
-    max-width: 30rem;
+    max-width: 25rem;
   }
 
   audio{
