@@ -161,12 +161,25 @@ class Home extends React.Component {
     return assessmentItems;
   }
 
-  iframe(){
+  iframeRender(){
     let assessOffered = this.props.assessment_offered;
     if(!_.isEmpty(assessOffered)){
       let qBankHost = this.props.settings.qBankHost ? this.props.settings.qBankHost : "https://qbank-clix-dev.mit.edu";
       let playerHost = this.props.settings.assessmentPlayerUrl; //This will need to be the instance deployed, not localhost.
       let url = encodeURI(`${playerHost}/?unlock_next=ON_CORRECT&api_url=${qBankHost}/api/v1&bank=${assessOffered.bankId}&assessment_offered_id=${assessOffered.id}#/assessment`);
+      //This will only work in firefox right now.
+      return <iframe height="600px" width="1000px" src={url}/>;
+    } else {
+      return "";
+    }
+  }
+
+  iframe(){
+    let assessOffered = this.props.assessment_offered;
+    if(!_.isEmpty(assessOffered)){
+      let qBankHost = this.props.settings.qBankHost ? this.props.settings.qBankHost : "https://qbank-clix-dev.mit.edu";
+      let playerHost = this.props.settings.assessmentPlayerUrl; //This will need to be the instance deployed, not localhost.
+      let url = `${playerHost}/?unlock_next=ON_CORRECT&api_url=${qBankHost}/api/v1&bank=${assessOffered.bankId}&assessment_offered_id=${assessOffered.id}#/assessment`;
       return `<iframe src="${url}"/>`;
     } else {
       return "";
@@ -210,13 +223,13 @@ class Home extends React.Component {
           <h2>{assessmentName}</h2>
           <p>Date Created: <span>02/09/2016</span></p>
           <p>Type: <span>{this.state.assessmentClicked.type}</span></p>
-          <a href="#" onClick={()=>{this.setState({openIframe: true});}} className="c-btn  c-btn--previous  c-btn--previous--small">
+          <a style={{"marginTop":"135px"}} href="#" onClick={()=>{this.setState({openIframe: true});}} className="c-btn  c-btn--previous  c-btn--previous--small">
           <span>Create Iframe Code</span>
         </a>
         </div>
         <div className="c-preview-questions">
           <div class="c-preview-scroll">
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/KAMeI4uHAFE" frameborder="0" allowfullscreen></iframe>
+            {this.iframeRender()}
           </div>
         </div>
       </div>
