@@ -17,6 +17,7 @@ class Home extends React.Component {
     super();
     this.state = {
       assessmentClicked: {},
+      openIframe: false,
       isOpen: false,
       itemChecked: {},
       assessments: {},
@@ -186,12 +187,24 @@ class Home extends React.Component {
         </svg>
       </div>);
   }
+  iframeCode(){
+    if(this.state.openIframe){
+      return (
+      <div className="c-preview-embed">
+        <div>{this.iframeSpinner()}</div>
+        <label for="embed">Embed Code</label>
+        <textarea id="embed" value={this.iframe()} readOnly="true" ></textarea>
+      </div>
+      );
+    }
+    return null;
+  }
 
   adminPreview(){
     var assessmentName = this.state.assessmentClicked.displayName ? this.state.assessmentClicked.displayName.text : "";
     return (<div className="o-admin-content">
     <div className="c-admin-content__header">
-      <a href="#" onClick={()=>{this.setState({isOpen: false});}} className="c-btn  c-btn--previous  c-btn--previous--small">
+      <a href="#" onClick={()=>{this.setState({isOpen: false, openIframe: false});}} className="c-btn  c-btn--previous  c-btn--previous--small">
         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
           <path d="M14.83 16.42l9.17 9.17 9.17-9.17 2.83 2.83-12 12-12-12z"/>
         </svg>
@@ -199,15 +212,14 @@ class Home extends React.Component {
       </a>
     </div>
     <div className="c-admin-content__main c-admin-content__main--preview">
-      <div className="c-preview-embed">
-        <div>{this.iframeSpinner()}</div>
-        <label for="embed">Embed Code</label>
-        <textarea id="embed" value={this.iframe()} readOnly="true" ></textarea>
-      </div>
+      {this.iframeCode()}
       <div className="c-preview-sidebar">
         <h2>{assessmentName}</h2>
         <p>Date Created: <span>02/09/2016</span></p>
         <p>Type: <span>{this.state.assessmentClicked.type}</span></p>
+        <a href="#" onClick={()=>{this.setState({openIframe: true});}} className="c-btn  c-btn--previous  c-btn--previous--small">
+        <span>Create Iframe Code</span>
+      </a>
       </div>
       <div className="c-preview-questions">
         <div class="c-preview-scroll">
