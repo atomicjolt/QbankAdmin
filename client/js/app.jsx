@@ -29,7 +29,7 @@ class Root extends React.Component {
     const { store } = this.props;
     return (
       <Provider store={store}>
-        <div>
+        <div style={{"height": "100%"}}>
           {routes}
           {devTools}
         </div>

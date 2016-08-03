@@ -6,7 +6,7 @@
   height: 40rem;
   font-size: 1.4rem;
   @include regular;
-  color: #4A4A4A;
+  color: $answer-text;
   p{
     padding:2rem;
     animation: fadein 2s;
@@ -46,12 +46,21 @@
     }
 }
 
+#main-app > div > div{
+  height: 100%;
+}
+
 .c-admin-content__main{
   height: 100%;
   position: relative;
   z-index: 1;
   margin-top: -5rem;
   padding-top: 5rem;
+}
+
+.c-admin-content__main--preview{
+  background: $white;
+  z-index: 2;
 }
 
 .c-admin-content__main--scroll{
