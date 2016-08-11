@@ -31,35 +31,26 @@ class Home extends React.Component {
     }
   }
 
+  onMessage(message) {
+    let data = JSON.parse(message.data);
+    switch(data.open_assessments_msg){
+      case 'open_assessments_resize':
+        let iframe = document.getElementById('openassessments_container');
+        iframe.style.height = data.payload.height + "px";
+        break;
+    }
+  }
+
   componentDidUpdate() {
-    console.log("componentDidUpdate");
-    var iframe = document.getElementById('openassessments_container');
-    console.log(iframe);
+    let iframe = document.getElementById('openassessments_container');
 
     if(!iframe){ return; }
 
-    var CommunicationHandler = {
-
-      init: function() {
-        window.addEventListener("message", this.handleComm, false);
-        iframe.contentWindow.postMessage({
-          'open_assessments_msg': 'open_assessments_size_request',
-          'payload': {}
-        }, '*');
-      },
-
-      handleComm: function(e){
-        let data = JSON.parse(e.data);
-        switch(data.open_assessments_msg){
-          case 'open_assessments_resize':
-            iframe.style.height = data.payload.height + "px";
-            break;
-        }
-      }
-
-    };
-
-    CommunicationHandler.init();
+    window.addEventListener("message", this.onMessage, false);
+    iframe.contentWindow.postMessage({
+      'open_assessments_msg': 'open_assessments_size_request',
+      'payload': {}
+    }, '*');
   }
 
   breadcrumbs(hierarchy){
