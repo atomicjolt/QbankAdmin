@@ -38,38 +38,21 @@ class Home extends React.Component {
 
     if(!iframe){ return; }
 
-    var Communicator = {
-      enableListener: function(handler){
-        // Create IE + others compatible event handler
-        var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
-        var eventer = window[eventMethod];
-        this.messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
-        // Listen to message from child window
-        eventer(this.messageEvent, handler.handleComm, false);
-      },
-
-      commMsg: function(msg, payload){
-        iframe.contentWindow.postMessage({'open_assessments_msg': msg, 'payload': payload}, '*');
-      }
-
-    };
-
     var CommunicationHandler = {
 
-      init: function(){
-        Communicator.enableListener(this);
-        Communicator.commMsg('open_assessments_size_request', {});
-      },
-
-      resizeIframe: function(payload){
-        iframe.style.height = payload.height + "px";
+      init: function() {
+        window.addEventListener("message", this.handleComm, false);
+        iframe.contentWindow.postMessage({
+          'open_assessments_msg': 'open_assessments_size_request',
+          'payload': {}
+        }, '*');
       },
 
       handleComm: function(e){
         let data = JSON.parse(e.data);
         switch(data.open_assessments_msg){
           case 'open_assessments_resize':
-            CommunicationHandler.resizeIframe(data.payload);
+            iframe.style.height = data.payload.height + "px";
             break;
         }
       }
