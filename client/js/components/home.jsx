@@ -31,6 +31,54 @@ class Home extends React.Component {
     }
   }
 
+  componentDidUpdate() {
+    console.log("componentDidUpdate");
+    var iframe = document.getElementById('openassessments_container');
+    console.log(iframe);
+
+    if(!iframe){ return; }
+
+    var Communicator = {
+      enableListener: function(handler){
+        // Create IE + others compatible event handler
+        var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+        var eventer = window[eventMethod];
+        this.messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+        // Listen to message from child window
+        eventer(this.messageEvent, handler.handleComm, false);
+      },
+
+      commMsg: function(msg, payload){
+        iframe.contentWindow.postMessage({'open_assessments_msg': msg, 'payload': payload}, '*');
+      }
+
+    };
+
+    var CommunicationHandler = {
+
+      init: function(){
+        Communicator.enableListener(this);
+        Communicator.commMsg('open_assessments_size_request', {});
+      },
+
+      resizeIframe: function(payload){
+        iframe.style.height = payload.height + "px";
+      },
+
+      handleComm: function(e){
+        let data = JSON.parse(e.data);
+        switch(data.open_assessments_msg){
+          case 'open_assessments_resize':
+            CommunicationHandler.resizeIframe(data.payload);
+            break;
+        }
+      }
+
+    };
+
+    CommunicationHandler.init();
+  }
+
   breadcrumbs(hierarchy){
     var checked = _.compact(_.map(this.state.itemChecked, (val, key)=>{if(val === true){return key;}}));
     return _.map(hierarchy, (bank)=>{
@@ -167,8 +215,12 @@ class Home extends React.Component {
       let qBankHost = this.props.settings.qBankHost ? this.props.settings.qBankHost : "https://qbank-clix-dev.mit.edu";
       let playerHost = this.props.settings.assessmentPlayerUrl; //This will need to be the instance deployed, not localhost.
       let url = encodeURI(`${playerHost}/?unlock_next=ON_CORRECT&api_url=${qBankHost}/api/v1&bank=${assessOffered.bankId}&assessment_offered_id=${assessOffered.id}#/assessment`);
-      //This will only work in firefox right now.
-      return <iframe height="600px" width="1000px" src={url}/>;
+
+      return (
+        <div>
+          <iframe id="openassessments_container" src={url}/>
+        </div>
+      );
     } else {
       return "";
     }
