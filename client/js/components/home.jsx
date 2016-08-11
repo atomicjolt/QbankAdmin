@@ -36,7 +36,8 @@ class Home extends React.Component {
     switch(data.open_assessments_msg){
       case 'open_assessments_resize':
         let iframe = document.getElementById('openassessments_container');
-        iframe.style.height = data.payload.height + "px";
+        let height = data.payload.height;
+        iframe.style.height = height + "px";
         break;
     }
   }
