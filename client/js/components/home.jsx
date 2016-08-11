@@ -40,7 +40,7 @@ class Home extends React.Component {
             <span>{bank.displayName.text}</span>
             <a href="#" onClick={()=>{this.checkItem(bank, false);}}>
               <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-                  <path d="M29.17 16l-5.17 5.17-5.17-5.17-2.83 2.83 5.17 5.17-5.17 5.17 2.83 2.83 5.17-5.17 5.17 5.17 2.83-2.83-5.17-5.17 5.17-5.17-2.83-2.83zm-5.17-12c-11.05 0-20 8.95-20 20s8.95 20 20 20 20-8.95 20-20-8.95-20-20-20zm0 36c-8.82 0-16-7.18-16-16s7.18-16 16-16 16 7.18 16 16-7.18 16-16 16z"/>
+                <path d="M29.17 16l-5.17 5.17-5.17-5.17-2.83 2.83 5.17 5.17-5.17 5.17 2.83 2.83 5.17-5.17 5.17 5.17 2.83-2.83-5.17-5.17 5.17-5.17-2.83-2.83zm-5.17-12c-11.05 0-20 8.95-20 20s8.95 20 20 20 20-8.95 20-20-8.95-20-20-20zm0 36c-8.82 0-16-7.18-16-16s7.18-16 16-16 16 7.18 16 16-7.18 16-16 16z"/>
               </svg>
             </a>
           </div>
@@ -136,7 +136,7 @@ class Home extends React.Component {
 
   offerAssessment(bankId, assessment){
     this.setState({ isOpen: true,
-                   assessmentClicked: assessment });
+                    assessmentClicked: assessment });
     var qBankHost = this.props.settings.qBankHost;
     this.props.offerAssessment(bankId, assessment.id, qBankHost);
   }
@@ -196,10 +196,10 @@ class Home extends React.Component {
   iframeCode(){
     if(this.state.openIframe){
       return (
-      <div className="c-preview-embed">
-        <label for="embed">Embed Code</label>
-        <textarea id="embed" value={this.iframe()} readOnly="true" ></textarea>
-      </div>
+        <div className="c-preview-embed">
+          <label for="embed">Embed Code</label>
+          <textarea id="embed" value={this.iframe()} readOnly="true" ></textarea>
+        </div>
       );
     }
     return null;
@@ -208,67 +208,67 @@ class Home extends React.Component {
   adminPreview(){
     var assessmentName = this.state.assessmentClicked.displayName ? this.state.assessmentClicked.displayName.text : "";
     return (
-    <div className="o-admin-content">
-      <div className="c-admin-content__header">
-        <a href="#" onClick={()=>{this.setState({isOpen: false, openIframe: false});}} className="c-btn  c-btn--previous  c-btn--previous--small">
-          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-            <path d="M14.83 16.42l9.17 9.17 9.17-9.17 2.83 2.83-12 12-12-12z"/>
-          </svg>
-          <span>back</span>
-        </a>
-      </div>
-      <div className="c-admin-content__main c-admin-content__main--preview">
-        {this.iframeCode()}
-        <div className="c-preview-sidebar">
-          <h2>{assessmentName}</h2>
-          <p>Date Created: <span>02/09/2016</span></p>
-          <p>Type: <span>{this.state.assessmentClicked.type}</span></p>
-          <a style={{"marginTop":"135px"}} href="#" onClick={()=>{this.setState({openIframe: true});}} className="c-btn  c-btn--previous  c-btn--previous--small">
-          <span>Create Iframe Code</span>
-        </a>
+      <div className="o-admin-content">
+        <div className="c-admin-content__header">
+          <a href="#" onClick={()=>{this.setState({isOpen: false, openIframe: false});}} className="c-btn  c-btn--previous  c-btn--previous--small">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+              <path d="M14.83 16.42l9.17 9.17 9.17-9.17 2.83 2.83-12 12-12-12z"/>
+            </svg>
+            <span>back</span>
+          </a>
         </div>
-        <div className="c-preview-questions">
-          <div class="c-preview-scroll">
-            {this.iframeRender()}
+        <div className="c-admin-content__main c-admin-content__main--preview">
+          {this.iframeCode()}
+          <div className="c-preview-sidebar">
+            <h2>{assessmentName}</h2>
+            <p>Date Created: <span>02/09/2016</span></p>
+            <p>Type: <span>{this.state.assessmentClicked.type}</span></p>
+            <a style={{"marginTop":"135px"}} href="#" onClick={()=>{this.setState({openIframe: true});}} className="c-btn  c-btn--previous  c-btn--previous--small">
+              <span>Create Iframe Code</span>
+            </a>
+          </div>
+          <div className="c-preview-questions">
+            <div class="c-preview-scroll">
+              {this.iframeRender()}
+            </div>
           </div>
         </div>
-      </div>
-    </div>);
+      </div>);
   }
 
   render() {
     const hierarchy = this.props.banks;
 
     return (
-    <div style={{"height": "100%"}}>
-      <div className="o-admin-container">
-        <div className="o-sidebar">
-          <div className="c-sidebar__header">
-            <img src="" alt="" />
+      <div style={{"height": "100%"}}>
+        <div className="o-admin-container">
+          <div className="o-sidebar">
+            <div className="c-sidebar__header">
+              <img src="" alt="" />
+            </div>
+            <div className="c-sidebar__filters">
+              <p className="c-filters__title">Filter Tree</p>
+              <ul className="c-filter-scroll">
+                {this.gradeLevel(hierarchy)}
+              </ul>
+            </div>
           </div>
-          <div className="c-sidebar__filters">
-            <p className="c-filters__title">Filter Tree</p>
-            <ul className="c-filter-scroll">
-              {this.gradeLevel(hierarchy)}
-            </ul>
+          <div className="o-admin-content">
+            <div className="c-admin-content__header">
+              {this.breadcrumbs(hierarchy)}
+            </div>
+            <div className="c-admin-content__main  c-admin-content__main--scroll">
+              <ul>
+                {this.filteredAssessments(hierarchy)}
+              </ul>
+            </div>
           </div>
         </div>
-        <div className="o-admin-content">
-          <div className="c-admin-content__header">
-            {this.breadcrumbs(hierarchy)}
-          </div>
-          <div className="c-admin-content__main  c-admin-content__main--scroll">
-            <ul>
-              {this.filteredAssessments(hierarchy)}
-            </ul>
-          </div>
+        <div className={this.slidingClasses()}>
+          <div class="o-sidebar o-sidebar--preview"></div>
+          {this.adminPreview()}
         </div>
-      </div>
-      <div className={this.slidingClasses()}>
-        <div class="o-sidebar o-sidebar--preview"></div>
-        {this.adminPreview()}
-      </div>
-    </div>);
+      </div>);
   }
 
 }
