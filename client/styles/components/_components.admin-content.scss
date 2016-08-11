@@ -118,6 +118,11 @@
   height: 100%;
   padding-bottom: 12.5rem;
 
+  iframe {
+    border: none;
+    width: 100%;
+  }
+
   .o-assessment-container{
     margin: 2rem auto;
 
