@@ -244,7 +244,7 @@ class Home extends React.Component {
             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
               <path d="M14.83 16.42l9.17 9.17 9.17-9.17 2.83 2.83-12 12-12-12z"/>
             </svg>
-            <span>back</span>
+            <span>Back To Activity List</span>
           </a>
         </div>
         <div className="c-admin-content__main c-admin-content__main--preview">
