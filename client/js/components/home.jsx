@@ -178,7 +178,11 @@ class Home extends React.Component {
     let assessOffered = this.props.assessment_offered;
     if(!_.isEmpty(assessOffered)){
       let qBankHost = this.props.settings.qBankHost ? this.props.settings.qBankHost : "https://qbank-clix-dev.mit.edu";
-      let playerHost = this.props.settings.assessmentPlayerUrl; //This will need to be the instance deployed, not localhost.
+      let hostedPlayer = this.props.settings.assessmentPlayerUrl;
+      let localPlayerUrl = this.props.settings.localPlayerUrl;
+
+      // localPlayerUrl should take precedence over the hosted player
+      let playerHost = localPlayerUrl ? localPlayerUrl : hostedPlayer;
       let url = `${playerHost}/?unlock_next=ON_CORRECT&api_url=${qBankHost}/api/v1&bank=${assessOffered.bankId}&assessment_offered_id=${assessOffered.id}#/assessment`;
       return `<iframe src="${url}"/>`;
     } else {
