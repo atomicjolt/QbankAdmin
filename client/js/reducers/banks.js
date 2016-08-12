@@ -29,7 +29,7 @@ function splitChunks(s) {
 }
 
 /**
- * Compares two strings "naturally", the way a human would, be sorting numbers
+ * Compares two strings "naturally", the way a human would, by sorting numbers
  * as number (not as characters) and taking word breaks into account.
  */
 function naturalCompare(s1, s2) {
