@@ -8,6 +8,9 @@ import { Constants }  from "../actions/banks";
  * everything else.  Runs of blanks are collapsed to a single space.
  */
 function splitChunks(s) {
+  // The following regexp has 3 sections in this order: 1) match a run of
+  // digits; 2) match a run of spaces (includes tabs, newlines, etc.); and, 3)
+  // match runs of everything that is neither a digit nor a space. */
   let r = /^(?:(\d+)|(\s+)|((?:(?!\d|\s).)+))/;
   let a = [];
 
