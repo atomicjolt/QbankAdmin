@@ -14,15 +14,13 @@ function splitChunks(s) {
   while(s.length > 0) {
     let m = s.match(r);
     if(m[1]) {                  // digits
-      s = s.slice(m[1].length);
       a.push(parseInt(m[1]));
     } else if(m[2]) {           // blanks
-      s = s.slice(m[2].length);
       a.push(" ");
     } else {                    // everything else
-      s = s.slice(m[3].length);
       a.push(m[3]);
     }
+    s = s.slice(m[0].length);
   }
 
   return a;
