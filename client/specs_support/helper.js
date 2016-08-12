@@ -1,7 +1,6 @@
 "use strict";
 
 import _                  from "lodash";
-import Immutable          from 'immutable';
 
 import configureStore     from "../js/store/configure_store";
 
@@ -26,8 +25,10 @@ export default class Helper{
       apiUrl: "http://www.example.com"
     }, settings);
 
+    Object.freeze(initialSettings);
+
     return configureStore({
-      settings: Immutable.fromJS(initialSettings)
+      settings: initialSettings
     });
   }
 
