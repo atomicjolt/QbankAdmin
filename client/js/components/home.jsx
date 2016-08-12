@@ -182,8 +182,7 @@ class Home extends React.Component {
       let localPlayerUrl = this.props.settings.localPlayerUrl;
 
       // localPlayerUrl should take precedence over the hosted player
-      let playerHost = localPlayerUrl ? localPlayerUrl : hostedPlayer;
-      let url = `${playerHost}/?unlock_next=ON_CORRECT&api_url=${qBankHost}/api/v1&bank=${assessOffered.bankId}&assessment_offered_id=${assessOffered.id}#/assessment`;
+      let url = `${localPlayerUrl || hostedPlayer}/?unlock_next=ON_CORRECT&api_url=${qBankHost}/api/v1&bank=${assessOffered.bankId}&assessment_offered_id=${assessOffered.id}#/assessment`;
       return `<iframe src="${url}"/>`;
     } else {
       return "";
