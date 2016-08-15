@@ -72,7 +72,17 @@ class Home extends React.Component {
     });
   }
 
-  onCheckItem(bank, value) {
+  onExpandBank(bank, value) {
+    this.props.clearSnippet();
+    let map = {[bank.id]: value};
+    if(!value) {
+      this.resetHierarchy(bank, map);
+    }
+    let itemChecked = Object.assign({}, this.state.itemChecked, map);
+    this.setState({itemChecked});
+  }
+
+  onSelectBank(bank, value) {
     this.props.clearSnippet();
     let map = {[bank.id]: value};
     if(!value) {
@@ -112,7 +122,7 @@ class Home extends React.Component {
       <li key={bank.id} className={itemClass}>
         <input type="checkbox"
                checked={this.isCheckedBreadcrumbs(bank.id)}
-               onChange={(e) => this.onCheckItem(bank, e.target.checked)}/>
+               onChange={(e) => this.onExpandBank(bank, e.target.checked)}/>
         <span>{bank.displayName.text}</span>
         <input type="checkbox" style={{float: "right"}}/>
         {renderedChildren}
