@@ -5,7 +5,7 @@ import React        from 'react';
 import { connect }  from 'react-redux';
 
 import { startApp }                       from '../actions/app';
-import { offerAssessment, clearSnippet }  from '../actions/assessment_offered';
+import * as AssessmentActions             from '../actions/assessments';
 import assets                             from '../libs/assets';
 
 
@@ -39,7 +39,7 @@ class Home extends React.Component {
       data = JSON.parse(data);
     }
 
-    switch(data.open_assessments_msg){
+    switch(data.open_assessments_msg) {
       case 'open_assessments_resize':
         let iframe = document.getElementById('openassessments_container');
         let height = data.payload.height;
@@ -168,6 +168,12 @@ class Home extends React.Component {
                     assessmentClicked: assessment });
     var qBankHost = this.props.settings.qBankHost;
     this.props.offerAssessment(bankId, assessment.id, qBankHost);
+    this.props.getItems(bankId, assessment.id, qBankHost);
+  }
+
+  setNOfM(nOfM) {
+    this.setState({ nOfM });
+    this.props.offerAssessment(bankId, assessment.id, qBankHost, nOfM);
   }
 
   renderAssessments(bank, force){
@@ -175,9 +181,11 @@ class Home extends React.Component {
     let assessmentItems = [];
     if(force || itemChecked[bank.id]) {
       assessmentItems.push(
-        _.map(bank.assessments, (a) => (
-          <li key={a.id} className="c-admin-list-item">
-            <a href="#" onClick={()=>{this.offerAssessment(bank.id, a);}}>{a.displayName.text}</a>
+        _.map(bank.assessments, (assessment) => (
+          <li key={assessment.id} className="c-admin-list-item">
+            <a href="#" onClick={()=>{this.offerAssessment(bank.id, assessment);}}>
+              {assessment.displayName.text}
+            </a>
           </li>
         ))
       );
@@ -259,6 +267,17 @@ class Home extends React.Component {
             <h2>{assessmentName}</h2>
             <p>Date Created: <span>02/09/2016</span></p>
             <p>Type: <span>{this.state.assessmentClicked.type}</span></p>
+            <p>Select
+              <select value={this.state.nOfM || this.props.items.length}
+                  onChange={(e) => { this.setNOfM(parseInt(e.target.value)); }}
+              >
+                {
+                  _.map(_.range(1, this.props.items.length + 1), (index) => {
+                    return <option key={index} value={index}>{index}</option>;
+                  })
+                }
+              </select> of {this.props.items.length}
+            </p>
             <a style={{"marginTop":"135px"}} href="#" onClick={()=>{this.setState({openIframe: true});}} className="c-btn  c-btn--previous  c-btn--previous--small">
               <span>Create Iframe Code</span>
             </a>
@@ -309,4 +328,4 @@ class Home extends React.Component {
 
 }
 
-export default connect(select, { startApp, offerAssessment, clearSnippet })(Home);
+export default connect(select, { startApp, ...AssessmentActions })(Home);

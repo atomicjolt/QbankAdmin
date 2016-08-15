@@ -37,8 +37,10 @@ export default (store) => (next) => {
         const body = {
           bank_id:       action.bankId,
           assessment_id: action.assessmentId,
-          qBankHost: action.qBankHost
+          qBankHost: action.qBankHost,
+          nOfM: action.nOfM
         };
+
         request.post(url).send(body).then(
           function (response) {
             store.dispatch({
