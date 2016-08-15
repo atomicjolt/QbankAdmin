@@ -1,5 +1,5 @@
 {
-  "name": "proxy",
+  "name": "items",
   "customName": false,
   "customRole": false,
   "handler": "handler.handler",
