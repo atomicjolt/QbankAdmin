@@ -205,8 +205,11 @@ class Home extends React.Component {
     let assessOffered = this.props.assessment_offered;
     if(!_.isEmpty(assessOffered)){
       let qBankHost = this.props.settings.qBankHost ? this.props.settings.qBankHost : "https://qbank-clix-dev.mit.edu";
-      let playerHost = this.props.settings.assessmentPlayerUrl; //This will need to be the instance deployed, not localhost.
-      let url = `${playerHost}/?unlock_next=ON_CORRECT&api_url=${qBankHost}/api/v1&bank=${assessOffered.bankId}&assessment_offered_id=${assessOffered.id}#/assessment`;
+      let hostedPlayer = this.props.settings.assessmentPlayerUrl;
+      let localPlayerUrl = this.props.settings.localPlayerUrl;
+
+      // localPlayerUrl should take precedence over the hosted player
+      let url = `${localPlayerUrl || hostedPlayer}/?unlock_next=ON_CORRECT&api_url=${qBankHost}/api/v1&bank=${assessOffered.bankId}&assessment_offered_id=${assessOffered.id}#/assessment`;
       return `<iframe src="${url}"/>`;
     } else {
       return "";
@@ -241,7 +244,7 @@ class Home extends React.Component {
             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
               <path d="M14.83 16.42l9.17 9.17 9.17-9.17 2.83 2.83-12 12-12-12z"/>
             </svg>
-            <span>back</span>
+            <span>Back To Assessment List</span>
           </a>
         </div>
         <div className="c-admin-content__main c-admin-content__main--preview">
