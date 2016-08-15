@@ -120,7 +120,7 @@ class Home extends React.Component {
     if(_.isUndefined(children)) { return; }
     return (
       <ul className="c-filter__dropdown">
-        {_.map(children, (child) => this.renderItem(child))}
+        {children.map((child) => this.renderItem(child))}
       </ul>
     );
   }
@@ -131,7 +131,7 @@ class Home extends React.Component {
     }
     return (
       <ul className="c-filter-scroll">
-        {_.map(hierarchy, (child) => this.renderItem(child))}
+        {hierarchy.map((child) => this.renderItem(child))}
       </ul>
     );
   }
