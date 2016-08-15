@@ -177,6 +177,7 @@ class Home extends React.Component {
   }
 
   setNOfM(n) {
+    // If n of m is null, we default it to -1 in the lambda function
     let nOfM = n;
     if(n === this.props.items.length) {
       nOfM = null;
