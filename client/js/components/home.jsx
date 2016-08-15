@@ -125,7 +125,7 @@ class Home extends React.Component {
     ));
   }
 
-  gradeLevel(hierarchy){
+  renderBankHierarchy(hierarchy) {
     if(_.isEmpty(hierarchy)) {
       return <div className="loader">{this.spinner()}</div>;
     }
@@ -278,7 +278,7 @@ class Home extends React.Component {
             <div className="c-sidebar__filters">
               <p className="c-filters__title">Filter Tree</p>
               <ul className="c-filter-scroll">
-                {this.gradeLevel(hierarchy)}
+                {this.renderBankHierarchy(hierarchy)}
               </ul>
             </div>
           </div>
