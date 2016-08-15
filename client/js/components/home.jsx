@@ -20,7 +20,8 @@ class Home extends React.Component {
       openIframe: false,
       isOpen: false,
       itemChecked: {},
-      assessments: {}
+      assessments: {},
+      currentBankId: null
     };
   }
 
@@ -164,16 +165,31 @@ class Home extends React.Component {
   }
 
   offerAssessment(bankId, assessment){
-    this.setState({ isOpen: true,
-                    assessmentClicked: assessment });
+    this.setState({
+      isOpen: true,
+      assessmentClicked: assessment,
+      currentBankId: bankId
+    });
+
     var qBankHost = this.props.settings.qBankHost;
     this.props.offerAssessment(bankId, assessment.id, qBankHost);
     this.props.getItems(bankId, assessment.id, qBankHost);
   }
 
-  setNOfM(nOfM) {
+  setNOfM(n) {
+    let nOfM = n;
+    if(n === this.props.items.length) {
+      nOfM = null;
+    }
+
     this.setState({ nOfM });
-    this.props.offerAssessment(bankId, assessment.id, qBankHost, nOfM);
+
+    this.props.offerAssessment(
+      this.state.currentBankId,
+      this.state.assessmentClicked.id,
+      this.props.settings.qBankHost,
+      nOfM
+    );
   }
 
   renderAssessments(bank, force){
@@ -267,7 +283,7 @@ class Home extends React.Component {
             <h2>{assessmentName}</h2>
             <p>Date Created: <span>02/09/2016</span></p>
             <p>Type: <span>{this.state.assessmentClicked.type}</span></p>
-            <p>Select
+            <p>Student must answer
               <select value={this.state.nOfM || this.props.items.length}
                   onChange={(e) => { this.setNOfM(parseInt(e.target.value)); }}
               >
