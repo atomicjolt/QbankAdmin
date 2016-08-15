@@ -125,12 +125,10 @@ class Home extends React.Component {
   }
 
   gradeLevel(hierarchy){
-    if(_.isEmpty(hierarchy)){
+    if(_.isEmpty(hierarchy)) {
       return <div className="loader">{this.spinner()}</div>;
     }
-    return _.map(hierarchy, (child)=>{
-      return this.renderItem(child);
-    });
+    return _.map(hierarchy, (child) => this.renderItem(child));
   }
 
   filteredAssessments(hierarchy){
