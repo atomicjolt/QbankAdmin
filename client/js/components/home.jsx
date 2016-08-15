@@ -129,7 +129,11 @@ class Home extends React.Component {
     if(_.isEmpty(hierarchy)) {
       return <div className="loader">{this.spinner()}</div>;
     }
-    return _.map(hierarchy, (child) => this.renderItem(child));
+    return (
+      <ul className="c-filter-scroll">
+        {_.map(hierarchy, (child) => this.renderItem(child))}
+      </ul>
+    );
   }
 
   filteredAssessments(hierarchy){
@@ -277,9 +281,7 @@ class Home extends React.Component {
             </div>
             <div className="c-sidebar__filters">
               <p className="c-filters__title">Filter Tree</p>
-              <ul className="c-filter-scroll">
-                {this.renderBankHierarchy(hierarchy)}
-              </ul>
+              {this.renderBankHierarchy(hierarchy)}
             </div>
           </div>
           <div className="o-admin-content">
