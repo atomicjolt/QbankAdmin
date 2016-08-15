@@ -8,12 +8,12 @@ import { DONE }                               from "../constants/wrapper";
 
 export default (store) => (next) => {
   function startApp(action) {
-
+    let qBankHost = "";
     const state = store.getState();
     switch(action.type) {
 
       case AppConstants.APP_START:
-        const qBankHost = action.qBankHost || "";
+        qBankHost = action.qBankHost || "";
         request.get(`${state.settings.rootEndpoint}proxy?qBankHost=${qBankHost}`).then(
           function (response) {
             store.dispatch({
@@ -53,7 +53,7 @@ export default (store) => (next) => {
         break;
 
       case ItemsConstants.ASSESSMENT_ITEMS:
-        const qBankHost = action.qBankHost || "";
+        qBankHost = action.qBankHost || "";
         request.get(`${state.settings.rootEndpoint}items?qBankHost=${qBankHost}&bankId=${action.bankId}&assessmentId=${action.assessmentId}`).then(
           function (response) {
             store.dispatch({
