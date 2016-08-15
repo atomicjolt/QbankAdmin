@@ -94,19 +94,21 @@ class Home extends React.Component {
     return _.includes(checked, bankId);
   }
 
-  renderItem(bank){
+  renderItem(bank) {
     let itemClass = "c-filter__item";
     if(bank.childNodes.length == 0){
       itemClass = itemClass + " c-filter__item--dropdown";
     }
     let renderedChildren;
-    if(this.state.itemChecked[bank.id]){
+    if(this.state.itemChecked[bank.id]) {
       renderedChildren = this.renderChildren(bank.childNodes);
     }
     return (
       <li key={bank.id} className={itemClass}>
         <label className="c-checkbox--nested">
-          <input type="checkbox" checked={this.isCheckedBreadcrumbs(bank.id)} onChange={ (e) => this.checkItem(bank, e.target.checked) }/>
+          <input type="checkbox"
+                 checked={this.isCheckedBreadcrumbs(bank.id)}
+                 onChange={(e) => this.checkItem(bank, e.target.checked)}/>
           <div>{bank.displayName.text}</div>
         </label>
         {renderedChildren}
@@ -114,14 +116,13 @@ class Home extends React.Component {
     );
   }
 
-  renderChildren(children){
-    if(_.isUndefined(children)){ return; }
-    return _.map(children, (child)=>{
-      return (
-        <ul key={child.id} className="c-filter__dropdown">
-          {this.renderItem(child)}
-        </ul>);
-    });
+  renderChildren(children) {
+    if(_.isUndefined(children)) { return; }
+    return _.map(children, (child) => (
+      <ul key={child.id} className="c-filter__dropdown">
+        {this.renderItem(child)}
+      </ul>
+    ));
   }
 
   gradeLevel(hierarchy){
