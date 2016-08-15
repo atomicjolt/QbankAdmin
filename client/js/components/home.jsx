@@ -19,9 +19,11 @@ class Home extends React.Component {
       assessmentClicked: {},
       openIframe: false,
       isOpen: false,
+      expandedBanks: new Set(),
       itemChecked: {},
       assessments: {}
     };
+    Object.freeze(this.state);
   }
 
   componentWillMount() {
@@ -73,13 +75,15 @@ class Home extends React.Component {
   }
 
   onExpandBank(bank, value) {
-    this.props.clearSnippet();
-    let map = {[bank.id]: value};
-    if(!value) {
-      this.resetHierarchy(bank, map);
+    let expandedBanks = new Set(this.state.expandedBanks);
+
+    if(value) {
+      expandedBanks.add(bank.id);
+    } else {
+      this.resetExpansion(bank, expandedBanks);
     }
-    let itemChecked = Object.assign({}, this.state.itemChecked, map);
-    this.setState({itemChecked});
+
+    this.setState({expandedBanks});
   }
 
   onSelectBank(bank, value) {
@@ -90,6 +94,17 @@ class Home extends React.Component {
     }
     let itemChecked = Object.assign({}, this.state.itemChecked, map);
     this.setState({itemChecked});
+  }
+
+  /**
+   * Clears the hierarchy selection for the given bank and all of its
+   * descendants.
+   */
+  resetExpansion(bank, set) {
+    set.delete(bank.id);
+    bank.childNodes.forEach((bc) => {
+      this.resetExpansion(bc, set);
+    });
   }
 
   /**
@@ -113,15 +128,16 @@ class Home extends React.Component {
     if(bank.childNodes.length == 0){
       itemClass = itemClass + " c-filter__item--dropdown";
     }
+    let expanded = this.state.expandedBanks.has(bank.id);
     let renderedChildren;
-    if(this.state.itemChecked[bank.id]) {
+    if(expanded) {
       renderedChildren = this.renderChildren(bank.childNodes);
     }
     // TODO: Clean up the markup.
     return (
       <li key={bank.id} className={itemClass}>
         <input type="checkbox"
-               checked={this.isCheckedBreadcrumbs(bank.id)}
+               checked={expanded}
                onChange={(e) => this.onExpandBank(bank, e.target.checked)}/>
         <span>{bank.displayName.text}</span>
         <input type="checkbox" style={{float: "right"}}/>
