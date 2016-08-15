@@ -72,19 +72,23 @@ class Home extends React.Component {
     });
   }
 
-  onCheckItem(bank, value){
+  onCheckItem(bank, value) {
     this.props.clearSnippet();
     let map = {[bank.id]: value};
-    if(!value){
+    if(!value) {
       this.resetHierarchy(bank, map);
     }
     let itemChecked = Object.assign({}, this.state.itemChecked, map);
     this.setState({itemChecked});
   }
 
-  resetHierarchy(bank, map){
+  /**
+   * Clears the hierarchy selection for the given bank and all of its
+   * descendants.
+   */
+  resetHierarchy(bank, map) {
     map[bank.id] = false;
-    _.forEach(bank.childNodes, (bc)=>{
+    _.forEach(bank.childNodes, (bc) => {
       this.resetHierarchy(bc, map);
     });
   }
