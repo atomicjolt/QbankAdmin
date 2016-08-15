@@ -107,14 +107,14 @@ class Home extends React.Component {
     if(this.state.itemChecked[bank.id]) {
       renderedChildren = this.renderChildren(bank.childNodes);
     }
+    // TODO: Clean up the markup.
     return (
       <li key={bank.id} className={itemClass}>
-        <label className="c-checkbox--nested">
-          <input type="checkbox"
-                 checked={this.isCheckedBreadcrumbs(bank.id)}
-                 onChange={(e) => this.onCheckItem(bank, e.target.checked)}/>
-          <div>{bank.displayName.text}</div>
-        </label>
+        <input type="checkbox"
+               checked={this.isCheckedBreadcrumbs(bank.id)}
+               onChange={(e) => this.onCheckItem(bank, e.target.checked)}/>
+        <span>{bank.displayName.text}</span>
+        <input type="checkbox" style={{float: "right"}}/>
         {renderedChildren}
       </li>
     );
