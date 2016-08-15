@@ -118,11 +118,11 @@ class Home extends React.Component {
 
   renderChildren(children) {
     if(_.isUndefined(children)) { return; }
-    return _.map(children, (child) => (
-      <ul key={child.id} className="c-filter__dropdown">
-        {this.renderItem(child)}
+    return (
+      <ul className="c-filter__dropdown">
+        {_.map(children, (child) => this.renderItem(child))}
       </ul>
-    ));
+    );
   }
 
   renderBankHierarchy(hierarchy) {
