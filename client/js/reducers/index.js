@@ -6,6 +6,7 @@ import jwt                from './jwt';
 import settings           from './settings';
 import banks              from './banks';
 import assessment_offered from './assessment_offered';
+import items              from './items';
 
 const rootReducer = combineReducers({
   settings,
@@ -13,7 +14,8 @@ const rootReducer = combineReducers({
   application,
   auth,
   banks,
-  assessment_offered
+  assessment_offered,
+  items
 });
 
 export default rootReducer;
