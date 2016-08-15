@@ -32,7 +32,13 @@ class Home extends React.Component {
   }
 
   onMessage(message) {
-    let data = JSON.parse(message.data);
+    // The react dev tools send a javascript object as a message. The player
+    // sends a string. This handles that.
+    let data = message.data;
+    if(typeof message.data === "string") {
+      data = JSON.parse(data);
+    }
+
     switch(data.open_assessments_msg){
       case 'open_assessments_resize':
         let iframe = document.getElementById('openassessments_container');
