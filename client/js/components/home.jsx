@@ -21,7 +21,8 @@ class Home extends React.Component {
       isOpen: false,
       itemChecked: {},
       assessments: {},
-      currentBankId: null
+      currentBankId: null,
+      nOfM: null
     };
   }
 

@@ -1,15 +1,15 @@
 import request                          from "superagent";
 
 import { Constants as AppConstants }          from "../actions/app";
-import { Constants as AssessmentConstants }   from "../actions/assessment_offered";
+import { Constants as AssessmentConstants }   from "../actions/assessments";
 import { Constants as BanksConstants }        from "../actions/banks";
-import { Constants as ItemsConstants }        from "../actions/items";
 import { DONE }                               from "../constants/wrapper";
 
 export default (store) => (next) => {
   function startApp(action) {
     let qBankHost = "";
     const state = store.getState();
+
     switch(action.type) {
 
       case AppConstants.APP_START:
@@ -54,12 +54,12 @@ export default (store) => (next) => {
         );
         break;
 
-      case ItemsConstants.ASSESSMENT_ITEMS:
+      case AssessmentConstants.ASSESSMENT_ITEMS:
         qBankHost = action.qBankHost || "";
         request.get(`${state.settings.rootEndpoint}items?qBankHost=${qBankHost}&bankId=${action.bankId}&assessmentId=${action.assessmentId}`).then(
           function (response) {
             store.dispatch({
-              type:     ItemsConstants.ASSESSMENT_ITEMS + DONE,
+              type:     AssessmentConstants.ASSESSMENT_ITEMS + DONE,
               payload:  response.body
             });
           },

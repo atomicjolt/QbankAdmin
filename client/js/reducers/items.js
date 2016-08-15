@@ -1,12 +1,12 @@
 "use strict";
 
-import { Constants as ItemsConstants }   from "../actions/items";
+import { Constants }   from "../actions/assessments";
 
 
 export default (state = {}, action) => {
   switch(action.type){
 
-    case ItemsConstants.ASSESSMENT_ITEMS + ItemsConstants.DONE:
+    case Constants.ASSESSMENT_ITEMS + Constants.DONE:
       return action.payload;
 
     default:

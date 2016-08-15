@@ -1,7 +1,7 @@
 "use strict";
 
 import _                                      from "lodash";
-import { Constants as AssessmentConstants }   from "../actions/assessment_offered";
+import { Constants as AssessmentConstants }   from "../actions/assessments";
 
 
 export default (state = {}, action) => {

@@ -12,15 +12,6 @@ export const Constants = wrapper(
   []
 );
 
-export function showAssessment(bankId, assessmentId, qBankHost) {
-  return {
-    type:      Constants.SHOW_ASSESSMENT,
-    bankId,
-    assessmentId,
-    qBankHost
-  };
-}
-
 export function offerAssessment(bankId, assessmentId, qBankHost, nOfM) {
   return {
     type:      Constants.ASSESSMENT_OFFER,
