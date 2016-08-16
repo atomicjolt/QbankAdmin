@@ -182,15 +182,6 @@ class Home extends React.Component {
     return assessmentList;
   }
 
-  noChildChecked(bank, itemChecked){
-    for (var i in bank.childNodes){
-      if(itemChecked[bank.childNodes[i].id]){
-        return false;
-      }
-    }
-    return true;
-  }
-
   spinner(){
     return (
       <div className="c-assessment-loading">
