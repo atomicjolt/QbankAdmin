@@ -57,7 +57,7 @@ class Home extends React.Component {
     }, '*');
   }
 
-  breadcrumbs(hierarchy) {
+  renderBreadcrumbs(hierarchy) {
     var checked = _.compact(_.map(this.state.itemChecked, (val, key) => { if(val === true) { return key; } }));
     return _.map(hierarchy, (bank) => {
       if(_.includes(checked, bank.id)) {
@@ -70,7 +70,7 @@ class Home extends React.Component {
               </svg>
             </a>
           </div>,
-          this.breadcrumbs(bank.childNodes)
+          this.renderBreadcrumbs(bank.childNodes)
         ];
       }
     });
@@ -295,7 +295,7 @@ class Home extends React.Component {
           </div>
           <div className="o-admin-content">
             <div className="c-admin-content__header">
-              {this.breadcrumbs(hierarchy)}
+              {this.renderBreadcrumbs(hierarchy)}
             </div>
             <div className="c-admin-content__main  c-admin-content__main--scroll">
               <ul>
