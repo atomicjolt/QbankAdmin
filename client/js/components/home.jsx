@@ -166,7 +166,7 @@ class Home extends React.Component {
   renderAssessmentList(hierarchy) {
     let assessmentList = [];
     hierarchy.forEach((bank) => {
-      this.gatherAssessments(assessmentList, bank);
+      this.gatherAssessments(assessmentList, [], bank);
     });
     return assessmentList;
   }
@@ -187,17 +187,19 @@ class Home extends React.Component {
     this.props.offerAssessment(bankId, assessment.id, qBankHost);
   }
 
-  gatherAssessments(assessmentList, bank) {
+  gatherAssessments(assessmentList, path, bank) {
+    path = path.concat([bank.displayName.text]);
     if(this.state.selectedBanks.has(bank.id)) {
+      assessmentList.push(<h1>{path.join(", ")}</h1>);
       bank.assessments.forEach((a) => {
         assessmentList.push(
-          <li key={a.id} className="c-admin-list-item">
+          <li className="c-admin-list-item">
             <a href="#" onClick={()=>{this.offerAssessment(bank.id, a);}}>{a.displayName.text}</a>
           </li>
         );
       });
     }
-    bank.childNodes.forEach((b) => this.gatherAssessments(assessmentList, b));
+    bank.childNodes.forEach((b) => this.gatherAssessments(assessmentList, path, b));
   }
 
   iframeRender(){
