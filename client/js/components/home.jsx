@@ -110,17 +110,6 @@ class Home extends React.Component {
     });
   }
 
-  /**
-   * Clears the hierarchy selection for the given bank and all of its
-   * descendants.
-   */
-  resetHierarchy(bank, map) {
-    map[bank.id] = false;
-    _.forEach(bank.childNodes, (bc) => {
-      this.resetHierarchy(bc, map);
-    });
-  }
-
   isCheckedBreadcrumbs(bankId){
     var checked = _.compact(_.map(this.state.itemChecked, (val, key)=>{if(val === true){return key;}}));
     return _.includes(checked, bankId);
