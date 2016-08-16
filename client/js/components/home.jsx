@@ -20,6 +20,7 @@ class Home extends React.Component {
       openIframe: false,
       isOpen: false,
       expandedBanks: new Set(),
+      selectedBanks: new Set(),
       itemChecked: {},
       assessments: {}
     };
@@ -87,13 +88,15 @@ class Home extends React.Component {
   }
 
   onSelectBank(bank, value) {
-    this.props.clearSnippet();
-    let map = {[bank.id]: value};
-    if(!value) {
-      this.resetHierarchy(bank, map);
+    let selectedBanks = new Set(this.state.selectedBanks);
+
+    if(value) {
+      selectedBanks.add(bank.id);
+    } else {
+      selectedBanks.delete(bank.id);
     }
-    let itemChecked = Object.assign({}, this.state.itemChecked, map);
-    this.setState({itemChecked});
+
+    this.setState({selectedBanks});
   }
 
   /**
@@ -141,7 +144,9 @@ class Home extends React.Component {
                disabled={bank.childNodes.length == 0}
                onChange={(e) => this.onExpandBank(bank, e.target.checked)}/>
         <span>{bank.displayName.text}</span>
-        <input type="checkbox" style={{float: "right"}}/>
+        <input type="checkbox"
+               style={{float: "right"}}
+               onChange={(e) => this.onSelectBank(bank, e.target.checked)}/>
         {renderedChildren}
       </li>
     );
