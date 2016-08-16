@@ -174,10 +174,10 @@ class Home extends React.Component {
     );
   }
 
-  filteredAssessments(hierarchy) {
+  renderAssessmentList(hierarchy) {
     let assessmentList = [];
     hierarchy.forEach((bank) => {
-      this.renderAssessments(assessmentList, bank);
+      this.gatherAssessments(assessmentList, bank);
     });
     return assessmentList;
   }
@@ -207,7 +207,7 @@ class Home extends React.Component {
     this.props.offerAssessment(bankId, assessment.id, qBankHost);
   }
 
-  renderAssessments(assessmentList, bank) {
+  gatherAssessments(assessmentList, bank) {
     let itemChecked = this.state.itemChecked;
     if(this.state.selectedBanks.has(bank.id)) {
       bank.assessments.forEach((a) => {
@@ -218,7 +218,7 @@ class Home extends React.Component {
         );
       });
     }
-    bank.childNodes.forEach((b) => this.renderAssessments(assessmentList, b));
+    bank.childNodes.forEach((b) => this.gatherAssessments(assessmentList, b));
   }
 
   iframeRender(){
@@ -324,7 +324,7 @@ class Home extends React.Component {
             </div>
             <div className="c-admin-content__main  c-admin-content__main--scroll">
               <ul>
-                {this.filteredAssessments(hierarchy)}
+                {this.renderAssessmentList(hierarchy)}
               </ul>
             </div>
           </div>
