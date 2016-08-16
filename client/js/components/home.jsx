@@ -171,14 +171,16 @@ class Home extends React.Component {
   gatherAssessments(assessmentList, path, bank) {
     path = path.concat([bank.displayName.text]);
     if(this.state.expandedBanks.has(bank.id)) {
-      assessmentList.push(<h1>{path.join(", ")}</h1>);
-      bank.assessments.forEach((a) => {
-        assessmentList.push(
-          <li className="c-admin-list-item">
-            <a href="#" onClick={()=>{this.offerAssessment(bank.id, a);}}>{a.displayName.text}</a>
-          </li>
-        );
-      });
+      if(bank.assessments.length > 0) {
+        assessmentList.push(<h1>{path.join(", ")}</h1>);
+        bank.assessments.forEach((a) => {
+          assessmentList.push(
+            <li className="c-admin-list-item">
+              <a href="#" onClick={()=>{this.offerAssessment(bank.id, a);}}>{a.displayName.text}</a>
+            </li>
+          );
+        });
+      }
     }
     bank.childNodes.forEach((b) => this.gatherAssessments(assessmentList, path, b));
   }
