@@ -58,13 +58,12 @@ class Home extends React.Component {
   }
 
   renderBreadcrumbs(hierarchy) {
-    var checked = _.compact(_.map(this.state.itemChecked, (val, key) => { if(val === true) { return key; } }));
     return _.map(hierarchy, (bank) => {
-      if(_.includes(checked, bank.id)) {
+      if(this.state.selectedBanks.has(bank.id)) {
         return [
           <div className="c-breadcrumb" key={bank.id}>
             <span>{bank.displayName.text}</span>
-            <a href="#" onClick={() => { this.onCheckItem(bank, false); }}>
+            <a href="#" onClick={() => { this.onSelectBank(bank, false); }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
                 <path d="M29.17 16l-5.17 5.17-5.17-5.17-2.83 2.83 5.17 5.17-5.17 5.17 2.83 2.83 5.17-5.17 5.17 5.17 2.83-2.83-5.17-5.17 5.17-5.17-2.83-2.83zm-5.17-12c-11.05 0-20 8.95-20 20s8.95 20 20 20 20-8.95 20-20-8.95-20-20-20zm0 36c-8.82 0-16-7.18-16-16s7.18-16 16-16 16 7.18 16 16-7.18 16-16 16z"/>
               </svg>
