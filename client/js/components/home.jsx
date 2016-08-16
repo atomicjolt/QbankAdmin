@@ -168,9 +168,18 @@ class Home extends React.Component {
     this.props.offerAssessment(bankId, assessment.id, qBankHost);
   }
 
-  gatherAssessments(assessmentList, path, bank) {
+  hasNoChildrenSelected(bank) {
+    for(let b of bank.childNodes) {
+      if(this.state.expandedBankPaths.has(b.pathId)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  gatherAssessments(assessmentList, path, bank, force) {
     path = path.concat([bank.displayName.text]);
-    if(this.state.expandedBankPaths.has(bank.pathId)) {
+    if(force || this.state.expandedBankPaths.has(bank.pathId)) {
       if(bank.assessments.length > 0) {
         assessmentList.push(<h1>{path.join(", ")}</h1>);
         bank.assessments.forEach((a) => {
@@ -181,8 +190,9 @@ class Home extends React.Component {
           );
         });
       }
+      let forceChildren = this.hasNoChildrenSelected(bank);
+      bank.childNodes.forEach((b) => this.gatherAssessments(assessmentList, path, b, forceChildren));
     }
-    bank.childNodes.forEach((b) => this.gatherAssessments(assessmentList, path, b));
   }
 
   iframeRender(){
