@@ -55,30 +55,6 @@ class Home extends React.Component {
     }, '*');
   }
 
-  gatherBreadcrumbs(breadcrumbs, banks) {
-    banks.forEach((b) => {
-      if(this.state.expandedBankPaths.has(b.pathId)) {
-        breadcrumbs.push(
-          <div className="c-breadcrumb" key={b.id}>
-            <span>{b.displayName.text}</span>
-            <a href="#" onClick={() => { this.onExpandBank(b, false); }}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-                <path d="M29.17 16l-5.17 5.17-5.17-5.17-2.83 2.83 5.17 5.17-5.17 5.17 2.83 2.83 5.17-5.17 5.17 5.17 2.83-2.83-5.17-5.17 5.17-5.17-2.83-2.83zm-5.17-12c-11.05 0-20 8.95-20 20s8.95 20 20 20 20-8.95 20-20-8.95-20-20-20zm0 36c-8.82 0-16-7.18-16-16s7.18-16 16-16 16 7.18 16 16-7.18 16-16 16z"/>
-              </svg>
-            </a>
-          </div>
-        );
-      }
-      this.gatherBreadcrumbs(breadcrumbs, b.childNodes);
-    });
-  }
-
-  renderBreadcrumbs(hierarchy) {
-    let breadcrumbs = [];
-    this.gatherBreadcrumbs(breadcrumbs, hierarchy);
-    return breadcrumbs;
-  }
-
   onExpandBank(bank, value) {
     let expandedBankPaths = new Set(this.state.expandedBankPaths);
 
@@ -296,7 +272,6 @@ class Home extends React.Component {
           </div>
           <div className="o-admin-content">
             <div className="c-admin-content__header">
-              {this.renderBreadcrumbs(hierarchy)}
             </div>
             <div className="c-admin-content__main  c-admin-content__main--scroll">
               <ul>
