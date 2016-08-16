@@ -20,7 +20,6 @@ class Home extends React.Component {
       openIframe: false,
       isOpen: false,
       expandedBanks: new Set(),
-      itemChecked: {},
       assessments: {}
     };
     Object.freeze(this.state);
