@@ -134,11 +134,10 @@ class Home extends React.Component {
                checked={expanded}
                disabled={bank.childNodes.length == 0}
                onChange={(e) => this.onExpandBank(bank, e.target.checked)}/>
-        <span>{bank.displayName.text}</span>
         <input type="checkbox"
                checked={selected}
-               style={{float: "right"}}
                onChange={(e) => this.onSelectBank(bank, e.target.checked)}/>
+        <span>{bank.displayName.text}</span>
         {renderedChildren}
       </li>
     );
