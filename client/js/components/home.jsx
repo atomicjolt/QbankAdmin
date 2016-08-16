@@ -20,7 +20,6 @@ class Home extends React.Component {
       openIframe: false,
       isOpen: false,
       expandedBanks: new Set(),
-      selectedBanks: new Set(),
       itemChecked: {},
       assessments: {}
     };
@@ -59,11 +58,11 @@ class Home extends React.Component {
 
   gatherBreadcrumbs(breadcrumbs, banks) {
     banks.forEach((b) => {
-      if(this.state.selectedBanks.has(b.id)) {
+      if(this.state.expandedBanks.has(b.id)) {
         breadcrumbs.push(
           <div className="c-breadcrumb" key={b.id}>
             <span>{b.displayName.text}</span>
-            <a href="#" onClick={() => { this.onSelectBank(b, false); }}>
+            <a href="#" onClick={() => { this.onExpandBank(b, false); }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
                 <path d="M29.17 16l-5.17 5.17-5.17-5.17-2.83 2.83 5.17 5.17-5.17 5.17 2.83 2.83 5.17-5.17 5.17 5.17 2.83-2.83-5.17-5.17 5.17-5.17-2.83-2.83zm-5.17-12c-11.05 0-20 8.95-20 20s8.95 20 20 20 20-8.95 20-20-8.95-20-20-20zm0 36c-8.82 0-16-7.18-16-16s7.18-16 16-16 16 7.18 16 16-7.18 16-16 16z"/>
               </svg>
@@ -93,18 +92,6 @@ class Home extends React.Component {
     this.setState({expandedBanks});
   }
 
-  onSelectBank(bank, value) {
-    let selectedBanks = new Set(this.state.selectedBanks);
-
-    if(value) {
-      selectedBanks.add(bank.id);
-    } else {
-      selectedBanks.delete(bank.id);
-    }
-
-    this.setState({selectedBanks});
-  }
-
   /**
    * Clears the hierarchy selection for the given bank and all of its
    * descendants.
@@ -122,7 +109,6 @@ class Home extends React.Component {
       itemClass = itemClass + " c-filter__item--dropdown";
     }
     let expanded = this.state.expandedBanks.has(bank.id);
-    let selected = this.state.selectedBanks.has(bank.id);
     let renderedChildren;
     if(expanded) {
       renderedChildren = this.renderChildren(bank.childNodes);
@@ -132,11 +118,7 @@ class Home extends React.Component {
       <li key={bank.id} className={itemClass}>
         <input type="checkbox"
                checked={expanded}
-               disabled={bank.childNodes.length == 0}
                onChange={(e) => this.onExpandBank(bank, e.target.checked)}/>
-        <input type="checkbox"
-               checked={selected}
-               onChange={(e) => this.onSelectBank(bank, e.target.checked)}/>
         <span>{bank.displayName.text}</span>
         {renderedChildren}
       </li>
@@ -189,7 +171,7 @@ class Home extends React.Component {
 
   gatherAssessments(assessmentList, path, bank) {
     path = path.concat([bank.displayName.text]);
-    if(this.state.selectedBanks.has(bank.id)) {
+    if(this.state.expandedBanks.has(bank.id)) {
       assessmentList.push(<h1>{path.join(", ")}</h1>);
       bank.assessments.forEach((a) => {
         assessmentList.push(
