@@ -17,11 +17,18 @@ function sortBanks(banks) {
   }
 }
 
+function addPathIds(bank, path) {
+  path = path + "/" + bank.id;
+  bank.pathId = path;
+  bank.childNodes.forEach((b) => { addPathIds(b, path); });
+}
+
 export default (state = [], action) => {
   switch(action.type){
     case Constants.GET_BANK_HIERARCHY:
       let banks = action.payload;
       sortBanks(banks);
+      banks.forEach((b) => { addPathIds(b, ""); });
       return banks;
 
     default:

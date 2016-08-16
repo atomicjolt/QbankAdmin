@@ -19,7 +19,7 @@ class Home extends React.Component {
       assessmentClicked: {},
       openIframe: false,
       isOpen: false,
-      expandedBanks: new Set(),
+      expandedBankPaths: new Set(),
       assessments: {}
     };
     Object.freeze(this.state);
@@ -57,7 +57,7 @@ class Home extends React.Component {
 
   gatherBreadcrumbs(breadcrumbs, banks) {
     banks.forEach((b) => {
-      if(this.state.expandedBanks.has(b.id)) {
+      if(this.state.expandedBankPaths.has(b.pathId)) {
         breadcrumbs.push(
           <div className="c-breadcrumb" key={b.id}>
             <span>{b.displayName.text}</span>
@@ -80,25 +80,25 @@ class Home extends React.Component {
   }
 
   onExpandBank(bank, value) {
-    let expandedBanks = new Set(this.state.expandedBanks);
+    let expandedBankPaths = new Set(this.state.expandedBankPaths);
 
     if(value) {
-      expandedBanks.add(bank.id);
+      expandedBankPaths.add(bank.pathId);
     } else {
-      this.resetExpansion(bank, expandedBanks);
+      this.resetExpansion(bank, expandedBankPaths);
     }
 
-    this.setState({expandedBanks});
+    this.setState({expandedBankPaths});
   }
 
   /**
    * Clears the hierarchy selection for the given bank and all of its
    * descendants.
    */
-  resetExpansion(bank, set) {
-    set.delete(bank.id);
+  resetExpansion(bank, pathSet) {
+    pathSet.delete(bank.pathId);
     bank.childNodes.forEach((bc) => {
-      this.resetExpansion(bc, set);
+      this.resetExpansion(bc, pathSet);
     });
   }
 
@@ -107,7 +107,7 @@ class Home extends React.Component {
     if(bank.childNodes.length == 0){
       itemClass = itemClass + " c-filter__item--dropdown";
     }
-    let expanded = this.state.expandedBanks.has(bank.id);
+    let expanded = this.state.expandedBankPaths.has(bank.pathId);
     let renderedChildren;
     if(expanded) {
       renderedChildren = this.renderChildren(bank.childNodes);
@@ -170,7 +170,7 @@ class Home extends React.Component {
 
   gatherAssessments(assessmentList, path, bank) {
     path = path.concat([bank.displayName.text]);
-    if(this.state.expandedBanks.has(bank.id)) {
+    if(this.state.expandedBankPaths.has(bank.pathId)) {
       if(bank.assessments.length > 0) {
         assessmentList.push(<h1>{path.join(", ")}</h1>);
         bank.assessments.forEach((a) => {
