@@ -115,10 +115,12 @@ class Home extends React.Component {
     // TODO: Clean up the markup.
     return (
       <li key={bank.id} className={itemClass}>
-        <input type="checkbox"
-               checked={expanded}
-               onChange={(e) => this.onExpandBank(bank, e.target.checked)}/>
-        <span>{bank.displayName.text}</span>
+        <label className="c-checkbox--nested">
+          <input type="checkbox"
+                 checked={expanded}
+                 onChange={(e) => this.onExpandBank(bank, e.target.checked)}/>
+          <div>{bank.displayName.text}</div>
+        </label>
         {renderedChildren}
       </li>
     );
