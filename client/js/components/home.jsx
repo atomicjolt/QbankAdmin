@@ -208,7 +208,6 @@ class Home extends React.Component {
   }
 
   gatherAssessments(assessmentList, bank) {
-    let itemChecked = this.state.itemChecked;
     if(this.state.selectedBanks.has(bank.id)) {
       bank.assessments.forEach((a) => {
         assessmentList.push(
