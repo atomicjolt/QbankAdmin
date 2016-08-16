@@ -132,6 +132,7 @@ class Home extends React.Component {
       itemClass = itemClass + " c-filter__item--dropdown";
     }
     let expanded = this.state.expandedBanks.has(bank.id);
+    let selected = this.state.selectedBanks.has(bank.id);
     let renderedChildren;
     if(expanded) {
       renderedChildren = this.renderChildren(bank.childNodes);
@@ -145,6 +146,7 @@ class Home extends React.Component {
                onChange={(e) => this.onExpandBank(bank, e.target.checked)}/>
         <span>{bank.displayName.text}</span>
         <input type="checkbox"
+               checked={selected}
                style={{float: "right"}}
                onChange={(e) => this.onSelectBank(bank, e.target.checked)}/>
         {renderedChildren}
@@ -172,10 +174,12 @@ class Home extends React.Component {
     );
   }
 
-  filteredAssessments(hierarchy){
-    return _.flatten(_.map(hierarchy, (bank)=>{
-      return this.renderAssessments(bank);
-    }));
+  filteredAssessments(hierarchy) {
+    let assessmentList = [];
+    hierarchy.forEach((bank) => {
+      this.renderAssessments(assessmentList, bank);
+    });
+    return assessmentList;
   }
 
   noChildChecked(bank, itemChecked){
@@ -203,24 +207,18 @@ class Home extends React.Component {
     this.props.offerAssessment(bankId, assessment.id, qBankHost);
   }
 
-  renderAssessments(bank, force){
+  renderAssessments(assessmentList, bank) {
     let itemChecked = this.state.itemChecked;
-    let assessmentItems = [];
-    if(force || itemChecked[bank.id]) {
-      assessmentItems.push(
-        _.map(bank.assessments, (a) => (
+    if(this.state.selectedBanks.has(bank.id)) {
+      bank.assessments.forEach((a) => {
+        assessmentList.push(
           <li key={a.id} className="c-admin-list-item">
             <a href="#" onClick={()=>{this.offerAssessment(bank.id, a);}}>{a.displayName.text}</a>
           </li>
-        ))
-      );
-      let forceChildren = this.noChildChecked(bank, itemChecked);
-      for(let i in bank.childNodes) {
-        let bc = bank.childNodes[i];
-        Array.prototype.push.apply(assessmentItems, this.renderAssessments(bc, forceChildren));
-      }
+        );
+      });
     }
-    return assessmentItems;
+    bank.childNodes.forEach((b) => this.renderAssessments(assessmentList, b));
   }
 
   iframeRender(){
