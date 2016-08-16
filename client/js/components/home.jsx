@@ -110,11 +110,6 @@ class Home extends React.Component {
     });
   }
 
-  isCheckedBreadcrumbs(bankId){
-    var checked = _.compact(_.map(this.state.itemChecked, (val, key)=>{if(val === true){return key;}}));
-    return _.includes(checked, bankId);
-  }
-
   renderItem(bank) {
     let itemClass = "c-filter__item";
     if(bank.childNodes.length == 0){
