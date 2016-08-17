@@ -56,7 +56,6 @@ module.exports.handler = function (event, context, callback) {
         --outstanding;
         console.log(outstanding + " requests left");
         if(outstanding == 0) {
-          console.log("Succeeding", banks, assessments);
           attachAssessments();
           context.succeed(banks);
         }
