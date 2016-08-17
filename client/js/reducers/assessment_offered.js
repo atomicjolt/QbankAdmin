@@ -10,7 +10,7 @@ export default (state = {}, action) => {
     case Constants.ASSESSMENT_OFFER + Constants.DONE:
       return action.payload;
 
-    case Constants.ASSESSMENT_CLEAR_SNIPPET:
+    case Constants.CLEAR_ASSESSMENT_OFFERED:
       return {};
 
     default:

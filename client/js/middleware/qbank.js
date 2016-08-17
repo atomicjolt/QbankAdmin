@@ -3,7 +3,7 @@ import request                          from "superagent";
 import { Constants as AppConstants }          from "../actions/app";
 import { displayError }                       from "../actions/app";
 import { Constants as AssessmentConstants }   from "../actions/assessments";
-import { clearSnippet }                       from "../actions/assessments";
+import { clearAssessmentOffered }             from "../actions/assessments";
 import { getBankHierarchy }                   from "../actions/banks";
 import { DONE }                               from "../constants/wrapper";
 
@@ -52,7 +52,7 @@ export default (store) => (next) => {
         break;
 
       case AssessmentConstants.ASSESSMENT_OFFER:
-        store.dispatch(clearSnippet());
+        store.dispatch(clearAssessmentOffered());
 
         const url = `${state.settings.rootEndpoint}offer`;
 
