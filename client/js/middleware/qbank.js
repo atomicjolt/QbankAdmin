@@ -7,6 +7,22 @@ import { clearSnippet }                       from "../actions/assessments";
 import { getBankHierarchy }                   from "../actions/banks";
 import { DONE }                               from "../constants/wrapper";
 
+
+/**
+ * Handles a Lambda error, if present, by dispatching an action for it.  Returns
+ * true if there was an error, false otherwise.
+ */
+function errorHandled(store, response) {
+  let errorMessage = response.body.errorMessage;
+  if(errorMessage === undefined) return false;
+
+  // The message begins with an timestamp and UUID, which we strip off.
+  errorMessage = errorMessage.replace(/^[0-9TZ:.-]+ [0-9a-f-]+ /, "");
+  store.dispatch(displayError(errorMessage));
+
+  return true;
+}
+
 export default (store) => (next) => {
   function startApp(action) {
     let qBankHost = "";
@@ -18,13 +34,8 @@ export default (store) => (next) => {
         qBankHost = action.qBankHost || "";
         request.get(`${state.settings.rootEndpoint}proxy?qBankHost=${qBankHost}`).then(
           function (response) {
-            let errorMessage = response.body.errorMessage;
-            if(errorMessage !== undefined) {
-              errorMessage = errorMessage.replace(/^[0-9TZ:.-]+ [0-9a-f-]+ /, "");
-              store.dispatch(displayError(errorMessage));
-            } else {
-              store.dispatch(getBankHierarchy(response.body));
-            }
+            if(errorHandled(store, response)) return;
+            store.dispatch(getBankHierarchy(response.body));
           },
           function (err) {
             store.dispatch(displayError(err));
