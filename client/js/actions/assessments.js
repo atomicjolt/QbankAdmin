@@ -6,7 +6,7 @@ export const Constants = wrapper(
   [
     "SHOW_ASSESSMENT",
     "ASSESSMENT_OFFER",
-    "ASSESSMENT_CLEAR_SNIPPET",
+    "CLEAR_ASSESSMENT_OFFERED",
     "ASSESSMENT_ITEMS",
     "CLEAR_ASSESSMENT_ITEMS"
   ],
@@ -23,9 +23,9 @@ export function offerAssessment(bankId, assessmentId, qBankHost, nOfM) {
   };
 }
 
-export function clearSnippet() {
+export function clearAssessmentOffered() {
   return {
-    type:      Constants.ASSESSMENT_CLEAR_SNIPPET
+    type:      Constants.CLEAR_ASSESSMENT_OFFERED
   };
 }
 

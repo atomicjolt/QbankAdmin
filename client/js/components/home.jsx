@@ -45,8 +45,10 @@ class Home extends React.Component {
     switch(data.open_assessments_msg) {
       case 'open_assessments_resize':
         let iframe = document.getElementById('openassessments_container');
-        let height = data.payload.height;
-        iframe.style.height = height + "px";
+        if(iframe) {
+          let height = data.payload.height;
+          iframe.style.height = height + "px";
+        }
         break;
     }
   }
@@ -150,6 +152,7 @@ class Home extends React.Component {
 
   closeAssessmentView() {
     this.props.clearItems();
+    this.props.clearAssessmentOffered();
     this.setState({
       isOpen: false,
       openIframe: false,
