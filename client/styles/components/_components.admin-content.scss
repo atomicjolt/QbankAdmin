@@ -174,3 +174,13 @@
     color: $text-color;
   }
 }
+
+.c-admin-error{
+  @include semi-bold;
+  font-size: 2rem;
+  padding: 2rem;
+  color: $white;
+  background: $incorrect;
+  margin: 0.5rem 0;
+  border-radius: $radius;
+}
