@@ -87,7 +87,13 @@ class Home extends React.Component {
       this.resetHierarchy(bank, map);
     }
     let itemChecked = Object.assign({}, this.state.itemChecked, map);
-    this.setState({itemChecked});
+    this.setState({
+      itemChecked,
+      isOpen: false,
+      assessmentClicked: {},
+      currentBankId: null,
+      nOfM: null
+    });
   }
 
   resetHierarchy(bank, map){
