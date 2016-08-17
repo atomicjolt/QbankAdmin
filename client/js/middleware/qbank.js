@@ -16,8 +16,16 @@ function errorHandled(store, response) {
   let errorMessage = response.body.errorMessage;
   if(errorMessage === undefined) return false;
 
-  // The message begins with an timestamp and UUID, which we strip off.
-  errorMessage = errorMessage.replace(/^[0-9TZ:.-]+ [0-9a-f-]+ /, "");
+  // The error message is sometimes null if something goes wrong inside the
+  // lambda function, so we check if it exists before trying to strip the
+  // timestamp
+  if(errorMessage) {
+    // The message begins with an timestamp and UUID, which we strip off.
+    errorMessage = errorMessage.replace(/^[0-9TZ:.-]+ [0-9a-f-]+ /, "");
+  } else {
+    errorMessage = "Something went wrong inside the lambda function.";
+  }
+
   store.dispatch(displayError(errorMessage));
 
   return true;
