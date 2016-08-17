@@ -7,7 +7,8 @@ export const Constants = wrapper(
     "SHOW_ASSESSMENT",
     "ASSESSMENT_OFFER",
     "ASSESSMENT_CLEAR_SNIPPET",
-    "ASSESSMENT_ITEMS"
+    "ASSESSMENT_ITEMS",
+    "CLEAR_ASSESSMENT_ITEMS"
   ],
   []
 );
@@ -34,5 +35,11 @@ export function getItems(bankId, assessmentId, qBankHost) {
     bankId,
     assessmentId,
     qBankHost
+  };
+}
+
+export function clearItems() {
+  return {
+    type: Constants.CLEAR_ASSESSMENT_ITEMS
   };
 }
