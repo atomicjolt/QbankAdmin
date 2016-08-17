@@ -1,6 +1,7 @@
 import request                          from "superagent";
 
 import { Constants as AppConstants }          from "../actions/app";
+import { displayError }                       from "../actions/app";
 import { Constants as AssessmentConstants }   from "../actions/assessments";
 import { clearSnippet }                       from "../actions/assessments";
 import { getBankHierarchy }                   from "../actions/banks";
@@ -17,10 +18,16 @@ export default (store) => (next) => {
         qBankHost = action.qBankHost || "";
         request.get(`${state.settings.rootEndpoint}proxy?qBankHost=${qBankHost}`).then(
           function (response) {
-            store.dispatch(getBankHierarchy(response.body));
+            let errorMessage = response.body.errorMessage;
+            if(errorMessage !== undefined) {
+              errorMessage = errorMessage.replace(/^[0-9TZ:.-]+ [0-9a-f-]+ /, "");
+              store.dispatch(displayError(errorMessage));
+            } else {
+              store.dispatch(getBankHierarchy(response.body));
+            }
           },
           function (err) {
-            console.log("error", err.url, err.message);
+            store.dispatch(displayError(err));
           }
         );
         break;
@@ -45,7 +52,7 @@ export default (store) => (next) => {
             });
           },
           function (err) {
-            console.log("error", err.url, err.message);
+            store.dispatch(displayError(err));
           }
         );
         break;
@@ -60,7 +67,7 @@ export default (store) => (next) => {
             });
           },
           function (err) {
-            console.log("error", err.url, err.message);
+            store.dispatch(displayError(err));
           }
         );
         break;
