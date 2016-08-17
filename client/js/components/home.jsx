@@ -97,7 +97,7 @@ class Home extends React.Component {
     if(expanded) {
       renderedChildren = this.renderChildren(bank.childNodes);
     }
-    // TODO: Clean up the markup.
+
     return (
       <li key={bank.id} className={itemClass}>
         <label className="c-checkbox--nested">
