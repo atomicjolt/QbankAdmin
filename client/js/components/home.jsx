@@ -159,14 +159,16 @@ class Home extends React.Component {
     path = path.concat([bank.displayName.text]);
     if(force || this.state.expandedBankPaths.has(bank.pathId)) {
       if(bank.assessments.length > 0) {
-        assessmentList.push(<h1>{path.join(", ")}</h1>);
-        bank.assessments.forEach((a) => {
-          assessmentList.push(
-            <li className="c-admin-list-item">
-              <a href="#" onClick={()=>{this.offerAssessment(bank.id, a);}}>{a.displayName.text}</a>
-            </li>
-          );
-        });
+        assessmentList.push(<h2 className="c-admin-list-location">{path.join(", ")}</h2>);
+        assessmentList.push(
+          <ul>
+            {bank.assessments.map((a) => (
+               <li className="c-admin-list-item">
+                 <a href="#" onClick={()=>{this.offerAssessment(bank.id, a);}}>{a.displayName.text}</a>
+               </li>
+             ))}
+          </ul>
+        );
       }
       let forceChildren = this.hasNoChildrenSelected(bank);
       bank.childNodes.forEach((b) => this.gatherAssessments(assessmentList, path, b, forceChildren));
@@ -274,9 +276,7 @@ class Home extends React.Component {
             <div className="c-admin-content__header">
             </div>
             <div className="c-admin-content__main  c-admin-content__main--scroll">
-              <ul>
-                {this.renderAssessmentList(hierarchy)}
-              </ul>
+              {this.renderAssessmentList(hierarchy)}
             </div>
           </div>
         </div>
