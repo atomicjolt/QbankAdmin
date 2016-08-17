@@ -201,11 +201,11 @@ class Home extends React.Component {
     path = path.concat([bank.displayName.text]);
     if(force || this.state.expandedBankPaths.has(bank.pathId)) {
       if(bank.assessments.length > 0) {
-        assessmentList.push(<h2 className="c-admin-list-location">{path.join(", ")}</h2>);
+        assessmentList.push(<h2 className="c-admin-list-location" key={`h_${bank.pathId}`}>{path.join(", ")}</h2>);
         assessmentList.push(
-          <ul>
+          <ul key={`l_${bank.pathId}`}>
             {bank.assessments.map((a) => (
-               <li className="c-admin-list-item">
+               <li key={a.id} className="c-admin-list-item">
                  <a href="#" onClick={()=>{this.offerAssessment(bank.id, a);}}>{a.displayName.text}</a>
                </li>
              ))}
