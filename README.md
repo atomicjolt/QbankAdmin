@@ -167,6 +167,13 @@ Make sure that `npm install` has run successfully.  Then, execute `sls
 dash deploy`, select all functions and endpoints, then select
 "deploy".
 
+##App Settings:
+-----------------------
+assessmentPlayerUrl: The URL for the assessment player.
+localPlayerUrl: The URL for the generated iframe code for the user to copy and
+                and paste. Defaults to be the same as assessmentPlayerUrl.
+rootEndpoint: The URL for the lambda api.                
+qBankHost: The URL for qbank.
 
 License and attribution
 -----------------------
