@@ -11,9 +11,9 @@ const types = [
 export const Constants = wrapper(types, []);
 
 
-export function getBankHierarchy(){
+export function getBankHierarchy(payload) {
   return {
-    type:      Constants.GET_BANK_HIERARCHY
+    type: Constants.GET_BANK_HIERARCHY,
+    payload
   };
 }
-

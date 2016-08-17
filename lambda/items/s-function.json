@@ -1,15 +1,15 @@
 {
-  "name": "proxy",
+  "name": "items",
   "customName": false,
   "customRole": false,
   "handler": "handler.handler",
   "runtime": "nodejs4.3",
   "description": "some description for your lambda",
-  "timeout": 20,
+  "timeout": 6,
   "memorySize": 1024,
   "endpoints": [
     {
-      "path": "proxy",
+      "path": "items",
       "method": "GET",
       "authorizationType": "none",
       "apiKeyRequired": false,
@@ -17,7 +17,7 @@
         "integration.request.path.provider": "method.request.path.provider"
       },
       "requestTemplates": {
-        "application/json": "{\"qBankHost\":\"$input.params('qBankHost')\"}"
+        "application/json": "{\"qBankHost\":\"$input.params('qBankHost')\", \"bankId\":\"$input.params('bankId')\", \"assessmentId\":\"$input.params('assessmentId')\"}"
       },
       "responses": {
         "400": {

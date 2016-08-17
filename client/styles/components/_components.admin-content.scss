@@ -111,6 +111,10 @@ h2.c-admin-list-location{
     span{
       color: $text-color;
     }
+
+    select {
+      margin-left: 4px;
+    }
   }
 }
 
@@ -170,4 +174,14 @@ h2.c-admin-list-location{
     font-size: 1.2rem;
     color: $text-color;
   }
+}
+
+.c-admin-error{
+  @include semi-bold;
+  font-size: 2rem;
+  padding: 2rem;
+  color: $white;
+  background: $incorrect;
+  margin: 0.5rem 0;
+  border-radius: $radius;
 }

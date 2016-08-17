@@ -5,7 +5,7 @@ import React        from 'react';
 import { connect }  from 'react-redux';
 
 import { startApp }                       from '../actions/app';
-import { offerAssessment, clearSnippet }  from '../actions/assessment_offered';
+import * as AssessmentActions             from '../actions/assessments';
 import assets                             from '../libs/assets';
 
 
@@ -20,7 +20,9 @@ class Home extends React.Component {
       openIframe: false,
       isOpen: false,
       expandedBankPaths: new Set(),
-      assessments: {}
+      assessments: {},
+      currentBankId: null,
+      nOfM: null
     };
     Object.freeze(this.state);
   }
@@ -33,8 +35,14 @@ class Home extends React.Component {
   }
 
   onMessage(message) {
-    let data = JSON.parse(message.data);
-    switch(data.open_assessments_msg){
+    // The react dev tools send a javascript object as a message. The player
+    // sends a string. This handles that.
+    let data = message.data;
+    if(typeof message.data === "string") {
+      data = JSON.parse(data);
+    }
+
+    switch(data.open_assessments_msg) {
       case 'open_assessments_resize':
         let iframe = document.getElementById('openassessments_container');
         let height = data.payload.height;
@@ -140,10 +148,32 @@ class Home extends React.Component {
   }
 
   offerAssessment(bankId, assessment){
-    this.setState({ isOpen: true,
-                    assessmentClicked: assessment });
+    this.setState({
+      isOpen: true,
+      assessmentClicked: assessment,
+      currentBankId: bankId
+    });
+
     var qBankHost = this.props.settings.qBankHost;
     this.props.offerAssessment(bankId, assessment.id, qBankHost);
+    this.props.getItems(bankId, assessment.id, qBankHost);
+  }
+
+  setNOfM(n) {
+    // If n of m is null, we default it to -1 in the lambda function
+    let nOfM = n;
+    if(n === this.props.items.length) {
+      nOfM = null;
+    }
+
+    this.setState({ nOfM });
+
+    this.props.offerAssessment(
+      this.state.currentBankId,
+      this.state.assessmentClicked.id,
+      this.props.settings.qBankHost,
+      nOfM
+    );
   }
 
   hasNoChildrenSelected(bank) {
@@ -244,6 +274,17 @@ class Home extends React.Component {
             <h2>{assessmentName}</h2>
             <p>Date Created: <span>02/09/2016</span></p>
             <p>Type: <span>{this.state.assessmentClicked.type}</span></p>
+            <p>Student must answer
+              <select value={this.state.nOfM || this.props.items.length}
+                  onChange={(e) => { this.setNOfM(parseInt(e.target.value)); }}
+              >
+                {
+                  _.map(_.range(1, this.props.items.length + 1), (index) => {
+                    return <option key={index} value={index}>{index}</option>;
+                  })
+                }
+              </select> of {this.props.items.length}
+            </p>
             <a style={{"marginTop":"135px"}} href="#" onClick={()=>{this.setState({openIframe: true});}} className="c-btn  c-btn--previous  c-btn--previous--small">
               <span>Create Iframe Code</span>
             </a>
@@ -260,6 +301,26 @@ class Home extends React.Component {
   render() {
     const hierarchy = this.props.banks;
 
+    let error = this.props.application.error;
+    let side;
+    let content;
+
+    if(error !== undefined) {
+      side = null;
+      content = <p className="c-admin-error">{error}</p>;
+    } else {
+      side = (
+        <ul className="c-filter-scroll">
+          {this.renderBankHierarchy(hierarchy)}
+        </ul>
+      );
+      content = (
+        <ul>
+          {this.renderAssessmentList(hierarchy)}
+        </ul>
+      );
+    }
+
     return (
       <div style={{"height": "100%"}}>
         <div className="o-admin-container">
@@ -269,12 +330,12 @@ class Home extends React.Component {
             </div>
             <div className="c-sidebar__filters">
               <p className="c-filters__title">Filter Tree</p>
-              {this.renderBankHierarchy(hierarchy)}
+              {side}
             </div>
           </div>
           <div className="o-admin-content">
             <div className="c-admin-content__main  c-admin-content__main--scroll">
-              {this.renderAssessmentList(hierarchy)}
+              {content}
             </div>
           </div>
         </div>
@@ -282,9 +343,10 @@ class Home extends React.Component {
           <div class="o-sidebar o-sidebar--preview"></div>
           {this.adminPreview()}
         </div>
-      </div>);
+      </div>
+    );
   }
 
 }
 
-export default connect(select, { startApp, offerAssessment, clearSnippet })(Home);
+export default connect(select, { startApp, ...AssessmentActions })(Home);
