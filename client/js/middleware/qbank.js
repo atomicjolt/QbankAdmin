@@ -2,7 +2,8 @@ import request                          from "superagent";
 
 import { Constants as AppConstants }          from "../actions/app";
 import { Constants as AssessmentConstants }   from "../actions/assessments";
-import { Constants as BanksConstants }        from "../actions/banks";
+import { clearSnippet }                       from "../actions/assessments";
+import { getBankHierarchy }                   from "../actions/banks";
 import { DONE }                               from "../constants/wrapper";
 
 export default (store) => (next) => {
@@ -16,10 +17,7 @@ export default (store) => (next) => {
         qBankHost = action.qBankHost || "";
         request.get(`${state.settings.rootEndpoint}proxy?qBankHost=${qBankHost}`).then(
           function (response) {
-            store.dispatch({
-              type:     BanksConstants.GET_BANK_HIERARCHY,
-              payload:  response.body
-            });
+            store.dispatch(getBankHierarchy(response.body));
           },
           function (err) {
             console.log("error", err.url, err.message);
@@ -28,9 +26,7 @@ export default (store) => (next) => {
         break;
 
       case AssessmentConstants.ASSESSMENT_OFFER:
-        store.dispatch({
-          type:     AssessmentConstants.ASSESSMENT_CLEAR_SNIPPET
-        });
+        store.dispatch(clearSnippet());
 
         const url = `${state.settings.rootEndpoint}offer`;
 
