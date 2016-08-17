@@ -16,7 +16,7 @@ function errorHandled(store, response) {
   let errorMessage = response.body.errorMessage;
   if(errorMessage === undefined) return false;
 
-  // The error message is sometimes null, if something goes wrong inside the
+  // The error message is sometimes null if something goes wrong inside the
   // lambda function, so we check if it exists before trying to strip the
   // timestamp
   if(errorMessage) {
