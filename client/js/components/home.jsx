@@ -312,6 +312,26 @@ class Home extends React.Component {
   render() {
     const hierarchy = this.props.banks;
 
+    let error = this.props.application.error;
+    let side;
+    let content;
+
+    if(error !== undefined) {
+      side = null;
+      content = <p className="c-admin-error">{error}</p>;
+    } else {
+      side = (
+        <ul className="c-filter-scroll">
+          {this.gradeLevel(hierarchy)}
+        </ul>
+      );
+      content = (
+        <ul>
+          {this.filteredAssessments(hierarchy)}
+        </ul>
+      );
+    }
+
     return (
       <div style={{"height": "100%"}}>
         <div className="o-admin-container">
@@ -321,9 +341,7 @@ class Home extends React.Component {
             </div>
             <div className="c-sidebar__filters">
               <p className="c-filters__title">Filter Tree</p>
-              <ul className="c-filter-scroll">
-                {this.gradeLevel(hierarchy)}
-              </ul>
+              {side}
             </div>
           </div>
           <div className="o-admin-content">
@@ -331,9 +349,7 @@ class Home extends React.Component {
               {this.breadcrumbs(hierarchy)}
             </div>
             <div className="c-admin-content__main  c-admin-content__main--scroll">
-              <ul>
-                {this.filteredAssessments(hierarchy)}
-              </ul>
+              {content}
             </div>
           </div>
         </div>
@@ -341,7 +357,8 @@ class Home extends React.Component {
           <div class="o-sidebar o-sidebar--preview"></div>
           {this.adminPreview()}
         </div>
-      </div>);
+      </div>
+    );
   }
 
 }
