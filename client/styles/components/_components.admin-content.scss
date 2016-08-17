@@ -78,6 +78,17 @@
   }
 }
 
+h2.c-admin-list-location{
+  padding: 3rem 2rem 2rem;
+  border-bottom: 0.2rem solid $light-gray;
+  color: $text-color;
+  font-size: 1.4rem;
+  @include regular;
+  font-weight: normal;
+  font-style: normal;
+  margin: 0;
+}
+
 .c-preview-sidebar{
   float: left;
   height: 100%;
