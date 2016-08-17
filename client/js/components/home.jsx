@@ -318,7 +318,7 @@ class Home extends React.Component {
 
     if(error !== undefined) {
       side = null;
-      content = <h1>{error}</h1>;
+      content = <p className="c-admin-error">{error}</p>;
     } else {
       side = (
         <ul className="c-filter-scroll">
