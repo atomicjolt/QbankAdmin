@@ -67,44 +67,12 @@ module.exports.handler = function (event, context, callback) {
   }
 
   /**
-   * Gets the details for a single bank, such as title, description, etc.
-   * Updates the bank in-place.
-   */
-  function getBankDetails(bank) {
-    // get("hierarchies/nodes/" + bank.id, (response) => {
-    //   var details = JSON.parse(response.text);
-
-    //   // The detailed object we get back contains a `childNodes` key with an
-    //   // empty array value, which conflicts with the real `childNodes` value
-    //   // already in the hierarchy.  We preserve the correct value by assigning
-    //   // it to the newly-received object, *then* assign the new object's entries
-    //   // to the original.
-
-    //   details.childNodes = bank.childNodes;
-    //   Object.assign(bank, details);
-    // })
-    ;
-  }
-
-  /**
-   * Given a hierarchy of banks with no details (title, etc.), recursively walks
-   * the hiearchy, requesting details each bank.
-   */
-  function recursivelyGetBankDetails(bank) {
-    getBankDetails(bank);
-    for(var i in bank.childNodes) {
-      recursivelyGetBankDetails(bank.childNodes[i]);
-    }
-  }
-
-  /**
    * Gets the hierarchy of banks appearing under the given root bank.  The
    * hierarchy includes only IDs, not details such as title.
    */
   function getChildren(bank) {
     get("hierarchies/nodes/" + bank.id + "/children?descendants=10&display_names", (response) => {
       bank.childNodes = JSON.parse(response.text);
-      recursivelyGetBankDetails(bank);
     });
   }
 
