@@ -273,8 +273,6 @@ class Home extends React.Component {
             </div>
           </div>
           <div className="o-admin-content">
-            <div className="c-admin-content__header">
-            </div>
             <div className="c-admin-content__main  c-admin-content__main--scroll">
               {this.renderAssessmentList(hierarchy)}
             </div>
