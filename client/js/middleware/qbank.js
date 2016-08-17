@@ -35,10 +35,10 @@ export default (store) => (next) => {
         const url = `${state.settings.rootEndpoint}offer`;
 
         const body = {
-          bank_id:       action.bankId,
-          assessment_id: action.assessmentId,
-          qBankHost: action.qBankHost,
-          nOfM: action.nOfM
+          bank_id:        action.bankId,
+          assessment_id:  action.assessmentId,
+          qBankHost:      action.qBankHost,
+          nOfM:           action.nOfM
         };
 
         request.post(url).send(body).then(
