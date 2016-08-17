@@ -57,6 +57,7 @@ export default (store) => (next) => {
 
         request.post(url).send(body).then(
           function (response) {
+            if(errorHandled(store, response)) return;
             store.dispatch({
               type:     AssessmentConstants.ASSESSMENT_OFFER + DONE,
               payload:  response.body
@@ -72,6 +73,7 @@ export default (store) => (next) => {
         qBankHost = action.qBankHost || "";
         request.get(`${state.settings.rootEndpoint}items?qBankHost=${qBankHost}&bankId=${action.bankId}&assessmentId=${action.assessmentId}`).then(
           function (response) {
+            if(errorHandled(store, response)) return;
             store.dispatch({
               type:     AssessmentConstants.ASSESSMENT_ITEMS + DONE,
               payload:  response.body
