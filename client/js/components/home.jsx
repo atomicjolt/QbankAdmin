@@ -19,11 +19,12 @@ class Home extends React.Component {
       assessmentClicked: {},
       openIframe: false,
       isOpen: false,
-      itemChecked: {},
+      expandedBankPaths: new Set(),
       assessments: {},
       currentBankId: null,
       nOfM: null
     };
+    Object.freeze(this.state);
   }
 
   componentWillMount() {
@@ -62,60 +63,47 @@ class Home extends React.Component {
     }, '*');
   }
 
-  breadcrumbs(hierarchy){
-    var checked = _.compact(_.map(this.state.itemChecked, (val, key)=>{if(val === true){return key;}}));
-    return _.map(hierarchy, (bank)=>{
-      if(_.includes(checked, bank.id)){
-        return [(
-          <div className="c-breadcrumb" key={bank.id}>
-            <span>{bank.displayName.text}</span>
-            <a href="#" onClick={()=>{this.checkItem(bank, false);}}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-                <path d="M29.17 16l-5.17 5.17-5.17-5.17-2.83 2.83 5.17 5.17-5.17 5.17 2.83 2.83 5.17-5.17 5.17 5.17 2.83-2.83-5.17-5.17 5.17-5.17-2.83-2.83zm-5.17-12c-11.05 0-20 8.95-20 20s8.95 20 20 20 20-8.95 20-20-8.95-20-20-20zm0 36c-8.82 0-16-7.18-16-16s7.18-16 16-16 16 7.18 16 16-7.18 16-16 16z"/>
-              </svg>
-            </a>
-          </div>
-        ), this.breadcrumbs(bank.childNodes)];
-      }
-    });
-  }
+  onExpandBank(bank, value) {
+    let expandedBankPaths = new Set(this.state.expandedBankPaths);
 
-  checkItem(bank, value){
-    this.props.clearSnippet();
-    let map = {[bank.id]: value};
-    if(!value){
-      this.resetHierarchy(bank, map);
+    if(value) {
+      expandedBankPaths.add(bank.pathId);
+    } else {
+      this.resetExpansion(bank, expandedBankPaths);
     }
-    let itemChecked = Object.assign({}, this.state.itemChecked, map);
-    this.setState({ itemChecked });
+
+    this.setState({expandedBankPaths});
     this.closeAssessmentView();
   }
 
-  resetHierarchy(bank, map){
-    map[bank.id] = false;
-    _.forEach(bank.childNodes, (bc)=>{
-      this.resetHierarchy(bc, map);
+  /**
+   * Clears the hierarchy selection for the given bank and all of its
+   * descendants.
+   */
+  resetExpansion(bank, pathSet) {
+    pathSet.delete(bank.pathId);
+    bank.childNodes.forEach((bc) => {
+      this.resetExpansion(bc, pathSet);
     });
   }
 
-  isCheckedBreadcrumbs(bankId){
-    var checked = _.compact(_.map(this.state.itemChecked, (val, key)=>{if(val === true){return key;}}));
-    return _.includes(checked, bankId);
-  }
-
-  renderItem(bank){
+  renderItem(bank) {
     let itemClass = "c-filter__item";
     if(bank.childNodes.length == 0){
       itemClass = itemClass + " c-filter__item--dropdown";
     }
+    let expanded = this.state.expandedBankPaths.has(bank.pathId);
     let renderedChildren;
-    if(this.state.itemChecked[bank.id]){
+    if(expanded) {
       renderedChildren = this.renderChildren(bank.childNodes);
     }
+
     return (
       <li key={bank.id} className={itemClass}>
         <label className="c-checkbox--nested">
-          <input type="checkbox" checked={this.isCheckedBreadcrumbs(bank.id)} onChange={ (e) => this.checkItem(bank, e.target.checked) }/>
+          <input type="checkbox"
+                 checked={expanded}
+                 onChange={(e) => this.onExpandBank(bank, e.target.checked)}/>
           <div>{bank.displayName.text}</div>
         </label>
         {renderedChildren}
@@ -123,38 +111,32 @@ class Home extends React.Component {
     );
   }
 
-  renderChildren(children){
-    if(_.isUndefined(children)){ return; }
-    return _.map(children, (child)=>{
-      return (
-        <ul key={child.id} className="c-filter__dropdown">
-          {this.renderItem(child)}
-        </ul>);
-    });
+  renderChildren(children) {
+    if(_.isUndefined(children)) { return; }
+    return (
+      <ul className="c-filter__dropdown">
+        {children.map((child) => this.renderItem(child))}
+      </ul>
+    );
   }
 
-  gradeLevel(hierarchy){
-    if(_.isEmpty(hierarchy)){
+  renderBankHierarchy(hierarchy) {
+    if(_.isEmpty(hierarchy)) {
       return <div className="loader">{this.spinner()}</div>;
     }
-    return _.map(hierarchy, (child)=>{
-      return this.renderItem(child);
+    return (
+      <ul className="c-filter-scroll">
+        {hierarchy.map((child) => this.renderItem(child))}
+      </ul>
+    );
+  }
+
+  renderAssessmentList(hierarchy) {
+    let assessmentList = [];
+    hierarchy.forEach((bank) => {
+      this.gatherAssessments(assessmentList, [], bank);
     });
-  }
-
-  filteredAssessments(hierarchy){
-    return _.flatten(_.map(hierarchy, (bank)=>{
-      return this.renderAssessments(bank);
-    }));
-  }
-
-  noChildChecked(bank, itemChecked){
-    for (var i in bank.childNodes){
-      if(itemChecked[bank.childNodes[i].id]){
-        return false;
-      }
-    }
-    return true;
+    return assessmentList;
   }
 
   spinner(){
@@ -206,26 +188,33 @@ class Home extends React.Component {
     );
   }
 
-  renderAssessments(bank, force){
-    let itemChecked = this.state.itemChecked;
-    let assessmentItems = [];
-    if(force || itemChecked[bank.id]) {
-      assessmentItems.push(
-        _.map(bank.assessments, (assessment) => (
-          <li key={assessment.id} className="c-admin-list-item">
-            <a href="#" onClick={()=>{this.offerAssessment(bank.id, assessment);}}>
-              {assessment.displayName.text}
-            </a>
-          </li>
-        ))
-      );
-      let forceChildren = this.noChildChecked(bank, itemChecked);
-      for(let i in bank.childNodes) {
-        let bc = bank.childNodes[i];
-        Array.prototype.push.apply(assessmentItems, this.renderAssessments(bc, forceChildren));
+  hasNoChildrenSelected(bank) {
+    for(let b of bank.childNodes) {
+      if(this.state.expandedBankPaths.has(b.pathId)) {
+        return false;
       }
     }
-    return assessmentItems;
+    return true;
+  }
+
+  gatherAssessments(assessmentList, path, bank, force) {
+    path = path.concat([bank.displayName.text]);
+    if(force || this.state.expandedBankPaths.has(bank.pathId)) {
+      if(bank.assessments.length > 0) {
+        assessmentList.push(<h2 className="c-admin-list-location" key={`h_${bank.pathId}`}>{path.join(", ")}</h2>);
+        assessmentList.push(
+          <ul key={`l_${bank.pathId}`}>
+            {bank.assessments.map((a) => (
+               <li key={a.id} className="c-admin-list-item">
+                 <a href="#" onClick={()=>{this.offerAssessment(bank.id, a);}}>{a.displayName.text}</a>
+               </li>
+             ))}
+          </ul>
+        );
+      }
+      let forceChildren = this.hasNoChildrenSelected(bank);
+      bank.childNodes.forEach((b) => this.gatherAssessments(assessmentList, path, b, forceChildren));
+    }
   }
 
   iframeRender(){
@@ -346,12 +335,12 @@ class Home extends React.Component {
     } else {
       side = (
         <ul className="c-filter-scroll">
-          {this.gradeLevel(hierarchy)}
+          {this.renderBankHierarchy(hierarchy)}
         </ul>
       );
       content = (
         <ul>
-          {this.filteredAssessments(hierarchy)}
+          {this.renderAssessmentList(hierarchy)}
         </ul>
       );
     }
@@ -369,9 +358,6 @@ class Home extends React.Component {
             </div>
           </div>
           <div className="o-admin-content">
-            <div className="c-admin-content__header">
-              {this.breadcrumbs(hierarchy)}
-            </div>
             <div className="c-admin-content__main  c-admin-content__main--scroll">
               {content}
             </div>
