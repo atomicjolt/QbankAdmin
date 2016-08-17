@@ -24,7 +24,7 @@ export function offerAssessment(bankId, assessmentId, qBankHost, nOfM) {
 
 export function clearSnippet() {
   return {
-    type:      Constants.ASSESSMENT_CLEAR_SNIPPET,
+    type:      Constants.ASSESSMENT_CLEAR_SNIPPET
   };
 }
 
