@@ -123,8 +123,12 @@ export class Home extends React.Component {
   }
 
   renderBankHierarchy(hierarchy) {
-    if(_.isEmpty(hierarchy)) {
+    if(hierarchy === null) {
       return <div className="loader">{this.spinner()}</div>;
+    } else if(_.isEmpty(hierarchy)) {
+      return <p className="c-admin-error">
+        No banks exist in QBank. Please upload some data first.
+      </p>;
     }
     return (
       <ul className="c-filter-scroll">
@@ -135,7 +139,7 @@ export class Home extends React.Component {
 
   renderAssessmentList(hierarchy) {
     let assessmentList = [];
-    hierarchy.forEach((bank) => {
+    _.each(hierarchy, (bank) => {
       this.gatherAssessments(assessmentList, [], bank);
     });
     return assessmentList;
@@ -330,7 +334,6 @@ export class Home extends React.Component {
 
   render() {
     const hierarchy = this.props.banks;
-
     let error = this.props.application.error;
     let side;
     let content;

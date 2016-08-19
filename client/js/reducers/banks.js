@@ -23,7 +23,7 @@ function addPathIds(bank, path) {
   bank.childNodes.forEach((b) => { addPathIds(b, path); });
 }
 
-export default (state = [], action) => {
+export default (state = null, action) => {
   switch(action.type){
     case Constants.GET_BANK_HIERARCHY:
       let banks = action.payload;
