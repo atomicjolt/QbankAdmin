@@ -324,7 +324,7 @@ export class Home extends React.Component {
             </a>
           </div>
           <div className="c-preview-questions">
-            <div class="c-preview-scroll">
+            <div className="c-preview-scroll">
               {this.iframeRender()}
             </div>
           </div>
@@ -373,7 +373,7 @@ export class Home extends React.Component {
           </div>
         </div>
         <div className={this.slidingClasses()}>
-          <div class="o-sidebar o-sidebar--preview"></div>
+          <div className="o-sidebar o-sidebar--preview"></div>
           {this.adminPreview()}
         </div>
       </div>
