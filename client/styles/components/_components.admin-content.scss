@@ -194,3 +194,60 @@ h2.c-admin-list-location{
   margin: 0.5rem 0;
   border-radius: $radius;
 }
+
+.c-login-title{
+  @include light;
+  font-size: 3rem;
+  margin: 5rem 0 3rem;
+  color: $primary;
+  text-align: center;
+}
+
+.c-login-btn{
+  height: 7rem;
+  max-width: 50rem;
+  width: 100%;
+  display: block;
+  margin: 0.5rem auto;
+  background: $lightest-gray;
+  border-radius: $radius;
+  box-shadow: 0 0 0.5rem rgba(0,0,0,0.3);
+  position: relative;
+  padding-left: 10rem;
+
+  &:before{
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 7rem;
+    height: 7rem;
+    border-radius: $radius 0 0 $radius;
+    background: $white;
+  }
+
+  &:hover{
+    .c-login-btn__text{
+      color: $primary;
+    }
+  }
+}
+
+.c-login-btn--google{
+  border-right: 0.5rem solid $white;
+
+  svg{
+    width: 2rem;
+    height: 2rem;
+    left: 2.5rem;
+    top: 2.3rem;
+    position: absolute;
+  }
+}
+
+  .c-login-btn__text{
+    @include semi-bold;
+    font-size: 1.6rem;
+    color: $text-color;
+    line-height: 6.6rem;
+  }
