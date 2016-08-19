@@ -11,7 +11,7 @@ import assets                             from '../libs/assets';
 
 const select = (state) => (state);
 
-class Home extends React.Component {
+export class Home extends React.Component {
 
   constructor(){
     super();
@@ -243,9 +243,12 @@ class Home extends React.Component {
       let qBankHost = this.props.settings.qBankHost ? this.props.settings.qBankHost : "https://qbank-clix-dev.mit.edu";
       let hostedPlayer = this.props.settings.assessmentPlayerUrl;
       let localPlayerUrl = this.props.settings.localPlayerUrl;
+      let localQbankUrl = this.props.settings.localQbankUrl;
 
       // localPlayerUrl should take precedence over the hosted player
-      let url = `${localPlayerUrl || hostedPlayer}/?unlock_next=ON_CORRECT&api_url=${qBankHost}/api/v1&bank=${assessOffered.bankId}&assessment_offered_id=${assessOffered.id}#/assessment`;
+      let url = `${localPlayerUrl || hostedPlayer}/?unlock_next=ON_CORRECT` +
+          `&api_url=${localQbankUrl || qBankHost}/api/v1` +
+          `&bank=${assessOffered.bankId}&assessment_offered_id=${assessOffered.id}#/assessment`;
       return `<iframe src="${url}"/>`;
     } else {
       return "";

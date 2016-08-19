@@ -169,11 +169,19 @@ dash deploy`, select all functions and endpoints, then select
 
 ##App Settings:
 -----------------------
-assessmentPlayerUrl: The URL for the assessment player.
-localPlayerUrl: The URL for the generated iframe code for the user to copy and
-                and paste. Defaults to be the same as assessmentPlayerUrl.
+assessmentPlayerUrl: The URL for where the assessment player is located. This
+                     is the URL that is always used for the assessment preview.
+
+localPlayerUrl: The URL for the assessment player location in the iframe code
+                that is generated for the user to copy and paste. Defaults
+                to be the same as assessmentPlayerUrl.
+
+localQbankUrl:  The URL for the QBank location in the iframe code that is
+                generated for the user to copy and paste. Defaults to be the
+                the same as qBankHost.
+
 rootEndpoint: The URL for the lambda api.                
-qBankHost: The URL for qbank.
+qBankHost: The URL for qbank. This URL is always used for the assessment preview.
 
 License and attribution
 -----------------------
