@@ -4,9 +4,10 @@ import _            from 'lodash';
 import React        from 'react';
 import { connect }  from 'react-redux';
 
-import { startApp }                       from '../actions/app';
-import * as AssessmentActions             from '../actions/assessments';
-import assets                             from '../libs/assets';
+import { startApp }            from '../actions/app';
+import * as AssessmentActions  from '../actions/assessments';
+import assets                  from '../libs/assets';
+import LocaleOption            from './locale_option';
 
 
 const select = (state) => (state);
@@ -43,8 +44,12 @@ class Home extends React.Component {
     }
 
     switch(data.open_assessments_msg) {
-      case 'open_assessments_resize':
-        let iframe = document.getElementById('openassessments_container');
+      case "open_assessments_available_locales":
+        this.props.setAvailableLocales(data.available_locales);
+        break;
+
+      case "open_assessments_resize":
+        let iframe = document.getElementById("openassessments_container");
         if(iframe) {
           let height = data.payload.height;
           iframe.style.height = height + "px";
@@ -58,7 +63,7 @@ class Home extends React.Component {
 
     if(!iframe){ return; }
 
-    window.addEventListener("message", this.onMessage, false);
+    window.addEventListener("message", (message) => this.onMessage(message), false);
     iframe.contentWindow.postMessage({
       'open_assessments_msg': 'open_assessments_size_request',
       'payload': {}

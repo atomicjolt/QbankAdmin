@@ -7,6 +7,7 @@ import settings           from './settings';
 import banks              from './banks';
 import assessment_offered from './assessment_offered';
 import items              from './items';
+import locales            from './locales';
 
 const rootReducer = combineReducers({
   settings,
@@ -15,7 +16,8 @@ const rootReducer = combineReducers({
   auth,
   banks,
   assessment_offered,
-  items
+  items,
+  locales
 });
 
 export default rootReducer;
