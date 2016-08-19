@@ -11,7 +11,7 @@ import assets                             from '../libs/assets';
 
 const select = (state) => (state);
 
-class Home extends React.Component {
+export class Home extends React.Component {
 
   constructor(){
     super();
