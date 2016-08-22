@@ -266,7 +266,8 @@ export class Home extends React.Component {
       let url = `${localPlayerUrl || hostedPlayer}/?unlock_next=ON_CORRECT` +
           `&api_url=${localQbankUrl || qBankHost}/api/v1` +
           `&bank=${assessOffered.bankId}&assessment_offered_id=${assessOffered.id}#/assessment`;
-      return `<iframe src="${url}"/>`;
+      return url;
+      // return `<iframe src="${url}"/>`;
     } else {
       return "";
     }
@@ -320,7 +321,12 @@ export class Home extends React.Component {
           </a>
         </div>
         <div className="c-admin-content__main c-admin-content__main--preview">
-          {this.iframeCode()}
+          {
+            IframeSnippet({
+              openIframe:this.state.openIframe,
+              url:this.iframe()
+            })
+          }
           <div className="c-preview-sidebar">
             <h2>{assessmentName}</h2>
             <p>Date Created: <span>02/09/2016</span></p>
