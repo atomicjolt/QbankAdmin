@@ -302,7 +302,6 @@ export class Home extends React.Component {
 
     if(this.state.openIframe) {
       var iframeEmbed = IframeEmbed({
-        openIframe:this.state.openIframe,
         url:this.iframeUrl(localUrl || playerUrl)
       });
     }
