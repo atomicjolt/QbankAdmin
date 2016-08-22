@@ -236,23 +236,6 @@ export class Home extends React.Component {
     }, "*");
   }
 
-  iframeRender(){
-    let assessOffered = this.props.assessment_offered;
-    if(!_.isEmpty(assessOffered)){
-      let qBankHost = this.props.settings.qBankHost ? this.props.settings.qBankHost : "https://qbank-clix-dev.mit.edu";
-      let playerHost = this.props.settings.assessmentPlayerUrl; //This will need to be the instance deployed, not localhost.
-      let url = encodeURI(`${playerHost}/?unlock_next=ON_CORRECT&api_url=${qBankHost}/api/v1&bank=${assessOffered.bankId}&assessment_offered_id=${assessOffered.id}#/assessment`);
-
-      return (
-        <div>
-          <iframe id="openassessments_container" src={url}/>
-        </div>
-      );
-    } else {
-      return "";
-    }
-  }
-
   render() {
     const hierarchy = this.props.banks;
     let error = this.props.application.error;
