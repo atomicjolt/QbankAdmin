@@ -225,6 +225,15 @@ class Home extends React.Component {
     }
   }
 
+  onChangeLocale(event) {
+    const iframe = document.getElementById("openassessments_container");
+    const locale = event.target.value;
+    iframe.contentWindow.postMessage({
+      open_assessments_msg: "open_assessments_set_locale",
+      locale
+    }, "*");
+  }
+
   iframeRender(){
     let assessOffered = this.props.assessment_offered;
     if(!_.isEmpty(assessOffered)){
@@ -294,6 +303,10 @@ class Home extends React.Component {
       );
     }
 
+    let localeOptions = this.props.locales.map((l) => (
+      <option key={l[0]} value={l[0]}>{l[1]}</option>
+    ));
+
     return (
       <div className="o-admin-content">
         <div className="c-admin-content__header">
@@ -316,6 +329,13 @@ class Home extends React.Component {
                 { nOfMOptions }
               </select> of {this.props.items.length}
             </p>
+
+            <p>Preview the UI in
+              <select onChange={(e) => this.onChangeLocale(e)}>
+                {localeOptions}
+              </select>
+            </p>
+
             <a style={{"marginTop":"135px"}} href="#" onClick={()=>{this.setState({openIframe: true});}} className="c-btn  c-btn--previous  c-btn--previous--small">
               <span>Create Iframe Code</span>
             </a>
