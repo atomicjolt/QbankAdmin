@@ -45,6 +45,6 @@ export default function PreviewSidebar(props) {
         className="c-btn  c-btn--previous  c-btn--previous--small">
         <span>Create Iframe Code</span>
       </a>
-  </div>
+    </div>
   );
 };

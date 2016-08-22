@@ -7,8 +7,6 @@ import { connect }  from 'react-redux';
 import { startApp }            from '../actions/app';
 import * as AssessmentActions  from '../actions/assessments';
 import assets                  from '../libs/assets';
-// import IframeEmbed             from './common/iframe_embed';
-// import IframePreview           from './common/iframe_preview';
 import AdminPreview            from './admin_preview';
 
 
