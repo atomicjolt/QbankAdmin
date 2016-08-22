@@ -13,6 +13,96 @@ import IframePreview           from './common/iframe_preview';
 
 const select = (state) => (state);
 
+class AdminPreview extends React.Component {
+
+  // *assessment name
+  // open iframe
+  // assessment offered
+  // settings
+  // close assessment view / open assessment view
+  render() {
+
+    let nOfMOptions;
+
+    // If there are no items, render an empty option to clear the select.
+    // Else, map over a range of numbers from 1 to items.length + 1,
+    // and generate an option for each number.
+    if(_.isEmpty(this.props.items)) {
+      nOfMOptions = <option value=""></option>;
+    } else {
+      nOfMOptions = _.map(_.range(1, this.props.items.length + 1),
+        (index) => {
+          return <option key={index} value={index}>{index}</option>;
+        }
+      );
+    }
+
+    var localUrl = this.props.settings.localPlayerUrl;
+    var playerUrl = this.props.settings.assessmentPlayerUrl;
+
+    if(this.state.openIframe) {
+      var iframeEmbed = IframeEmbed({
+        openIframe:this.state.openIframe,
+        url:this.iframeUrl(localUrl || playerUrl)
+      });
+    }
+
+    if(!_.isEmpty(this.props.assessment_offered)) {
+      var iframePreview = IframePreview({
+        url: this.iframeUrl(playerUrl)
+      });
+    }
+
+    let localeOptions = this.props.locales.map((l) => (
+      <option key={l[0]} value={l[0]}>{l[1]}</option>
+    ));
+    return <div>Howdy</div>;
+
+    //
+    // return (
+    //   <div className="o-admin-content">
+    //     <div className="c-admin-content__header">
+    //       <a href="#" onClick={()=>{ this.closeAssessmentView(); }} className="c-btn  c-btn--previous  c-btn--previous--small">
+    //         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+    //           <path d="M14.83 16.42l9.17 9.17 9.17-9.17 2.83 2.83-12 12-12-12z"/>
+    //         </svg>
+    //         <span>Back To Assessment List</span>
+    //       </a>
+    //     </div>
+    //     <div className="c-admin-content__main c-admin-content__main--preview">
+    //       {iframeEmbed}
+    //       <div className="c-preview-sidebar">
+    //         <h2>{this.props.assessmentName}</h2>
+    //         <p>Date Created: <span>02/09/2016</span></p>
+    //         <p>Type: <span>{this.state.assessmentClicked.type}</span></p>
+    //         <p>Student must answer
+    //           <select value={ this.state.nOfM || this.props.items.length }
+    //                   onChange={(e) => { this.setNOfM(parseInt(e.target.value)); }}>
+    //             { nOfMOptions }
+    //           </select> of {this.props.items.length}
+    //         </p>
+    //
+    //         <p>Preview the UI in
+    //           <select onChange={(e) => this.onChangeLocale(e)}>
+    //             {localeOptions}
+    //           </select>
+    //         </p>
+    //
+    //         <a style={{"marginTop":"135px"}} href="#" onClick={()=>{this.setState({openIframe: true});}} className="c-btn  c-btn--previous  c-btn--previous--small">
+    //           <span>Create Iframe Code</span>
+    //         </a>
+    //       </div>
+    //       <div className="c-preview-questions">
+    //         <div className="c-preview-scroll">
+    //           {iframePreview}
+    //         </div>
+    //       </div>
+    //     </div>
+    //   </div>
+    // );
+  }
+};
+
 
 export class Home extends React.Component {
 
@@ -402,7 +492,10 @@ export class Home extends React.Component {
         </div>
         <div className={this.slidingClasses()}>
           <div className="o-sidebar o-sidebar--preview"></div>
-          {this.adminPreview()}
+          {/*this.adminPreview()*/}
+          <AdminPreview
+            assessmentName={this.state.assessmentClicked.displayName}
+            openIframe={this.state.openIframe} />
         </div>
       </div>
     );
