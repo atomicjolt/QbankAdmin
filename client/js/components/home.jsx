@@ -68,17 +68,10 @@ class AdminPreview extends React.Component {
       <option key={l[0]} value={l[0]}>{l[1]}</option>
     ));
 
-
-  // *assessment name
-  // *open iframe
-  // assessment offered
-  // settings
-  // close assessment view / open assessment view
-
     return (
       <div className="o-admin-content">
         <div className="c-admin-content__header">
-          <a href="#" onClick={()=>{ /*this.closeAssessmentView();*/ }} className="c-btn  c-btn--previous  c-btn--previous--small">
+          <a href="#" onClick={()=>{ this.props.closeAssessmentView();}} className="c-btn  c-btn--previous  c-btn--previous--small">
             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
               <path d="M14.83 16.42l9.17 9.17 9.17-9.17 2.83 2.83-12 12-12-12z"/>
             </svg>
@@ -93,18 +86,18 @@ class AdminPreview extends React.Component {
             <p>Type: <span>{this.props.assessmentClicked.type}</span></p>
             <p>Student must answer
               <select value={ this.props.nOfM || this.props.items.length }
-                      onChange={(e) => { /*this.setNOfM(parseInt(e.target.value)); */}}>
+                      onChange={(e) => this.props.setNOfM(parseInt(e.target.value))}>
                 {nOfMOptions}
               </select> of {this.props.items.length}
             </p>
 
             <p>Preview the UI in
-              <select onChange={()=>{}/*(e) => this.onChangeLocale(e)*/}>
+              <select onChange={(e) => this.props.onChangeLocale(e)}>
                 {localeOptions}
               </select>
             </p>
 
-            <a style={{"marginTop":"135px"}} href="#" onClick={()=>{/*this.setState({openIframe: true});*/}} className="c-btn  c-btn--previous  c-btn--previous--small">
+            <a style={{"marginTop":"135px"}} href="#" onClick={()=> this.props.openIframe()} className="c-btn  c-btn--previous  c-btn--previous--small">
               <span>Create Iframe Code</span>
             </a>
           </div>
@@ -277,6 +270,10 @@ export class Home extends React.Component {
       currentBankId: null,
       nOfM: null
     });
+  }
+
+  openIframe() {
+    this.setState({openIframe: true});
   }
 
   offerAssessment(bankId, assessment){
@@ -516,7 +513,11 @@ export class Home extends React.Component {
             locales={this.props.locales}
             nOfM={this.state.nOfM}
             items={this.props.items}
-            assessmentOffered={this.props.assessment_offered}/>
+            assessmentOffered={this.props.assessment_offered}
+            closeAssessmentView={() => this.closeAssessmentView()}
+            openAssessmentView={() => this.openAssessmentView()}
+            setNOfM={(n) => this.setNOfM(n)}
+            onChangeLocale={(e) => this.onChangeLocale(e)}/>
         </div>
       </div>
     );
