@@ -270,11 +270,17 @@ export class Home extends React.Component {
     var localUrl = this.props.settings.localPlayerUrl;
     var playerUrl = this.props.settings.assessmentPlayerUrl;
 
-    if(this.state.openIframe){
+    if(this.state.openIframe) {
       var iframeEmbed = IframeEmbed({
         openIframe:this.state.openIframe,
         url:this.iframeUrl(localUrl || playerUrl)
-      })
+      });
+    }
+
+    if(!_.isEmpty(this.props.assessment_offered)) {
+      var iframePreview = IframePreview({
+        url: this.iframeUrl(playerUrl)
+      });
     }
 
     return (
@@ -306,12 +312,7 @@ export class Home extends React.Component {
           </div>
           <div className="c-preview-questions">
             <div className="c-preview-scroll">
-              {
-                IframePreview({
-                  assessment_offered: this.props.assessment_offered,
-                  url: this.iframeUrl(playerUrl)
-                })
-              }
+              {iframePreview}
             </div>
           </div>
         </div>

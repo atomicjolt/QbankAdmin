@@ -1,11 +1,15 @@
 import React from 'react';
 
+
+IframePreview.propTypes = {
+  // Iframe src url 
+  url: React.PropTypes.string
+};
+
 export default function IframePreview(props) {
-  if(!_.isEmpty(props.assessment_offered)){
-    return (
-      <div>
-        <iframe id="openassessments_container" src={props.url}/>
-      </div>
-    );
-  }
+  return (
+    <div>
+      <iframe id="openassessments_container" src={props.url}/>
+    </div>
+  );
 }
