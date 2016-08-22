@@ -240,24 +240,8 @@ export class Home extends React.Component {
     }, "*");
   }
 
-  iframeRender(){
-    let assessOffered = this.props.assessment_offered;
-    if(!_.isEmpty(assessOffered)){
-      let qBankHost = this.props.settings.qBankHost ? this.props.settings.qBankHost : "https://qbank-clix-dev.mit.edu";
-      let playerHost = this.props.settings.assessmentPlayerUrl; //This will need to be the instance deployed, not localhost.
-      let url = encodeURI(`${playerHost}/?unlock_next=ON_CORRECT&api_url=${qBankHost}/api/v1&bank=${assessOffered.bankId}&assessment_offered_id=${assessOffered.id}#/assessment`);
 
-      return (
-        <div>
-          <iframe id="openassessments_container" src={url}/>
-        </div>
-      );
-    } else {
-      return "";
-    }
-  }
-
-  iframe(playerUrl){
+  iframeUrl(playerUrl){
     let assessOffered = this.props.assessment_offered;
     if(!_.isEmpty(assessOffered)){
       let qBankHost = this.props.settings.qBankHost ? this.props.settings.qBankHost : "https://qbank-clix-dev.mit.edu";
@@ -279,18 +263,6 @@ export class Home extends React.Component {
     return "o-admin-container  o-admin-container--preview";
   }
 
-  iframeCode(){
-    if(this.state.openIframe){
-      return (
-        <div className="c-preview-embed">
-          <label for="embed">Embed Code</label>
-          <textarea id="embed" value={this.iframe()} readOnly="true" ></textarea>
-        </div>
-      );
-    }
-    return null;
-  }
-
   adminPreview(){
     var assessmentName = this.state.assessmentClicked.displayName ? this.state.assessmentClicked.displayName.text : "";
 
@@ -309,14 +281,24 @@ export class Home extends React.Component {
       );
     }
 
-<<<<<<< HEAD
     var localUrl = this.props.settings.localPlayerUrl;
     var playerUrl = this.props.settings.assessmentPlayerUrl;
-=======
+
+    if(this.state.openIframe) {
+      var iframeEmbed = IframeEmbed({
+        url:this.iframeUrl(localUrl || playerUrl)
+      });
+    }
+
+    if(!_.isEmpty(this.props.assessment_offered)) {
+      var iframePreview = IframePreview({
+        url: this.iframeUrl(playerUrl)
+      });
+    }
+
     let localeOptions = this.props.locales.map((l) => (
       <option key={l[0]} value={l[0]}>{l[1]}</option>
     ));
->>>>>>> 5225761f643f01088b9444469845aa0c3a1edeaf
 
     return (
       <div className="o-admin-content">
@@ -329,12 +311,7 @@ export class Home extends React.Component {
           </a>
         </div>
         <div className="c-admin-content__main c-admin-content__main--preview">
-          {
-            IframeEmbed({
-              openIframe:this.state.openIframe,
-              url:this.iframe(localUrl || playerUrl)
-            })
-          }
+          {iframeEmbed}
           <div className="c-preview-sidebar">
             <h2>{assessmentName}</h2>
             <p>Date Created: <span>02/09/2016</span></p>
@@ -358,12 +335,7 @@ export class Home extends React.Component {
           </div>
           <div className="c-preview-questions">
             <div className="c-preview-scroll">
-              {
-                IframePreview({
-                  assessment_offered: this.props.assessment_offered,
-                  url: this.iframe(playerUrl)
-                })
-              }
+              {iframePreview}
             </div>
           </div>
         </div>
@@ -396,7 +368,6 @@ export class Home extends React.Component {
     return (
       <div style={{"height": "100%"}}>
         <div className="o-admin-container">
-          {/* Sidebar */}
           <div className="o-sidebar">
             <div className="c-sidebar__header">
               <img src="" alt="" />
@@ -406,21 +377,16 @@ export class Home extends React.Component {
               {side}
             </div>
           </div>
-          {/* End Sidebar */}
-          {/* Assessment List */}
           <div className="o-admin-content">
             <div className="c-admin-content__main  c-admin-content__main--scroll">
               {content}
             </div>
           </div>
-          {/* End Assessment List */}
         </div>
-        {/* Assessment Preview */}
         <div className={this.slidingClasses()}>
           <div className="o-sidebar o-sidebar--preview"></div>
           {this.adminPreview()}
         </div>
-        {/* End Assessment Preview */}
       </div>
     );
   }
