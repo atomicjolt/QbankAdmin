@@ -17,7 +17,7 @@ function IframeSnippet(props) {
     return (
       <div className="c-preview-embed">
         <label for="embed">Embed Code</label>
-        <textarea id="embed" value={props.url} readOnly="true" ></textarea>
+        <textarea id="embed" value={`<iframe src="${props.url}"/>`} readOnly="true" ></textarea>
       </div>
     );
   }
@@ -254,20 +254,16 @@ export class Home extends React.Component {
     }
   }
 
-  iframe(){
+  iframe(playerUrl){
     let assessOffered = this.props.assessment_offered;
     if(!_.isEmpty(assessOffered)){
       let qBankHost = this.props.settings.qBankHost ? this.props.settings.qBankHost : "https://qbank-clix-dev.mit.edu";
-      let hostedPlayer = this.props.settings.assessmentPlayerUrl;
-      let localPlayerUrl = this.props.settings.localPlayerUrl;
       let localQbankUrl = this.props.settings.localQbankUrl;
 
-      // localPlayerUrl should take precedence over the hosted player
-      let url = `${localPlayerUrl || hostedPlayer}/?unlock_next=ON_CORRECT` +
+      let url = `${playerUrl}/?unlock_next=ON_CORRECT` +
           `&api_url=${localQbankUrl || qBankHost}/api/v1` +
           `&bank=${assessOffered.bankId}&assessment_offered_id=${assessOffered.id}#/assessment`;
       return url;
-      // return `<iframe src="${url}"/>`;
     } else {
       return "";
     }
@@ -310,6 +306,9 @@ export class Home extends React.Component {
       );
     }
 
+    var localUrl = this.props.settings.localPlayerUrl;
+    var playerUrl = this.props.settings.assessmentPlayerUrl;
+
     return (
       <div className="o-admin-content">
         <div className="c-admin-content__header">
@@ -324,7 +323,7 @@ export class Home extends React.Component {
           {
             IframeSnippet({
               openIframe:this.state.openIframe,
-              url:this.iframe()
+              url:this.iframe(localUrl || playerUrl)
             })
           }
           <div className="c-preview-sidebar">
