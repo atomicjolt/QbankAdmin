@@ -15,10 +15,9 @@ export default class AdminPreview extends React.Component {
 
   iframeUrl(playerUrl, qbankUrl, assessmentOffered){
     if(!_.isEmpty(assessmentOffered)){
-      let url = `${playerUrl}/?unlock_next=ON_CORRECT` +
-          `&api_url=${qbankUrl/*localQbankUrl || qBankHost*/}/api/v1` +
-          `&bank=${assessmentOffered.bankId}&assessment_offered_id=${assessmentOffered.id}#/assessment`;
-      return url;
+      return `${playerUrl}/?unlock_next=ON_CORRECT&api_url=${qbankUrl}
+      /api/v1&bank=${assessmentOffered.bankId}&assessment_offered_id=
+      ${assessmentOffered.id}#/assessment`;
     } else {
       return "";
     }
@@ -40,7 +39,7 @@ export default class AdminPreview extends React.Component {
         openIframe:this.props.openIframe,
         url:this.iframeUrl(
           localPlayerUrl || playerUrl,
-          localQbankUrl || qbankUrl,
+          localQbankUrl || qBankUrl,
           assessmentOffered
         )
       });
