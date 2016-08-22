@@ -6,6 +6,44 @@ import PreviewSidebar          from './preview_sidebar';
 
 export default class AdminPreview extends React.Component {
 
+  static propTypes = {
+
+    // Whether or not preview component should be displayed. In order for the sliding
+    // animation to work, it needs to be rendered even when it should not be displayed.
+    isOpen: React.PropTypes.bool,
+
+    // Object representing the assessment that is being previewed
+    assessmentClicked: React.PropTypes.object,
+
+    // Object containing admin settings. I.E. keys localQbankUrl, assessmentPlayerUrl, localPlayerUrl
+    settings: React.PropTypes.object,
+
+    // Array of available locales
+    locales: React.PropTypes.array,
+
+    // Current 'N of M' selection.
+    nOfM: React.PropTypes.number,
+
+    // The 'M' from 'N of M'. The total number of questions available to select from.
+    M: React.PropTypes.number,
+
+    // Object containing information about the assessment being previewed. Should
+    // contain keys 'bankId' and 'id'.
+    assessmentOffered: React.PropTypes.object,
+
+    // Function to close assessment preview. Is called whenever 'Back to Assessment
+    // List' button is clicked.
+    closeAssessmentView: React.PropTypes.function,
+
+    // Function to set the chosen 'N of M' state. Will be called whenever the
+    // 'N of M' option is changed.
+    setNOfM: React.PropTypes.function,
+
+    // Function to change preview locale. Is called whenever the selected locale
+    // is changed.
+    onChangeLocale: React.PropTypes.function,
+  };
+
   constructor() {
     super();
     this.state = {

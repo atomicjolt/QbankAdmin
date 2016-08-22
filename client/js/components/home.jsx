@@ -282,7 +282,7 @@ export class Home extends React.Component {
           settings={this.props.settings}
           locales={this.props.locales}
           nOfM={this.state.nOfM}
-          items={this.props.items}
+          M={this.props.items.length}
           assessmentOffered={this.props.assessment_offered}
           closeAssessmentView={() => this.closeAssessmentView()}
           setNOfM={(n) => this.setNOfM(n)}

@@ -1,5 +1,31 @@
 import React from 'react';
 
+PreviewSidebar.propTypes = {
+  // Object representing the assessment that is being previewed
+  assessmentClicked: React.PropTypes.object,
+
+  // The 'M' from 'N of M'. The total number of questions available to select from.
+  M: React.PropTypes.number,
+
+  // Array of available locales
+  locales: React.PropTypes.array,
+
+  // Current 'N of M' selection.
+  nOfM: React.PropTypes.number,
+
+  // Function to set the chosen 'N of M' state. Will be called whenever the
+  // 'N of M' option is changed.
+  setNOfM: React.PropTypes.function,
+
+  // Function to change preview locale. Is called whenever the selected locale
+  // is changed.
+  onChangeLocale: React.PropTypes.function,
+
+  // Function to make the iframe embed code visible. Will be called when the 'create
+  // iframe code' button is clicked.
+  displayEmbedCode: React.PropTypes.function
+};
+
 export default function PreviewSidebar(props) {
 
   var assessmentName = props.assessmentClicked.displayName ? props.assessmentClicked.displayName.text : "";
@@ -9,8 +35,8 @@ export default function PreviewSidebar(props) {
   // and generate an option for each number.
 
   var nOfMOptions = <option value=""></option>;
-  if(!_.isEmpty(props.items)) {
-    nOfMOptions = _.map(_.range(1, props.items.length + 1),
+  if(!_.isEmpty(props.M)) {
+    nOfMOptions = _.map(_.range(1, props.M.length + 1),
       (index) => {
         return <option key={index} value={index}>{index}</option>;
       }
@@ -27,10 +53,10 @@ export default function PreviewSidebar(props) {
       <p>Date Created: <span>02/09/2016</span></p>
       <p>Type: <span>{props.assessmentClicked.type}</span></p>
       <p>Student must answer
-        <select value={ props.nOfM || props.items.length }
+        <select value={ props.nOfM || props.M.length }
                 onChange={(e) => props.setNOfM(parseInt(e.target.value))}>
           { nOfMOptions }
-        </select> of {props.items.length}
+        </select> of {props.M.length}
       </p>
 
       <p>Preview the UI in
