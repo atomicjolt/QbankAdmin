@@ -11,11 +11,9 @@ import {Constants}  from "../actions/assessments";
  * 2-letter code, and the user-presentable name.
  */
 export default (state = [], action) => {
-  console.log("Reducer called!");
   switch(action.type) {
 
     case Constants.ASSESSMENT_SET_AVAILABLE_LOCALES:
-      console.log("Got locales", action.locales);
       return action.locales;
 
     default:

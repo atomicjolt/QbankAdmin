@@ -51,7 +51,6 @@ export function clearItems() {
  * code, and the user-presentable name.
  */
 export function setAvailableLocales(locales) {
-  console.log("Asked for action", locales);
   return {
     type: Constants.ASSESSMENT_SET_AVAILABLE_LOCALES,
     locales
