@@ -69,11 +69,7 @@ export default class AdminPreview extends React.Component {
               {iframeEmbed}
               <PreviewSidebar {...this.props}
                  displayEmbedCode={() => this.displayEmbedCode()} />
-              <div className="c-preview-questions">
-                <div className="c-preview-scroll">
-                  {iframePreview}
-                </div>
-              </div>
+              {iframePreview}
             </div>
           </div>
         </div>
