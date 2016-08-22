@@ -18,7 +18,6 @@ export class Home extends React.Component {
     super();
     this.state = {
       assessmentClicked: {},
-      openIframe: false,
       isOpen: false,
       expandedBankPaths: new Set(),
       assessments: {},
@@ -164,15 +163,10 @@ export class Home extends React.Component {
     this.props.clearAssessmentOffered();
     this.setState({
       isOpen: false,
-      openIframe: false,
       assessmentClicked: {},
       currentBankId: null,
       nOfM: null
     });
-  }
-
-  openIframe() {
-    this.setState({openIframe: true});
   }
 
   offerAssessment(bankId, assessment){
