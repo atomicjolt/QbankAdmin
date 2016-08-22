@@ -15,6 +15,13 @@ const select = (state) => (state);
 
 class AdminPreview extends React.Component {
 
+  constructor() {
+    super();
+    this.state = {
+      openIframe: false
+    };
+  }
+
   iframeUrl(playerUrl, assessmentOffered){
     if(!_.isEmpty(assessmentOffered)){
       let qBankHost = this.props.settings.qBankHost ? this.props.settings.qBankHost : "https://qbank-clix-dev.mit.edu";
@@ -51,7 +58,7 @@ class AdminPreview extends React.Component {
     var playerUrl = this.props.settings.assessmentPlayerUrl;
     var assessmentOffered = this.props.assessmentOffered;
 
-    if(this.props.openIframe) {
+    if(this.state.openIframe) {
       var iframeEmbed = IframeEmbed({
         openIframe:this.props.openIframe,
         url:this.iframeUrl(localUrl || playerUrl, assessmentOffered)
@@ -97,7 +104,11 @@ class AdminPreview extends React.Component {
               </select>
             </p>
 
-            <a style={{"marginTop":"135px"}} href="#" onClick={()=> this.props.openIframe()} className="c-btn  c-btn--previous  c-btn--previous--small">
+            <a
+              style={{"marginTop":"135px"}}
+              href="#"
+              onClick={()=> {this.setState({openIframe:true})}}
+              className="c-btn  c-btn--previous  c-btn--previous--small">
               <span>Create Iframe Code</span>
             </a>
           </div>
@@ -508,14 +519,12 @@ export class Home extends React.Component {
           {/*this.adminPreview()*/}
           <AdminPreview
             assessmentClicked={this.state.assessmentClicked}
-            openIframe={this.state.openIframe}
             settings={this.props.settings}
             locales={this.props.locales}
             nOfM={this.state.nOfM}
             items={this.props.items}
             assessmentOffered={this.props.assessment_offered}
             closeAssessmentView={() => this.closeAssessmentView()}
-            openAssessmentView={() => this.openAssessmentView()}
             setNOfM={(n) => this.setNOfM(n)}
             onChangeLocale={(e) => this.onChangeLocale(e)}/>
         </div>
