@@ -33,15 +33,15 @@ export default class AdminPreview extends React.Component {
 
     // Function to close assessment preview. Is called whenever 'Back to Assessment
     // List' button is clicked.
-    closeAssessmentView: React.PropTypes.function,
+    closeAssessmentView: React.PropTypes.func,
 
     // Function to set the chosen 'N of M' state. Will be called whenever the
     // 'N of M' option is changed.
-    setNOfM: React.PropTypes.function,
+    setNOfM: React.PropTypes.func,
 
     // Function to change preview locale. Is called whenever the selected locale
     // is changed.
-    onChangeLocale: React.PropTypes.function,
+    onChangeLocale: React.PropTypes.func,
   };
 
   constructor() {
@@ -53,9 +53,9 @@ export default class AdminPreview extends React.Component {
 
   iframeUrl(playerUrl, qbankUrl, assessmentOffered){
     if(!_.isEmpty(assessmentOffered)){
-      return `${playerUrl}/?unlock_next=ON_CORRECT&api_url=${qbankUrl}
-      /api/v1&bank=${assessmentOffered.bankId}&assessment_offered_id=
-      ${assessmentOffered.id}#/assessment`;
+      return `${playerUrl}/?unlock_next=ON_CORRECT&api_url=${qbankUrl}` +
+      `/api/v1&bank=${assessmentOffered.bankId}&assessment_offered_id=` +
+      `${assessmentOffered.id}#/assessment`;
     } else {
       return "";
     }

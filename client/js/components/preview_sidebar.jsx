@@ -15,15 +15,15 @@ PreviewSidebar.propTypes = {
 
   // Function to set the chosen 'N of M' state. Will be called whenever the
   // 'N of M' option is changed.
-  setNOfM: React.PropTypes.function,
+  setNOfM: React.PropTypes.func,
 
   // Function to change preview locale. Is called whenever the selected locale
   // is changed.
-  onChangeLocale: React.PropTypes.function,
+  onChangeLocale: React.PropTypes.func,
 
   // Function to make the iframe embed code visible. Will be called when the 'create
   // iframe code' button is clicked.
-  displayEmbedCode: React.PropTypes.function
+  displayEmbedCode: React.PropTypes.func
 };
 
 export default function PreviewSidebar(props) {
@@ -35,8 +35,8 @@ export default function PreviewSidebar(props) {
   // and generate an option for each number.
 
   var nOfMOptions = <option value=""></option>;
-  if(!_.isEmpty(props.M)) {
-    nOfMOptions = _.map(_.range(1, props.M.length + 1),
+  if(props.M > 0) {
+    nOfMOptions = _.map(_.range(1, props.M + 1),
       (index) => {
         return <option key={index} value={index}>{index}</option>;
       }
@@ -53,10 +53,10 @@ export default function PreviewSidebar(props) {
       <p>Date Created: <span>02/09/2016</span></p>
       <p>Type: <span>{props.assessmentClicked.type}</span></p>
       <p>Student must answer
-        <select value={ props.nOfM || props.M.length }
+        <select value={ props.nOfM || props.M }
                 onChange={(e) => props.setNOfM(parseInt(e.target.value))}>
           { nOfMOptions }
-        </select> of {props.M.length}
+        </select> of {props.M}
       </p>
 
       <p>Preview the UI in
