@@ -312,8 +312,7 @@ class Home extends React.Component {
             <p>Type: <span>{this.state.assessmentClicked.type}</span></p>
             <p>Student must answer
               <select value={ this.state.nOfM || this.props.items.length }
-                  onChange={(e) => { this.setNOfM(parseInt(e.target.value)); }}
-              >
+                      onChange={(e) => { this.setNOfM(parseInt(e.target.value)); }}>
                 { nOfMOptions }
               </select> of {this.props.items.length}
             </p>
@@ -327,7 +326,8 @@ class Home extends React.Component {
             </div>
           </div>
         </div>
-      </div>);
+      </div>
+    );
   }
 
   render() {
