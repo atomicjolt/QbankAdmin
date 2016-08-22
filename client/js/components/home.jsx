@@ -12,7 +12,7 @@ import assets                             from '../libs/assets';
 const select = (state) => (state);
 
 
-function IframeSnippet(props) {
+function IframeEmbed(props) {
   if(props.openIframe){
     return (
       <div className="c-preview-embed">
@@ -22,6 +22,16 @@ function IframeSnippet(props) {
     );
   }
   return null;
+}
+
+function IframePreview(props) {
+  if(!_.isEmpty(props.assessment_offered)){
+    return (
+      <div>
+        <iframe id="openassessments_container" src={props.url}/>
+      </div>
+    );
+  }
 }
 
 export class Home extends React.Component {
@@ -321,7 +331,7 @@ export class Home extends React.Component {
         </div>
         <div className="c-admin-content__main c-admin-content__main--preview">
           {
-            IframeSnippet({
+            IframeEmbed({
               openIframe:this.state.openIframe,
               url:this.iframe(localUrl || playerUrl)
             })
@@ -343,7 +353,12 @@ export class Home extends React.Component {
           </div>
           <div className="c-preview-questions">
             <div className="c-preview-scroll">
-              {this.iframeRender()}
+              {
+                IframePreview({
+                  assessment_offered: this.props.assessment_offered,
+                  url: this.iframe(playerUrl)
+                })
+              }
             </div>
           </div>
         </div>
