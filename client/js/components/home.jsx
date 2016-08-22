@@ -227,24 +227,7 @@ export class Home extends React.Component {
     }
   }
 
-  iframeRender(){
-    let assessOffered = this.props.assessment_offered;
-    if(!_.isEmpty(assessOffered)){
-      let qBankHost = this.props.settings.qBankHost ? this.props.settings.qBankHost : "https://qbank-clix-dev.mit.edu";
-      let playerHost = this.props.settings.assessmentPlayerUrl; //This will need to be the instance deployed, not localhost.
-      let url = encodeURI(`${playerHost}/?unlock_next=ON_CORRECT&api_url=${qBankHost}/api/v1&bank=${assessOffered.bankId}&assessment_offered_id=${assessOffered.id}#/assessment`);
-
-      return (
-        <div>
-          <iframe id="openassessments_container" src={url}/>
-        </div>
-      );
-    } else {
-      return "";
-    }
-  }
-
-  iframe(playerUrl){
+  iframeUrl(playerUrl){
     let assessOffered = this.props.assessment_offered;
     if(!_.isEmpty(assessOffered)){
       let qBankHost = this.props.settings.qBankHost ? this.props.settings.qBankHost : "https://qbank-clix-dev.mit.edu";
@@ -264,18 +247,6 @@ export class Home extends React.Component {
       return "o-admin-container  o-admin-container--preview is-open";
     }
     return "o-admin-container  o-admin-container--preview";
-  }
-
-  iframeCode(){
-    if(this.state.openIframe){
-      return (
-        <div className="c-preview-embed">
-          <label for="embed">Embed Code</label>
-          <textarea id="embed" value={this.iframe()} readOnly="true" ></textarea>
-        </div>
-      );
-    }
-    return null;
   }
 
   adminPreview(){
@@ -313,7 +284,7 @@ export class Home extends React.Component {
           {
             IframeEmbed({
               openIframe:this.state.openIframe,
-              url:this.iframe(localUrl || playerUrl)
+              url:this.iframeUrl(localUrl || playerUrl)
             })
           }
           <div className="c-preview-sidebar">
@@ -336,7 +307,7 @@ export class Home extends React.Component {
               {
                 IframePreview({
                   assessment_offered: this.props.assessment_offered,
-                  url: this.iframe(playerUrl)
+                  url: this.iframeUrl(playerUrl)
                 })
               }
             </div>
