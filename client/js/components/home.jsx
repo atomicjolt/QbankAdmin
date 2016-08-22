@@ -370,7 +370,6 @@ export class Home extends React.Component {
     return (
       <div style={{"height": "100%"}}>
         <div className="o-admin-container">
-          {/* Sidebar */}
           <div className="o-sidebar">
             <div className="c-sidebar__header">
               <img src="" alt="" />
@@ -380,21 +379,16 @@ export class Home extends React.Component {
               {side}
             </div>
           </div>
-          {/* End Sidebar */}
-          {/* Assessment List */}
           <div className="o-admin-content">
             <div className="c-admin-content__main  c-admin-content__main--scroll">
               {content}
             </div>
           </div>
-          {/* End Assessment List */}
         </div>
-        {/* Assessment Preview */}
         <div className={this.slidingClasses()}>
           <div className="o-sidebar o-sidebar--preview"></div>
           {this.adminPreview()}
         </div>
-        {/* End Assessment Preview */}
       </div>
     );
   }
