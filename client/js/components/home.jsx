@@ -7,9 +7,12 @@ import { connect }  from 'react-redux';
 import { startApp }            from '../actions/app';
 import * as AssessmentActions  from '../actions/assessments';
 import assets                  from '../libs/assets';
+import IframeEmbed             from './common/iframe_embed';
+import IframePreview           from './common/iframe_preview';
 
 
 const select = (state) => (state);
+
 
 export class Home extends React.Component {
 
@@ -237,36 +240,17 @@ export class Home extends React.Component {
     }, "*");
   }
 
-  iframeRender(){
+
+  iframeUrl(playerUrl){
     let assessOffered = this.props.assessment_offered;
     if(!_.isEmpty(assessOffered)){
       let qBankHost = this.props.settings.qBankHost ? this.props.settings.qBankHost : "https://qbank-clix-dev.mit.edu";
-      let playerHost = this.props.settings.assessmentPlayerUrl; //This will need to be the instance deployed, not localhost.
-      let url = encodeURI(`${playerHost}/?unlock_next=ON_CORRECT&api_url=${qBankHost}/api/v1&bank=${assessOffered.bankId}&assessment_offered_id=${assessOffered.id}#/assessment`);
-
-      return (
-        <div>
-          <iframe id="openassessments_container" src={url}/>
-        </div>
-      );
-    } else {
-      return "";
-    }
-  }
-
-  iframe(){
-    let assessOffered = this.props.assessment_offered;
-    if(!_.isEmpty(assessOffered)){
-      let qBankHost = this.props.settings.qBankHost ? this.props.settings.qBankHost : "https://qbank-clix-dev.mit.edu";
-      let hostedPlayer = this.props.settings.assessmentPlayerUrl;
-      let localPlayerUrl = this.props.settings.localPlayerUrl;
       let localQbankUrl = this.props.settings.localQbankUrl;
 
-      // localPlayerUrl should take precedence over the hosted player
-      let url = `${localPlayerUrl || hostedPlayer}/?unlock_next=ON_CORRECT` +
+      let url = `${playerUrl}/?unlock_next=ON_CORRECT` +
           `&api_url=${localQbankUrl || qBankHost}/api/v1` +
           `&bank=${assessOffered.bankId}&assessment_offered_id=${assessOffered.id}#/assessment`;
-      return `<iframe src="${url}"/>`;
+      return url;
     } else {
       return "";
     }
@@ -277,18 +261,6 @@ export class Home extends React.Component {
       return "o-admin-container  o-admin-container--preview is-open";
     }
     return "o-admin-container  o-admin-container--preview";
-  }
-
-  iframeCode(){
-    if(this.state.openIframe){
-      return (
-        <div className="c-preview-embed">
-          <label for="embed">Embed Code</label>
-          <textarea id="embed" value={this.iframe()} readOnly="true" ></textarea>
-        </div>
-      );
-    }
-    return null;
   }
 
   adminPreview(){
@@ -309,6 +281,21 @@ export class Home extends React.Component {
       );
     }
 
+    var localUrl = this.props.settings.localPlayerUrl;
+    var playerUrl = this.props.settings.assessmentPlayerUrl;
+
+    if(this.state.openIframe) {
+      var iframeEmbed = IframeEmbed({
+        url:this.iframeUrl(localUrl || playerUrl)
+      });
+    }
+
+    if(!_.isEmpty(this.props.assessment_offered)) {
+      var iframePreview = IframePreview({
+        url: this.iframeUrl(playerUrl)
+      });
+    }
+
     let localeOptions = this.props.locales.map((l) => (
       <option key={l[0]} value={l[0]}>{l[1]}</option>
     ));
@@ -324,7 +311,7 @@ export class Home extends React.Component {
           </a>
         </div>
         <div className="c-admin-content__main c-admin-content__main--preview">
-          {this.iframeCode()}
+          {iframeEmbed}
           <div className="c-preview-sidebar">
             <h2>{assessmentName}</h2>
             <p>Date Created: <span>02/09/2016</span></p>
@@ -348,7 +335,7 @@ export class Home extends React.Component {
           </div>
           <div className="c-preview-questions">
             <div className="c-preview-scroll">
-              {this.iframeRender()}
+              {iframePreview}
             </div>
           </div>
         </div>
