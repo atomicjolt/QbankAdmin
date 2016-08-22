@@ -270,6 +270,13 @@ export class Home extends React.Component {
     var localUrl = this.props.settings.localPlayerUrl;
     var playerUrl = this.props.settings.assessmentPlayerUrl;
 
+    if(this.state.openIframe){
+      var iframeEmbed = IframeEmbed({
+        openIframe:this.state.openIframe,
+        url:this.iframeUrl(localUrl || playerUrl)
+      })
+    }
+
     return (
       <div className="o-admin-content">
         <div className="c-admin-content__header">
@@ -281,12 +288,7 @@ export class Home extends React.Component {
           </a>
         </div>
         <div className="c-admin-content__main c-admin-content__main--preview">
-          {
-            IframeEmbed({
-              openIframe:this.state.openIframe,
-              url:this.iframeUrl(localUrl || playerUrl)
-            })
-          }
+          {iframeEmbed}
           <div className="c-preview-sidebar">
             <h2>{assessmentName}</h2>
             <p>Date Created: <span>02/09/2016</span></p>
