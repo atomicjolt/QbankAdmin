@@ -7,32 +7,12 @@ import { connect }  from 'react-redux';
 import { startApp }                       from '../actions/app';
 import * as AssessmentActions             from '../actions/assessments';
 import assets                             from '../libs/assets';
+import IframeEmbed                        from './common/iframe_embed';
+import IframePreview                      from './common/iframe_preview';
 
 
 const select = (state) => (state);
 
-
-function IframeEmbed(props) {
-  if(props.openIframe){
-    return (
-      <div className="c-preview-embed">
-        <label for="embed">Embed Code</label>
-        <textarea id="embed" value={`<iframe src="${props.url}"/>`} readOnly="true" ></textarea>
-      </div>
-    );
-  }
-  return null;
-}
-
-function IframePreview(props) {
-  if(!_.isEmpty(props.assessment_offered)){
-    return (
-      <div>
-        <iframe id="openassessments_container" src={props.url}/>
-      </div>
-    );
-  }
-}
 
 export class Home extends React.Component {
 
