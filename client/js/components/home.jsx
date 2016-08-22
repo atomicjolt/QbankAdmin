@@ -4,9 +4,9 @@ import _            from 'lodash';
 import React        from 'react';
 import { connect }  from 'react-redux';
 
-import { startApp }                       from '../actions/app';
-import * as AssessmentActions             from '../actions/assessments';
-import assets                             from '../libs/assets';
+import { startApp }            from '../actions/app';
+import * as AssessmentActions  from '../actions/assessments';
+import assets                  from '../libs/assets';
 
 
 const select = (state) => (state);
@@ -43,8 +43,12 @@ export class Home extends React.Component {
     }
 
     switch(data.open_assessments_msg) {
-      case 'open_assessments_resize':
-        let iframe = document.getElementById('openassessments_container');
+      case "open_assessments_available_locales":
+        this.props.setAvailableLocales(data.available_locales);
+        break;
+
+      case "open_assessments_resize":
+        let iframe = document.getElementById("openassessments_container");
         if(iframe) {
           let height = data.payload.height;
           iframe.style.height = height + "px";
@@ -58,7 +62,7 @@ export class Home extends React.Component {
 
     if(!iframe){ return; }
 
-    window.addEventListener("message", this.onMessage, false);
+    window.addEventListener("message", (message) => this.onMessage(message), false);
     iframe.contentWindow.postMessage({
       'open_assessments_msg': 'open_assessments_size_request',
       'payload': {}
@@ -224,6 +228,15 @@ export class Home extends React.Component {
     }
   }
 
+  onChangeLocale(event) {
+    const iframe = document.getElementById("openassessments_container");
+    const locale = event.target.value;
+    iframe.contentWindow.postMessage({
+      open_assessments_msg: "open_assessments_set_locale",
+      locale
+    }, "*");
+  }
+
   iframeRender(){
     let assessOffered = this.props.assessment_offered;
     if(!_.isEmpty(assessOffered)){
@@ -296,6 +309,10 @@ export class Home extends React.Component {
       );
     }
 
+    let localeOptions = this.props.locales.map((l) => (
+      <option key={l[0]} value={l[0]}>{l[1]}</option>
+    ));
+
     return (
       <div className="o-admin-content">
         <div className="c-admin-content__header">
@@ -314,11 +331,17 @@ export class Home extends React.Component {
             <p>Type: <span>{this.state.assessmentClicked.type}</span></p>
             <p>Student must answer
               <select value={ this.state.nOfM || this.props.items.length }
-                  onChange={(e) => { this.setNOfM(parseInt(e.target.value)); }}
-              >
+                      onChange={(e) => { this.setNOfM(parseInt(e.target.value)); }}>
                 { nOfMOptions }
               </select> of {this.props.items.length}
             </p>
+
+            <p>Preview the UI in
+              <select onChange={(e) => this.onChangeLocale(e)}>
+                {localeOptions}
+              </select>
+            </p>
+
             <a style={{"marginTop":"135px"}} href="#" onClick={()=>{this.setState({openIframe: true});}} className="c-btn  c-btn--previous  c-btn--previous--small">
               <span>Create Iframe Code</span>
             </a>
@@ -329,7 +352,8 @@ export class Home extends React.Component {
             </div>
           </div>
         </div>
-      </div>);
+      </div>
+    );
   }
 
   render() {
