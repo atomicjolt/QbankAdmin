@@ -7,7 +7,6 @@ import { connect }  from 'react-redux';
 import { startApp }            from '../actions/app';
 import * as AssessmentActions  from '../actions/assessments';
 import assets                  from '../libs/assets';
-import LocaleOption            from './locale_option';
 
 
 const select = (state) => (state);
