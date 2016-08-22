@@ -13,13 +13,10 @@ export default class AdminPreview extends React.Component {
     };
   }
 
-  iframeUrl(playerUrl, assessmentOffered){
+  iframeUrl(playerUrl, qbankUrl, assessmentOffered){
     if(!_.isEmpty(assessmentOffered)){
-      let qBankHost = this.props.settings.qBankHost ? this.props.settings.qBankHost : "https://qbank-clix-dev.mit.edu";
-      let localQbankUrl = this.props.settings.localQbankUrl;
-
       let url = `${playerUrl}/?unlock_next=ON_CORRECT` +
-          `&api_url=${localQbankUrl || qBankHost}/api/v1` +
+          `&api_url=${qbankUrl/*localQbankUrl || qBankHost*/}/api/v1` +
           `&bank=${assessmentOffered.bankId}&assessment_offered_id=${assessmentOffered.id}#/assessment`;
       return url;
     } else {
@@ -32,24 +29,26 @@ export default class AdminPreview extends React.Component {
   }
 
   render() {
-
-    var assessmentName = this.props.assessmentClicked.displayName ? this.props.assessmentClicked.displayName.text : "";
-
-
-    var localUrl = this.props.settings.localPlayerUrl;
+    var qBankUrl = this.props.settings.qBankHost ? this.props.settings.qBankHost : "https://qbank-clix-dev.mit.edu";
+    var localQbankUrl = this.props.settings.localQbankUrl;
     var playerUrl = this.props.settings.assessmentPlayerUrl;
+    var localPlayerUrl = this.props.settings.localPlayerUrl;
     var assessmentOffered = this.props.assessmentOffered;
 
     if(this.state.openIframe) {
       var iframeEmbed = IframeEmbed({
         openIframe:this.props.openIframe,
-        url:this.iframeUrl(localUrl || playerUrl, assessmentOffered)
+        url:this.iframeUrl(
+          localPlayerUrl || playerUrl,
+          localQbankUrl || qbankUrl,
+          assessmentOffered
+        )
       });
     }
 
     if(!_.isEmpty(this.props.assessmentOffered)) {
       var iframePreview = IframePreview({
-        url: this.iframeUrl(playerUrl, assessmentOffered)
+        url: this.iframeUrl(playerUrl, qBankUrl, assessmentOffered)
       });
     }
 
