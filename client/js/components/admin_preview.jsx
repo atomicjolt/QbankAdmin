@@ -66,7 +66,7 @@ export default class AdminPreview extends React.Component {
   }
 
   render() {
-    var qBankUrl = this.props.settings.qBankHost ? this.props.settings.qBankHost : "https://qbank-clix-dev.mit.edu";
+    var qBankUrl = this.props.settings.qBankHost || "https://qbank-clix-dev.mit.edu";
     var localQbankUrl = this.props.settings.localQbankUrl;
     var playerUrl = this.props.settings.assessmentPlayerUrl;
     var localPlayerUrl = this.props.settings.localPlayerUrl;
