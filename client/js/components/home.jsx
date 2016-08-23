@@ -7,12 +7,10 @@ import { connect }  from 'react-redux';
 import { startApp }            from '../actions/app';
 import * as AssessmentActions  from '../actions/assessments';
 import assets                  from '../libs/assets';
-import IframeEmbed             from './common/iframe_embed';
-import IframePreview           from './common/iframe_preview';
+import AdminPreview            from './admin_preview';
 
 
 const select = (state) => (state);
-
 
 export class Home extends React.Component {
 
@@ -20,7 +18,6 @@ export class Home extends React.Component {
     super();
     this.state = {
       assessmentClicked: {},
-      openIframe: false,
       isOpen: false,
       expandedBankPaths: new Set(),
       assessments: {},
@@ -166,7 +163,6 @@ export class Home extends React.Component {
     this.props.clearAssessmentOffered();
     this.setState({
       isOpen: false,
-      openIframe: false,
       assessmentClicked: {},
       currentBankId: null,
       nOfM: null
@@ -240,109 +236,6 @@ export class Home extends React.Component {
     }, "*");
   }
 
-
-  iframeUrl(playerUrl){
-    let assessOffered = this.props.assessment_offered;
-    if(!_.isEmpty(assessOffered)){
-      let qBankHost = this.props.settings.qBankHost ? this.props.settings.qBankHost : "https://qbank-clix-dev.mit.edu";
-      let localQbankUrl = this.props.settings.localQbankUrl;
-
-      let url = `${playerUrl}/?unlock_next=ON_CORRECT` +
-          `&api_url=${localQbankUrl || qBankHost}/api/v1` +
-          `&bank=${assessOffered.bankId}&assessment_offered_id=${assessOffered.id}#/assessment`;
-      return url;
-    } else {
-      return "";
-    }
-  }
-
-  slidingClasses(){
-    if(this.state.isOpen){
-      return "o-admin-container  o-admin-container--preview is-open";
-    }
-    return "o-admin-container  o-admin-container--preview";
-  }
-
-  adminPreview(){
-    var assessmentName = this.state.assessmentClicked.displayName ? this.state.assessmentClicked.displayName.text : "";
-
-    let nOfMOptions;
-
-    // If there are no items, render an empty option to clear the select.
-    // Else, map over a range of numbers from 1 to items.length + 1,
-    // and generate an option for each number.
-    if(_.isEmpty(this.props.items)) {
-      nOfMOptions = <option value=""></option>;
-    } else {
-      nOfMOptions = _.map(_.range(1, this.props.items.length + 1),
-        (index) => {
-          return <option key={index} value={index}>{index}</option>;
-        }
-      );
-    }
-
-    var localUrl = this.props.settings.localPlayerUrl;
-    var playerUrl = this.props.settings.assessmentPlayerUrl;
-
-    if(this.state.openIframe) {
-      var iframeEmbed = IframeEmbed({
-        url:this.iframeUrl(localUrl || playerUrl)
-      });
-    }
-
-    if(!_.isEmpty(this.props.assessment_offered)) {
-      var iframePreview = IframePreview({
-        url: this.iframeUrl(playerUrl)
-      });
-    }
-
-    let localeOptions = this.props.locales.map((l) => (
-      <option key={l[0]} value={l[0]}>{l[1]}</option>
-    ));
-
-    return (
-      <div className="o-admin-content">
-        <div className="c-admin-content__header">
-          <a href="#" onClick={()=>{ this.closeAssessmentView(); }} className="c-btn  c-btn--previous  c-btn--previous--small">
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-              <path d="M14.83 16.42l9.17 9.17 9.17-9.17 2.83 2.83-12 12-12-12z"/>
-            </svg>
-            <span>Back To Assessment List</span>
-          </a>
-        </div>
-        <div className="c-admin-content__main c-admin-content__main--preview">
-          {iframeEmbed}
-          <div className="c-preview-sidebar">
-            <h2>{assessmentName}</h2>
-            <p>Date Created: <span>02/09/2016</span></p>
-            <p>Type: <span>{this.state.assessmentClicked.type}</span></p>
-            <p>Student must answer
-              <select value={ this.state.nOfM || this.props.items.length }
-                      onChange={(e) => { this.setNOfM(parseInt(e.target.value)); }}>
-                { nOfMOptions }
-              </select> of {this.props.items.length}
-            </p>
-
-            <p>Preview the UI in
-              <select onChange={(e) => this.onChangeLocale(e)}>
-                {localeOptions}
-              </select>
-            </p>
-
-            <a style={{"marginTop":"135px"}} href="#" onClick={()=>{this.setState({openIframe: true});}} className="c-btn  c-btn--previous  c-btn--previous--small">
-              <span>Create Iframe Code</span>
-            </a>
-          </div>
-          <div className="c-preview-questions">
-            <div className="c-preview-scroll">
-              {iframePreview}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   render() {
     const hierarchy = this.props.banks;
     let error = this.props.application.error;
@@ -383,10 +276,17 @@ export class Home extends React.Component {
             </div>
           </div>
         </div>
-        <div className={this.slidingClasses()}>
-          <div className="o-sidebar o-sidebar--preview"></div>
-          {this.adminPreview()}
-        </div>
+        <AdminPreview
+          isOpen={this.state.isOpen}
+          assessmentClicked={this.state.assessmentClicked}
+          settings={this.props.settings}
+          locales={this.props.locales}
+          nOfM={this.state.nOfM}
+          M={this.props.items.length}
+          assessmentOffered={this.props.assessment_offered}
+          closeAssessmentView={() => this.closeAssessmentView()}
+          setNOfM={(n) => this.setNOfM(n)}
+          onChangeLocale={(e) => this.onChangeLocale(e)}/>
       </div>
     );
   }
