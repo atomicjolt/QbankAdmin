@@ -4,6 +4,18 @@ import Spinner from './common/spinner';
 
 export default class FilterTree extends React.Component {
 
+  static propTypes = {
+
+    // Set representing the selected banks
+    expandedBankPaths: React.PropTypes.instanceOf(Set).isRequired,
+
+    // Array of qbank question banks
+    banks: React.PropTypes.array,
+
+    // Function called when a filter tree item is clicked
+    itemClicked: React.PropTypes.func.isRequired,
+  };
+
   /**
    * Clears the hierarchy selection for the given bank and all of its
    * descendants.
@@ -15,9 +27,9 @@ export default class FilterTree extends React.Component {
     });
   }
 
-  updateBankPaths(expandedBankPaths){
-    if(_.isFunction(this.props.updateBankPaths)){
-      this.props.updateBankPaths(expandedBankPaths);
+  itemClicked(expandedBankPaths){
+    if(_.isFunction(this.props.itemClicked)){
+      this.props.itemClicked(expandedBankPaths);
     }
   }
 
@@ -30,8 +42,7 @@ export default class FilterTree extends React.Component {
       this.resetExpansion(bank, expandedBankPaths);
     }
 
-    this.updateBankPaths(expandedBankPaths);
-    this.props.closeAssessmentView();
+    this.itemClicked(expandedBankPaths);
   }
 
   renderChildren(children) {
