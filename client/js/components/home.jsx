@@ -177,9 +177,10 @@ export class Home extends React.Component {
             banks={this.props.banks} />
         );
       content = (
-        <ul>
-          {this.renderAssessmentList(hierarchy)}
-        </ul>
+        <AssessmentList
+          banks={this.props.banks}
+          assessmentClick={(id, assessment) => this.offerAssessment(id, assessment)}
+          expandedBankPaths={this.state.expandedBankPaths} />
       );
     }
 
@@ -220,7 +221,9 @@ export class Home extends React.Component {
 class AssessmentList extends React.Component {
 
   static propTypes = {
-    assessmentClick: React.PropTypes.func
+    assessmentClick: React.PropTypes.func,
+    banks: React.PropTypes.object,
+    expandedBankPaths: React.PropTypes.array
   };
 
   handleAssessmentClick(id, assessment){
@@ -231,7 +234,7 @@ class AssessmentList extends React.Component {
 
   hasNoChildrenSelected(bank) {
     for(let b of bank.childNodes) {
-      if(this.state.expandedBankPaths.has(b.pathId)) {
+      if(this.props.expandedBankPaths.has(b.pathId)) {
         return false;
       }
     }
@@ -240,7 +243,7 @@ class AssessmentList extends React.Component {
 
   gatherAssessments(assessmentList, path, bank, force) {
     path = path.concat([bank.displayName.text]);
-    if(force || this.state.expandedBankPaths.has(bank.pathId)) {
+    if(force || this.props.expandedBankPaths.has(bank.pathId)) {
       if(bank.assessments.length > 0) {
         assessmentList.push(<h2 className="c-admin-list-location" key={`h_${bank.pathId}`}>{path.join(", ")}</h2>);
         assessmentList.push(
