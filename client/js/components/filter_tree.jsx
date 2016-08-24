@@ -28,9 +28,7 @@ export default class FilterTree extends React.Component {
   }
 
   itemClicked(expandedBankPaths){
-    if(_.isFunction(this.props.itemClicked)){
-      this.props.itemClicked(expandedBankPaths);
-    }
+    this.props.itemClicked(expandedBankPaths);
   }
 
   onExpandBank(bank, value) {

@@ -14,9 +14,7 @@ export default class AssessmentList extends React.Component {
   };
 
   handleAssessmentClick(id, assessment){
-    if(_.isFunction(this.props.assessmentClick)) {
-      this.props.assessmentClick(id, assessment);
-    }
+    this.props.assessmentClick(id, assessment);
   }
 
   hasNoChildrenSelected(bank) {
