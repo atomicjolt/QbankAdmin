@@ -261,16 +261,7 @@ export class Home extends React.Component {
         </ul>
       );
     }
-
-          // <div className="o-sidebar">
-          //   <div className="c-sidebar__header">
-          //     <img src="" alt="" />
-          //   </div>
-          //   <div className="c-sidebar__filters">
-          //     <p className="c-filters__title">Filter Tree</p>
-          //     {side}
-          //   </div>
-          // </div>
+    
     return (
       <div style={{"height": "100%"}}>
         <div className="o-admin-container">
@@ -321,7 +312,7 @@ class Sidebar extends React.Component {
     if(value) {
       expandedBankPaths.add(bank.pathId);
     } else {
-      this.resetExpansion(bank, expandedBankPaths);
+      // this.resetExpansion(bank, expandedBankPaths); //TODO
     }
 
     this.updateBankPaths(expandedBankPaths);
@@ -359,6 +350,41 @@ class Sidebar extends React.Component {
         </label>
         {renderedChildren}
       </li>
+    );
+  }
+
+  renderBankHierarchy(hierarchy) {
+    if(hierarchy === null) {
+      return <div className="loader">{ /*this.spinner() */}</div>;
+    } else if(_.isEmpty(hierarchy)) {
+      return <p className="c-admin-error">
+        No banks exist in QBank. Please upload some data first.
+      </p>;
+    }
+    return (
+      <ul className="c-filter-scroll">
+        {hierarchy.map((child) => this.renderItem(child))}
+      </ul>
+    );
+  }
+
+  render(){
+    var side = (
+      <ul className="c-filter-scroll">
+        {this.renderBankHierarchy(this.props.banks)}
+      </ul>
+    );
+
+    return (
+      <div className="o-sidebar">
+        <div className="c-sidebar__header">
+          <img src="" alt="" />
+        </div>
+        <div className="c-sidebar__filters">
+          <p className="c-filters__title">Filter Tree</p>
+          {side}
+        </div>
+      </div>
     );
   }
 }
