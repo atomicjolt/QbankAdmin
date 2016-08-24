@@ -251,10 +251,11 @@ export class Home extends React.Component {
       content = <p className="c-admin-error">{error}</p>;
     } else {
       side = (
-        <ul className="c-filter-scroll">
-          {this.renderBankHierarchy(hierarchy)}
-        </ul>
-      );
+        <Sidebar
+            updateBankPaths={(paths) => this.onUpdateBankPaths(paths)}
+            closeAssessmentView={() => this.closeAssessmentView()}
+            banks={this.props.banks} />
+        );
       content = (
         <ul>
           {this.renderAssessmentList(hierarchy)}
@@ -265,10 +266,15 @@ export class Home extends React.Component {
     return (
       <div style={{"height": "100%"}}>
         <div className="o-admin-container">
-          <Sidebar
-              updateBankPaths={(paths) => this.onUpdateBankPaths(paths)}
-              closeAssessmentView={() => this.closeAssessmentView()}
-              banks={this.props.banks} />
+          <div className="o-sidebar">
+            <div className="c-sidebar__header">
+              <img src="" alt="" />
+            </div>
+            <div className="c-sidebar__filters">
+              <p className="c-filters__title">Filter Tree</p>
+              {side}
+            </div>
+          </div>
           <div className="o-admin-content">
             <div className="c-admin-content__main  c-admin-content__main--scroll">
               {content}
@@ -380,22 +386,10 @@ class Sidebar extends React.Component {
   }
 
   render(){
-    var side = (
+    return (
       <ul className="c-filter-scroll">
         {this.renderBankHierarchy(this.props.banks)}
       </ul>
-    );
-
-    return (
-      <div className="o-sidebar">
-        <div className="c-sidebar__header">
-          <img src="" alt="" />
-        </div>
-        <div className="c-sidebar__filters">
-          <p className="c-filters__title">Filter Tree</p>
-          {side}
-        </div>
-      </div>
     );
   }
 }
