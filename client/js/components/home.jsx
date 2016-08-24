@@ -57,12 +57,15 @@ export class Home extends React.Component {
     }
   }
 
+  componentDidMount(){
+    window.addEventListener("message", (message) => this.onMessage(message), false);
+  }
+
   componentDidUpdate() {
     let iframe = document.getElementById('openassessments_container');
 
     if(!iframe){ return; }
 
-    window.addEventListener("message", (message) => this.onMessage(message), false);
     iframe.contentWindow.postMessage({
       'open_assessments_msg': 'open_assessments_size_request',
       'payload': {}
