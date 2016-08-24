@@ -9,6 +9,7 @@ import * as AssessmentActions  from '../actions/assessments';
 import assets                  from '../libs/assets';
 import AdminPreview            from './admin_preview';
 import FilterTree              from './filter_tree';
+import AssessmentList          from './assessment_list'; 
 
 const select = (state) => (state);
 

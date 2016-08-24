@@ -3,9 +3,14 @@ import React from 'react';
 export default class AssessmentList extends React.Component {
 
   static propTypes = {
-    assessmentClick: React.PropTypes.func,
+    // Set representing the selected banks
+    expandedBankPaths: React.PropTypes.instanceOf(Set).isRequired,
+
+    // Array of qbank question banks
     banks: React.PropTypes.array,
-    expandedBankPaths: React.PropTypes.object
+
+    // Function to handle when an assessment is clicked
+    assessmentClick: React.PropTypes.func.isRequired,
   };
 
   handleAssessmentClick(id, assessment){
