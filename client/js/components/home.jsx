@@ -122,6 +122,11 @@ export class Home extends React.Component {
     this.setState({expandedBankPaths});
   }
 
+  filterItemClicked(paths) {
+    this.onUpdateBankPaths(paths);
+    this.closeAssessmentView();
+  }
+
   render() {
     const hierarchy = this.props.banks;
     let error = this.props.application.error;
@@ -134,8 +139,8 @@ export class Home extends React.Component {
     } else {
       side = (
         <FilterTree
-            updateBankPaths={(paths) => this.onUpdateBankPaths(paths)}
-            closeAssessmentView={() => this.closeAssessmentView()}
+            expandedBankPaths={this.state.expandedBankPaths}
+            itemClicked={(paths) => this.filterItemClicked(paths)}
             banks={this.props.banks} />
         );
       content = (

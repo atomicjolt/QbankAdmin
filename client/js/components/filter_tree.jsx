@@ -3,12 +3,18 @@ import React from 'react';
 import Spinner from './common/spinner';
 
 export default class FilterTree extends React.Component {
-  constructor(){
-    super();
-    this.state = {
-      expandedBankPaths: new Set()
-    };
-  }
+
+  static propTypes = {
+
+    // Set representing the selected banks
+    expandedBankPaths: React.PropTypes.instanceOf(Set).isRequired,
+
+    // Array of qbank question banks
+    banks: React.PropTypes.array,
+
+    // Function called when a filter tree item is clicked
+    itemClicked: React.PropTypes.func.isRequired,
+  };
 
   /**
    * Clears the hierarchy selection for the given bank and all of its
@@ -21,15 +27,14 @@ export default class FilterTree extends React.Component {
     });
   }
 
-  updateBankPaths(expandedBankPaths){
-    this.setState({expandedBankPaths});
-    if(_.isFunction(this.props.updateBankPaths)){
-      this.props.updateBankPaths(expandedBankPaths);
+  itemClicked(expandedBankPaths){
+    if(_.isFunction(this.props.itemClicked)){
+      this.props.itemClicked(expandedBankPaths);
     }
   }
 
   onExpandBank(bank, value) {
-    let expandedBankPaths = new Set(this.state.expandedBankPaths);
+    let expandedBankPaths = new Set(this.props.expandedBankPaths);
 
     if(value) {
       expandedBankPaths.add(bank.pathId);
@@ -37,8 +42,7 @@ export default class FilterTree extends React.Component {
       this.resetExpansion(bank, expandedBankPaths);
     }
 
-    this.updateBankPaths(expandedBankPaths);
-    this.props.closeAssessmentView();
+    this.itemClicked(expandedBankPaths);
   }
 
   renderChildren(children) {
@@ -55,7 +59,7 @@ export default class FilterTree extends React.Component {
     if(bank.childNodes.length == 0){
       itemClass = itemClass + " c-filter__item--dropdown";
     }
-    let expanded = this.state.expandedBankPaths.has(bank.pathId);
+    let expanded = this.props.expandedBankPaths.has(bank.pathId);
     let renderedChildren;
     if(expanded) {
       renderedChildren = this.renderChildren(bank.childNodes);
