@@ -236,8 +236,8 @@ export class Home extends React.Component {
     }, "*");
   }
 
-  onUpdateBankPaths(bankPaths){
-    this.setState({bankPaths});
+  onUpdateBankPaths(expandedBankPaths){
+    this.setState({expandedBankPaths});
   }
 
   render() {
@@ -261,7 +261,7 @@ export class Home extends React.Component {
         </ul>
       );
     }
-    
+
     return (
       <div style={{"height": "100%"}}>
         <div className="o-admin-container">
