@@ -172,6 +172,7 @@ export class Home extends React.Component {
     } else {
       side = (
         <FilterTree
+            expandedBankPaths={this.state.expandedBankPaths}
             updateBankPaths={(paths) => this.onUpdateBankPaths(paths)}
             closeAssessmentView={() => this.closeAssessmentView()}
             banks={this.props.banks} />
