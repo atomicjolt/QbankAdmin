@@ -267,6 +267,7 @@ export class Home extends React.Component {
         <div className="o-admin-container">
           <Sidebar
               updateBankPaths={(paths) => this.onUpdateBankPaths(paths)}
+              closeAssessmentView={() => this.closeAssessmentView()}
               banks={this.props.banks} />
           <div className="o-admin-content">
             <div className="c-admin-content__main  c-admin-content__main--scroll">
@@ -299,6 +300,17 @@ class Sidebar extends React.Component {
     };
   }
 
+  /**
+   * Clears the hierarchy selection for the given bank and all of its
+   * descendants.
+   */
+  resetExpansion(bank, pathSet) {
+    pathSet.delete(bank.pathId);
+    bank.childNodes.forEach((bc) => {
+      this.resetExpansion(bc, pathSet);
+    });
+  }
+
   updateBankPaths(expandedBankPaths){
     this.setState({expandedBankPaths});
     if(_.isFunction(this.props.updateBankPaths)){
@@ -312,12 +324,11 @@ class Sidebar extends React.Component {
     if(value) {
       expandedBankPaths.add(bank.pathId);
     } else {
-      // this.resetExpansion(bank, expandedBankPaths); //TODO
+      this.resetExpansion(bank, expandedBankPaths);
     }
 
     this.updateBankPaths(expandedBankPaths);
-
-    // this.closeAssessmentView(); TODO
+    this.props.closeAssessmentView();
   }
 
   renderChildren(children) {
