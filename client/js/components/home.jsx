@@ -236,6 +236,10 @@ export class Home extends React.Component {
     }, "*");
   }
 
+  onUpdateBankPaths(bankPaths){
+    this.setState({bankPaths});
+  }
+
   render() {
     const hierarchy = this.props.banks;
     let error = this.props.application.error;
@@ -258,18 +262,21 @@ export class Home extends React.Component {
       );
     }
 
+          // <div className="o-sidebar">
+          //   <div className="c-sidebar__header">
+          //     <img src="" alt="" />
+          //   </div>
+          //   <div className="c-sidebar__filters">
+          //     <p className="c-filters__title">Filter Tree</p>
+          //     {side}
+          //   </div>
+          // </div>
     return (
       <div style={{"height": "100%"}}>
         <div className="o-admin-container">
-          <div className="o-sidebar">
-            <div className="c-sidebar__header">
-              <img src="" alt="" />
-            </div>
-            <div className="c-sidebar__filters">
-              <p className="c-filters__title">Filter Tree</p>
-              {side}
-            </div>
-          </div>
+          <Sidebar
+              updateBankPaths={(paths) => this.onUpdateBankPaths(paths)}
+              banks={this.props.banks} />
           <div className="o-admin-content">
             <div className="c-admin-content__main  c-admin-content__main--scroll">
               {content}
@@ -291,6 +298,69 @@ export class Home extends React.Component {
     );
   }
 
+}
+
+class Sidebar extends React.Component {
+  constructor(){
+    super();
+    this.state = {
+      expandedBankPaths: new Set()
+    };
+  }
+
+  updateBankPaths(expandedBankPaths){
+    this.setState({expandedBankPaths});
+    if(_.isFunction(this.props.updateBankPaths)){
+      this.props.updateBankPaths(expandedBankPaths);
+    }
+  }
+
+  onExpandBank(bank, value) {
+    let expandedBankPaths = new Set(this.state.expandedBankPaths);
+
+    if(value) {
+      expandedBankPaths.add(bank.pathId);
+    } else {
+      this.resetExpansion(bank, expandedBankPaths);
+    }
+
+    this.updateBankPaths(expandedBankPaths);
+
+    // this.closeAssessmentView(); TODO
+  }
+
+  renderChildren(children) {
+    if(_.isUndefined(children)) { return; }
+    return (
+      <ul className="c-filter__dropdown">
+        {children.map((child) => this.renderItem(child))}
+      </ul>
+    );
+  }
+
+  renderItem(bank) {
+    let itemClass = "c-filter__item";
+    if(bank.childNodes.length == 0){
+      itemClass = itemClass + " c-filter__item--dropdown";
+    }
+    let expanded = this.state.expandedBankPaths.has(bank.pathId);
+    let renderedChildren;
+    if(expanded) {
+      renderedChildren = this.renderChildren(bank.childNodes);
+    }
+
+    return (
+      <li key={bank.id} className={itemClass}>
+        <label className="c-checkbox--nested">
+          <input type="checkbox"
+                 checked={expanded}
+                 onChange={(e) => this.onExpandBank(bank, e.target.checked)}/>
+          <div>{bank.displayName.text}</div>
+        </label>
+        {renderedChildren}
+      </li>
+    );
+  }
 }
 
 export default connect(select, { startApp, ...AssessmentActions })(Home);
