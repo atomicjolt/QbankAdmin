@@ -9,7 +9,7 @@ import * as AssessmentActions  from '../actions/assessments';
 import assets                  from '../libs/assets';
 import AdminPreview            from './admin_preview';
 import FilterTree              from './filter_tree';
-import AssessmentList          from './assessment_list'; 
+import AssessmentList          from './assessment_list';
 
 const select = (state) => (state);
 
@@ -54,6 +54,10 @@ export class Home extends React.Component {
           let height = data.payload.height;
           iframe.style.height = height + "px";
         }
+        break;
+      case "scrollToTop":
+        let scrollElement = document.getElementsByClassName('c-preview-scroll')[0];
+        scrollElement.scrollTop = 0;
         break;
     }
   }
